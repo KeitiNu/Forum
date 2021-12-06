@@ -1,5 +1,7 @@
 {{template "base"}}
 {{define "body"}}
+<form method="post">
+
 <div>
     <label for="username">Username:</label>
     <input type="text" id="username" name="username" required>
@@ -8,8 +10,9 @@
 <div>
     <label for="pass">Password (8 characters minimum):</label>
     <input type="password" id="pass" name="password"
-           minlength="8" required>
+           minlength="2" required>
 </div>
 
 <input type="submit" value="Sign in">
+</form>
 {{end}}

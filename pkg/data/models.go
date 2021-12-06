@@ -1,8 +1,19 @@
 package data
 
-import "database/sql"
+import (
+	"database/sql"
+	"errors"
+)
 
 // Encapsulate the code for working with sqlite3 in a separate package to the rest of our application.
+
+var (
+	ErrNoRecord = errors.New("models: no matching record found")
+
+	ErrInvalidCredentials = errors.New("models: invalid credentials")
+
+	ErrDuplicateUsername = errors.New("models: duplicate username")
+)
 
 // Storage for database data from tables
 type Models struct {

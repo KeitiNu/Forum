@@ -1,5 +1,6 @@
 {{template "base"}}
 {{define "body"}}
+<form method="post" class="std auth">
 <div>
     <label for="username">Username:</label>
     <input type="text" id="username" name="username" required>
@@ -8,13 +9,14 @@
 <div>
     <label for="pass">Password (8 characters minimum):</label>
     <input type="password" id="pass" name="password"
-           minlength="8" required>
+           minlength="2" required>
 </div>
 <div>
     <label for="pass">Confirm Password:</label>
-    <input type="password" id="pass" name="password"
-           minlength="8" required>
+    <input type="password" id="pass" name="confirm_password"
+           minlength="2" required>
 </div>
 
 <input type="submit" value="Register">
+</form>
 {{end}}
