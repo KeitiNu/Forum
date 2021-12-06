@@ -10,3 +10,10 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	}
 	app.render(w, r, "home.page.tmpl", nil)
 }
+
+func (app *application) login(w http.ResponseWriter, r *http.Request) {
+	app.render(w, r, "login.page.tmpl", nil)
+}
+func (app *application) register(w http.ResponseWriter, r *http.Request) {
+	app.render(w, r, "register.page.tmpl", nil)
+}

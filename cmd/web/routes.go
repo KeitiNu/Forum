@@ -12,5 +12,7 @@ func (app *application) routes() http.Handler {
 	mux.Handle("/static/", http.StripPrefix("/static", fs))
 
 	mux.HandleFunc("/", app.home)
+	mux.HandleFunc("/login", app.login)
+	mux.HandleFunc("/register", app.register)
 	return mux
 }
