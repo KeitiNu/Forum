@@ -1,6 +1,21 @@
+body {
+    background-color: #880D1E;
+}
+
+h1 {
+    color: #CBEEF3;
+    margin-left: 20px;
+}
+
+a, div {
+    color: #F49CBB;
+    font-size: large;
+}
+
 label {
     display: block;
     font: .9rem 'Fira Sans', sans-serif;
+    font-size: large;
 }
 
 input[type='submit'],
