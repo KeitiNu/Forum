@@ -13,6 +13,8 @@ var (
 	ErrInvalidCredentials = errors.New("models: invalid credentials")
 
 	ErrDuplicateUsername = errors.New("models: duplicate username")
+
+	ErrDuplicateEmail = errors.New("duplicate email")
 )
 
 // Storage for database data from tables

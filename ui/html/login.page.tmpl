@@ -1,18 +1,24 @@
-{{template "base"}}
+{{template "base" .}}
 {{define "body"}}
 <form method="post">
-
+{{with .Form}}
 <div>
     <label for="username">Username:</label>
-    <input type="text" id="username" name="username" required>
+    <input type="text" id="username" name="username" value="{{.Get "username"}}">
+    {{with .Errors.Get "username"}}
+                <label class='error'>{{.}}</label>
+            {{end}}
 </div>
 
 <div>
     <label for="pass">Password (8 characters minimum):</label>
-    <input type="password" id="pass" name="password"
-           minlength="2" required>
+    <input type="password" id="pass" name="password">
+           {{with .Errors.Get "password"}}
+                <label class='error'>{{.}}</label>
+            {{end}}
 </div>
 
 <input type="submit" value="Sign in">
 </form>
+{{end}}
 {{end}}

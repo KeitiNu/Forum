@@ -1,22 +1,39 @@
-{{template "base"}}
+{{template "base".}}
 {{define "body"}}
 <form method="post" class="std auth">
+    {{with .Form}}
 <div>
     <label for="username">Username:</label>
-    <input type="text" id="username" name="username" required>
+    <input type="text" id="username" name="username" value="{{.Get "username"}}">
+    {{with .Errors.Get "username"}}
+                <label class='error'>{{.}}</label>
+            {{end}}
+</div>
+
+<div>
+    <label for="email">E-Mail:</label>
+    <input type="text" id="email" name="email" value="{{.Get "email"}}">
+     {{with .Errors.Get "email"}}
+                <label class='error'>{{.}}</label>
+            {{end}}
 </div>
 
 <div>
     <label for="pass">Password (8 characters minimum):</label>
-    <input type="password" id="pass" name="password"
-           minlength="2" required>
+    <input type="password" id="pass" name="password">
+    {{with .Errors.Get "password"}}
+                <label class='error'>{{.}}</label>
+            {{end}}
 </div>
 <div>
     <label for="pass">Confirm Password:</label>
-    <input type="password" id="pass" name="confirm_password"
-           minlength="2" required>
+    <input type="password" id="pass" name="confirm_password">
+    {{with .Errors.Get "password"}}
+                <label class='error'>{{.}}</label>
+            {{end}}
 </div>
 
 <input type="submit" value="Register">
+{{end}}
 </form>
 {{end}}

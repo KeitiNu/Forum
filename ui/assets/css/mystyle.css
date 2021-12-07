@@ -9,6 +9,8 @@ a, div {
 
 }
 
+
+
 label {
     display: block;
     font: .9rem 'Fira Sans', sans-serif;
@@ -18,4 +20,8 @@ label {
 input[type='submit'],
 label {
     margin-top: 1rem;
+}
+
+.error {
+    color: rgb(165, 7, 7);
 }
