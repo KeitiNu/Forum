@@ -7,6 +7,9 @@ import (
 	"runtime/debug"
 )
 
+// We have error messages and webpage rendering functions here, which are repeated several times and
+// would make the code longer if typed everytime. You can see render and error helpers in handlers.go file.
+
 // The serverError helper writes an error message and stack trace to the errorLog,
 // then sends a generic 500 Internal Server Error response to the user.
 func (app *application) serverError(w http.ResponseWriter, err error) {

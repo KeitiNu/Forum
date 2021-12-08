@@ -3,6 +3,9 @@
 <form method="post">
 {{with .Form}}
 <div>
+    {{with .Errors.Get "generic"}}
+    <label class='error'>{{.}}</label>
+{{end}}
     <label for="username">Username:</label>
     <input type="text" id="username" name="username" value="{{.Get "username"}}">
     {{with .Errors.Get "username"}}
