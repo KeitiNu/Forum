@@ -45,11 +45,21 @@ func (app *application) render(w http.ResponseWriter, r *http.Request, name stri
 	// At first we write template to buffer to know if there would be any errors. If there are no errors we will write it to client.
 	buf := new(bytes.Buffer)
 	// Execute the template set, passing in any dynamic data.
-	err := ts.Execute(buf, td)
+	// Add default data adds our user information to each template (if user is logged in)
+	err := ts.Execute(buf, app.addDefaultData(td, r))
 	if err != nil {
 		app.serverError(w, err)
 	}
 
 	// If there aren't any errors we display it to our client.
 	buf.WriteTo(w)
+}
+
+func (app *application) addDefaultData(td *templateData, r *http.Request) *templateData {
+	if td == nil {
+		td = &templateData{}
+	}
+
+	td.AuthenticatedUser = app.contextGetUser(r)
+	return td
 }

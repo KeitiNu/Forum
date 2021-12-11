@@ -62,6 +62,15 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 			app.serverError(w, err)
 			return
 		}
+		a, err := r.Cookie("session")
+		if err != nil {
+			app.serverError(w, err)
+		}
+		err = app.models.Users.UpdateByToken(a.Value, user.Name)
+		if err != nil {
+			app.serverError(w, err)
+			return
+		}
 	}
 	// After login redirect the user to the homepage.
 	http.Redirect(w, r, "/", http.StatusSeeOther)

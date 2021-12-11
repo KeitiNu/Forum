@@ -14,5 +14,5 @@ func (app *application) routes() http.Handler {
 	mux.HandleFunc("/", app.home)
 	mux.HandleFunc("/login", app.login)
 	mux.HandleFunc("/register", app.register)
-	return mux
+	return app.authenticate(app.session(mux))
 }

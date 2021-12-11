@@ -1,6 +1,9 @@
 {{template "base" .}}
 {{define "body"}}
 <form method="post">
+    {{if .AuthenticatedUser}}
+    <h2>Hello, {{.AuthenticatedUser.Name}}. You have been logged in.</h2>
+    {{end}}
 {{with .Form}}
 <div>
     {{with .Errors.Get "generic"}}

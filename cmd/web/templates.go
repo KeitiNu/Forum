@@ -9,12 +9,13 @@ import (
 )
 
 type templateData struct {
-	Form     *forms.Form
-	Post     *data.Post
-	Posts    []*data.Post
-	Comments []*data.Comment
-	User     *data.User
-	Users    []*data.User
+	AuthenticatedUser *data.User
+	Form              *forms.Form
+	Post              *data.Post
+	Posts             []*data.Post
+	Comments          []*data.Comment
+	User              *data.User
+	Users             []*data.User
 }
 
 /* Each and every time we render a web page, our application must read the template files from disk.

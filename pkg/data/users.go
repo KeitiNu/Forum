@@ -8,12 +8,12 @@ import (
 
 	"git.01.kood.tech/roosarula/forum/pkg/forms"
 	"github.com/mattn/go-sqlite3"
+	uuid "github.com/satori/go.uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
 // Fields we extract from database to use and render on webpages
 type User struct {
-	ID              string
 	Name            string
 	Email           string
 	Password        password
@@ -115,11 +115,13 @@ func ValidateLogin(v *forms.Validator, user *User) {
 }
 
 // Insert user into database
+// Insert user into database
 func (u UserModel) Insert(user *User) error {
-	query := `INSERT INTO users (id, username, email, hashed_password, created)
+	query := `INSERT INTO users (username, email, hashed_password, token, created)
 	VALUES(?, ?, ?, ?,  datetime('now'))`
+	s := uuid.NewV4()
 
-	args := []interface{}{1, user.Name, user.Email, user.Password.hash}
+	args := []interface{}{user.Name, user.Email, user.Password.hash, s}
 
 	// If the table already contains a record with this email address, then when we try
 	// to perform the insert there will be a violation of the UNIQUE "users_email_key"
@@ -129,11 +131,9 @@ func (u UserModel) Insert(user *User) error {
 	if err != nil {
 		if sqlErr, ok := err.(sqlite3.Error); ok {
 			if sqlErr.Error() == "UNIQUE constraint failed: users.username" {
-				fmt.Println("woop")
 				return ErrDuplicateUsername
 			}
 			if sqlErr.Error() == "UNIQUE constraint failed: users.email" {
-				fmt.Println("sad")
 				return ErrDuplicateEmail
 			}
 			fmt.Println(sqlErr.Error())
@@ -149,10 +149,9 @@ func (u UserModel) Insert(user *User) error {
 func (u *UserModel) Authenticate(username, password string) error {
 	// Retrieve the id and hashed password associated with the given email. If no
 	// matching email exists, we return the ErrInvalidCredentials error.
-	var id string
 	var hashedPassword []byte
-	row := u.DB.QueryRow("SELECT id, hashed_password FROM users WHERE username = ?", username)
-	err := row.Scan(&id, &hashedPassword)
+	row := u.DB.QueryRow("SELECT hashed_password FROM users WHERE username = ?", username)
+	err := row.Scan(&hashedPassword)
 	if err == sql.ErrNoRows {
 		return ErrInvalidCredentials
 	} else if err != nil {
@@ -169,5 +168,27 @@ func (u *UserModel) Authenticate(username, password string) error {
 	}
 
 	// Otherwise, the password is correct..
+	return nil
+}
+
+func (u *UserModel) GetByToken(token string) (*User, error) {
+	row := u.DB.QueryRow("SELECT username FROM users WHERE token = ?", token)
+	user := &User{}
+	err := row.Scan(&user.Name)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, ErrNoRecord
+		}
+		return nil, err
+	}
+	return user, nil
+}
+
+func (u *UserModel) UpdateByToken(token, username string) error {
+	_, err := u.DB.Exec("UPDATE users SET token = ? WHERE username = ?", token, username)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
 	return nil
 }
