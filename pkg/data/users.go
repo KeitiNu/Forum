@@ -8,7 +8,6 @@ import (
 
 	"git.01.kood.tech/roosarula/forum/pkg/forms"
 	"github.com/mattn/go-sqlite3"
-	uuid "github.com/satori/go.uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -116,12 +115,11 @@ func ValidateLogin(v *forms.Validator, user *User) {
 
 // Insert user into database
 // Insert user into database
-func (u UserModel) Insert(user *User) error {
+func (u UserModel) Insert(user *User, token string) error {
 	query := `INSERT INTO users (username, email, hashed_password, token, created)
 	VALUES(?, ?, ?, ?,  datetime('now'))`
-	s := uuid.NewV4()
 
-	args := []interface{}{user.Name, user.Email, user.Password.hash, s}
+	args := []interface{}{user.Name, user.Email, user.Password.hash, token}
 
 	// If the table already contains a record with this email address, then when we try
 	// to perform the insert there will be a violation of the UNIQUE "users_email_key"

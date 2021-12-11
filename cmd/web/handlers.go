@@ -62,10 +62,14 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 			app.serverError(w, err)
 			return
 		}
+
+		// Get the token for the current user who is attempting to log in.
 		a, err := r.Cookie("session")
 		if err != nil {
 			app.serverError(w, err)
 		}
+
+		// Add the current cookie (token) to the user's profile in database.
 		err = app.models.Users.UpdateByToken(a.Value, user.Name)
 		if err != nil {
 			app.serverError(w, err)
@@ -108,7 +112,13 @@ func (app *application) register(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		err = app.models.Users.Insert(user)
+		// Get the token for the current user who is attempting to register.
+		a, err := r.Cookie("session")
+		if err != nil {
+			app.serverError(w, err)
+		}
+
+		err = app.models.Users.Insert(user, a.Value)
 		if err != nil {
 			switch err {
 			case data.ErrDuplicateUsername:
