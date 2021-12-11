@@ -16,6 +16,8 @@ func (app *application) routes() http.Handler {
 	mux.HandleFunc("/logout", app.logout)
 	mux.HandleFunc("/register", app.register)
 	mux.HandleFunc("/profile", app.profile)
+	mux.HandleFunc("/newcategory", app.requireAuthenticatedUser(app.newCategory))
+	mux.HandleFunc("/submit", app.requireAuthenticatedUser(app.submitPost))
 
 	return app.authenticate(app.session(mux))
 }

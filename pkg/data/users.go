@@ -170,9 +170,9 @@ func (u *UserModel) Authenticate(username, password string) error {
 }
 
 func (u *UserModel) GetByToken(token string) (*User, error) {
-	row := u.DB.QueryRow("SELECT username FROM users WHERE token = ?", token)
+	row := u.DB.QueryRow("SELECT username, email FROM users WHERE token = ?", token)
 	user := &User{}
-	err := row.Scan(&user.Name)
+	err := row.Scan(&user.Name, &user.Email)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, ErrNoRecord

@@ -1,0 +1,18 @@
+{{template "base" .}}
+{{define "body"}}
+<h2>Create a post</h2>
+<form method="post">
+        <div>
+            <label>Title</label>
+            <input type="text" required name="title" placeholder="Post title" value="" maxlength="30" />
+        </div>
+        <div>
+            <label>Content (500 chars)</label>
+            <textarea name="content" style="min-height: 150px;" maxlength="500"></textarea>
+        </div>
+        <div>
+            <button type="submit" name="submitPost">Submit</button>
+        </div>
+    </form>
+</form>
+{{end}}

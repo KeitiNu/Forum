@@ -16,6 +16,7 @@ type templateData struct {
 	Comments          []*data.Comment
 	User              *data.User
 	Users             []*data.User
+	Categories        []*data.Category
 }
 
 /* Each and every time we render a web page, our application must read the template files from disk.

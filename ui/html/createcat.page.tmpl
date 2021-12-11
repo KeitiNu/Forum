@@ -1,0 +1,18 @@
+{{template "base" .}}
+{{define "body"}}
+<h2>Create a category</h2>
+<form method="post">
+        <div>
+            <label>Name *</label>
+            <input type="text" required name="catname" placeholder="Category name" value="" maxlength="30" />
+        </div>
+        <div>
+            <label>Category description (500 chars)</label>
+            <textarea name="description" style="min-height: 150px;" maxlength="500"></textarea>
+        </div>
+        <div>
+            <button type="submit" name="createCategory">Create</button>
+        </div>
+    </form>
+</form>
+{{end}}

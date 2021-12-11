@@ -3,8 +3,13 @@
 <div>
     {{if .AuthenticatedUser}}
     <h2>Hello, {{.AuthenticatedUser.Name}}. You have been logged in.</h2>
+    <a href="/submit">Submit Post</a>
+    <a href="/newcategory">Create Category</a>
     {{else}}
     <h2>Hello!</h2>
 	{{end}}
+    {{range .Categories}}
+    <h3>{{.Title}}</h3>
+    {{end}}
 </div>
 {{end}}

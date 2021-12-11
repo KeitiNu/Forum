@@ -19,16 +19,18 @@ var (
 
 // Storage for database data from tables
 type Models struct {
-	Users    UserModel
-	Posts    PostModel
-	Comments CommentsModel
+	Users      UserModel
+	Posts      PostModel
+	Comments   CommentsModel
+	Categories CategoryModel
 }
 
 // All database data has been divided into categories and is ready to be used. Actually it links the whole database to every category.
 func NewModels(db *sql.DB) Models {
 	return Models{
-		Users:    UserModel{DB: db},
-		Posts:    PostModel{DB: db},
-		Comments: CommentsModel{DB: db},
+		Users:      UserModel{DB: db},
+		Posts:      PostModel{DB: db},
+		Comments:   CommentsModel{DB: db},
+		Categories: CategoryModel{DB: db},
 	}
 }
