@@ -1,0 +1,48 @@
+{{define "header-in"}}
+<nav class="navbar navbar-dark bg-dark">
+	<div class="container-fluid">
+		<a class="navbar-brand" href="/">
+		Kodify logo
+		</a>
+		<form class="d-flex">
+			<a class="btn btn-primary" href="/profile">
+				Profile
+			</a>
+			<div class="dropdown">
+				<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+				Notifications
+				</button>
+				<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+					99+
+					<span class="visually-hidden">unread messages</span>
+				</span>
+				<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+					<li><a class="dropdown-item" href="#">Action</a></li>
+					<li><a class="dropdown-item" href="#">Another action</a></li>
+					<li><a class="dropdown-item" href="#">Something else here</a></li>
+				</ul>
+			</div>
+			<a class="btn btn-info" href="/logout">log-out</a>
+		</form>
+	</div>
+</nav>
+{{end}}
+
+
+{{define "header-out"}}
+<nav class="navbar navbar-dark bg-dark">
+	<div class="container-fluid">
+		<a class="navbar-brand" href="/">
+			Kodify logo
+		</a>
+		<form class="d-flex">
+			<a class="btn btn-primary" href="/login">
+				log-in
+			</a>
+			<a class="btn btn-secondary" href="/register">
+				sign-up
+			</a>
+		</form>
+	</div>
+</nav>
+{{end}}

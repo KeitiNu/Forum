@@ -147,3 +147,7 @@ func (app *application) logout(w http.ResponseWriter, r *http.Request) {
 
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
+
+func (app *application) profile(w http.ResponseWriter, r *http.Request) {
+	app.render(w, r, "profile.page.tmpl", nil)
+}

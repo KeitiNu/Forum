@@ -1,42 +1,43 @@
 {{template "base".}}
 {{define "body"}}
 <form method="post" class="std auth">
-    {{if .AuthenticatedUser}}
-    <h2>Hello, {{.AuthenticatedUser.Name}}. You have been logged in.</h2>
-    {{end}}
     {{with .Form}}
-<div>
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="username" value="{{.Get "username"}}">
-    {{with .Errors.Get "username"}}
-                <label class='error'>{{.}}</label>
-            {{end}}
-</div>
+	<div>
+		<label class="form-label" for="username">Username:
+			{{with .Errors.Get "password"}}
+				<span class="badge bg-danger">{{.}}</span>
+			{{end}}
+		</label>
+		<input class="form-control" type="text" id="username" name="username" value="{{.Get "username"}}">
+	</div>
 
-<div>
-    <label for="email">E-Mail:</label>
-    <input type="text" id="email" name="email" value="{{.Get "email"}}">
-     {{with .Errors.Get "email"}}
-                <label class='error'>{{.}}</label>
-            {{end}}
-</div>
+	<div>
+		<label class="form-label" for="email">E-Mail:
+			{{with .Errors.Get "password"}}
+				<span class="badge bg-danger">{{.}}</span>
+			{{end}}
+		</label>
+		<input class="form-control" type="text" id="email" name="email" value="{{.Get "email"}}">
+	</div>
 
-<div>
-    <label for="pass">Password (8 characters minimum):</label>
-    <input type="password" id="pass" name="password">
-    {{with .Errors.Get "password"}}
-                <label class='error'>{{.}}</label>
-            {{end}}
-</div>
-<div>
-    <label for="pass">Confirm Password:</label>
-    <input type="password" id="pass" name="confirm_password">
-    {{with .Errors.Get "password"}}
-                <label class='error'>{{.}}</label>
-            {{end}}
-</div>
+	<div>
+		<label class="form-label" for="pass">Password (8 characters minimum):
+			{{with .Errors.Get "password"}}
+				<span class="badge bg-danger">{{.}}</span>
+			{{end}}
+		</label>
+		<input class="form-control" type="password" id="pass" name="password">
+	</div>
+	<div>
+		<label class="form-label" for="pass">Confirm Password: 
+			{{with .Errors.Get "password"}}
+				<span class="badge bg-danger">{{.}}</span>
+			{{end}}
+		</label>
+		<input class="form-control" type="password" id="pass" name="confirm_password">
+	</div>
 
-<input type="submit" value="Register">
-{{end}}
+	<input class="btn btn-primary" type="submit" value="Register">
+	{{end}}
 </form>
 {{end}}
