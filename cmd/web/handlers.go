@@ -2,9 +2,11 @@ package main
 
 import (
 	"net/http"
+	"time"
 
 	"git.01.kood.tech/roosarula/forum/pkg/data"
 	"git.01.kood.tech/roosarula/forum/pkg/forms"
+	uuid "github.com/satori/go.uuid"
 )
 
 // All of the functions that run when a user enters an address are located here.
@@ -137,4 +139,11 @@ func (app *application) register(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
+}
+
+func (app *application) logout(w http.ResponseWriter, r *http.Request) {
+	c := &http.Cookie{Name: "session", Value: uuid.NewV4().String(), Expires: time.Now(), MaxAge: -1}
+	http.SetCookie(w, c)
+
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }

@@ -3,6 +3,7 @@
 <div>
     {{if .AuthenticatedUser}}
     <h2>Hello, {{.AuthenticatedUser.Name}}. You have been logged in.</h2>
+    <a href="/logout">Logout</a>
     {{else}}
     <h1>Hello!</h1>
     {{end}}
