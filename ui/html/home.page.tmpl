@@ -8,8 +8,20 @@
     {{else}}
     <h2>Hello!</h2>
 	{{end}}
-    {{range .Categories}}
-    <h3>{{.Title}}</h3>
-    {{end}}
+	<div class="row row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 row-cols-xxl-6 g-1 justify-content-center">
+		{{range .Categories}}
+		<div class="col">
+			<div class="card border-warning mb-3 mx-3 category-card">
+				<div class="card-body">
+					<h5 class="card-title">{{.Title}}</h5>
+					<p class="card-text">{{.Description}}</p>
+				</div>
+				<div class="card-footer">
+					<small class="text-muted">341 active threads</small>
+				</div>
+			</div>
+		</div>
+		{{end}}
+	</div>
 </div>
 {{end}}

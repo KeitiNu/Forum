@@ -25,3 +25,7 @@ label {
 .error {
     color: rgb(165, 7, 7);
 }
+
+.category-card {
+	min-width: 200px;
+}
