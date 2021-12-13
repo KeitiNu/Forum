@@ -1,6 +1,9 @@
 package main
 
-import "net/http"
+import (
+	"expvar"
+	"net/http"
+)
 
 func (app *application) routes() http.Handler {
 	mux := http.NewServeMux()
@@ -18,6 +21,9 @@ func (app *application) routes() http.Handler {
 	mux.HandleFunc("/profile", app.profile)
 	mux.HandleFunc("/newcategory", app.requireAuthenticatedUser(app.newCategory))
 	mux.HandleFunc("/submit", app.requireAuthenticatedUser(app.submitPost))
+	// Metrics with expvar stdlib package.
 
-	return app.authenticate(app.session(mux))
+	mux.Handle("/debug/vars", expvar.Handler())
+
+	return app.metrics(app.authenticate(app.session(mux)))
 }
