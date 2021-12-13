@@ -53,6 +53,7 @@ func main() {
 	expvar.Publish("timestamp", expvar.Func(func() interface{} {
 		return time.Now().Unix()
 	}))
+
 	// Data and configuration for app
 	app := &application{
 		errorLog:      errorLog,

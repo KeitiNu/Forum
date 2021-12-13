@@ -21,8 +21,8 @@ func (app *application) routes() http.Handler {
 	mux.HandleFunc("/profile", app.profile)
 	mux.HandleFunc("/newcategory", app.requireAuthenticatedUser(app.newCategory))
 	mux.HandleFunc("/submit", app.requireAuthenticatedUser(app.submitPost))
-	// Metrics with expvar stdlib package.
 
+	// Metrics with expvar stdlib package.
 	mux.Handle("/debug/vars", expvar.Handler())
 
 	return app.metrics(app.authenticate(app.session(mux)))
