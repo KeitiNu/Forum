@@ -50,7 +50,7 @@ func (app *application) requireAuthenticatedUser(next http.HandlerFunc) http.Han
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Check that the authenticatedUser helper doesn't return nil.
 		if app.contextGetUser(r) == nil {
-			http.Redirect(w, r, "/login", 302)
+			http.Redirect(w, r, "/login", http.StatusFound)
 			return
 		}
 

@@ -1,18 +1,70 @@
 {{template "base" .}}
+
 {{define "body"}}
-<h2>Create a post</h2>
-<form method="post">
+	<h2>Create a post</h2>
+	<form method="POST" id="threadform" action="/submit" enctype="multipart/form-data">
+		<!-- Thread title -->
+		<div class="mb-3">
+			<label class="form-label">Title</label>
+			<input class="form-control" type="text" required name="title" placeholder="Post title" value="" maxlength="30" />
+		</div>
+
+		<!-- Content textarea -->
+		<div class="mb-3">
+			<label class="form-label">Content</label>
+			<textarea class="form-control" id="postcontent" name="content" onkeyup="charactercount()" maxlength="500" placeholder="Maximum 500 characters" required></textarea>
+			<div class="d-flex justify-content-end">
+				<span id="words_count" class="badge bg-secondary rounded-pill">
+					<span id="textcount">0</span>/500
+				</span>
+			</div>
+		</div>
+		<div id="textarea_count" class="badge pull-right"></div>
+
+		<!-- Image upload -->
+		<div class="mb-3">
+			<label class="form-label">Upload Image</label>
+			<div class="input-group">
+				<input type="file" class="form-control" id="inputGroupFile01" name="myFile">
+			</div>
+		</div>
         <div>
-            <label>Title</label>
-            <input type="text" required name="title" placeholder="Post title" value="" maxlength="30" />
-        </div>
-        <div>
-            <label>Content (500 chars)</label>
-            <textarea name="content" style="min-height: 150px;" maxlength="500"></textarea>
-        </div>
-        <div>
-            <button type="submit" name="submitPost">Submit</button>
-        </div>
-    </form>
-</form>
+            <input type="checkbox" id="scales" name="category" value="Golang"
+                   checked>
+            <label for="scales">Golang</label>
+          </div>
+
+          <div>
+            <input type="checkbox" id="horns" name="category" value="Javascript">
+            <label for="horns">Javascript</label>
+          </div>
+		<!-- Category tagging -->
+		<div class="mb-3">
+			<label class="form-label">Tags</label>
+			<select class="select form-control" multiple data-mdb-filter="true">
+				{{range .Categories}}
+				<option value="{{.Title}}">{{.Title}}</option>
+				{{end}}
+			</select>
+		</div>
+
+		<!-- Sumbit button -->
+		<div class="mb-3">
+			<button type="submit" class="btn btn-primary" name="submitPost">Submit</button>
+		</div>
+
+	</form>
+
+{{end}}
+
+{{define "js"}}
+<script type="text/javascript">
+	function charactercount(){
+	const areatextarea = document.querySelector("#postcontent");
+	const areatext = document.querySelector("#postcontent").value.length;
+	const textcount = document.querySelector("#textcount");
+	const wordcount = document.querySelector("#words_count");
+	textcount.innerHTML = areatext;
+	};
+</script>
 {{end}}

@@ -2,34 +2,82 @@ package data
 
 import (
 	"database/sql"
+	"fmt"
 	"time"
 )
 
 // Fields we extract from database to use and render on webpages
 type Post struct {
 	ID       int
-	Category string
-	User     string
 	Title    string
 	Content  string
+	Likes    int
+	Dislikes int
 	Created  time.Time
-	Votes    int
-	Comments int
+	ImageSrc string
+	User     string
+	Category []string
 }
 
 type PostModel struct {
 	DB *sql.DB
 }
 
-func (s *PostModel) Insert(title, content, user string) error {
-	stmt := `INSERT INTO posts (user, title, content, created)
-			VALUES(?, ?, ?,datetime('now'))`
-	_, err := s.DB.Exec(stmt, user, title, content)
+func (s *PostModel) Insert(title, content, user, imagesrc string, category []string) (int, error) {
+	stmt := `INSERT INTO posts (user, title, content, imagesrc, created)
+			VALUES(?, ?, ?, ?, datetime('now'))`
+	result, err := s.DB.Exec(stmt, user, title, content, imagesrc)
 	if err != nil {
-		return err
+		return 0, err
+	}
+	id, err := result.LastInsertId()
+	if err != nil {
+		fmt.Println("INSERT", err)
 	}
 
-	return nil
+	for _, v := range category {
+		stmt = `INSERT INTO post_category (post_id, category_id)
+			VALUES(?,?)`
+
+		_, err = s.DB.Exec(stmt, id, v)
+		if err != nil {
+			fmt.Println(err)
+			return 0, err
+		}
+	}
+	return int(id), nil
+}
+
+func (m *PostModel) Get(id int) (*Post, error) {
+
+	stmt := `SELECT title, content, created, user, imagesrc, b.category_id From posts a
+	LEFT JOIN post_category b ON a.id = b.post_id
+    WHERE a.id = ?`
+
+	rows, err := m.DB.Query(stmt, id)
+	if err != nil {
+		return nil, err
+	}
+	a := &Post{}
+	for rows.Next() {
+		s := &Post{}
+		d := ""
+		err := rows.Scan(&s.Title, &s.Content, &s.Created, &s.User, &s.ImageSrc, &d)
+		if err == sql.ErrNoRows {
+			return nil, ErrNoRecord
+		} else if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+		a.Title = s.Title
+		a.Content = s.Content
+		a.Created = s.Created
+		a.User = s.User
+		a.ImageSrc = s.ImageSrc[12:]
+		a.Category = append(a.Category, d)
+	}
+	fmt.Println(a)
+	return a, nil
 }
 
 func (m *PostModel) Latest(category string) ([]*Post, error) {

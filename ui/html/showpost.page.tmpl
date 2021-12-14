@@ -1,0 +1,15 @@
+{{template "base".}}
+{{define "body"}}
+{{with .Post}}
+<div class="div">
+    <h1>Title: {{.Title}}</h1>
+    <h3>Content: {{.Content}}</h3>
+    <p>Created at: {{.Created}}</p>
+    <h4>Categories: {{.Category}}</h4>
+    <h4>Posted by: {{.User}}</h4>
+    {{with .ImageSrc}}
+    <img src="/static/{{.}}" alt="">
+    {{end}}
+</div>
+{{end}}
+{{end}}
