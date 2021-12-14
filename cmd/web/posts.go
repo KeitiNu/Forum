@@ -28,7 +28,7 @@ func (app *application) submitPost(w http.ResponseWriter, r *http.Request) {
 		tempFilename := ""
 		file, _, err := r.FormFile("myFile")
 		// err.Error() asendus
- 		if fmt.Sprintf("%s", err) != "http: no such file" {
+		if fmt.Sprintf("%s", err) != "http: no such file" {
 			if err != nil {
 				fmt.Println(err)
 				return
@@ -88,8 +88,34 @@ func (app *application) showPost(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 	}
 	post, err := app.models.Posts.Get(id)
+	comments, err := app.models.Comments.Latest(id)
 	if err != nil {
 		fmt.Println(err)
 	}
-	app.render(w, r, "showpost.page.tmpl", &templateData{Post: post})
+	switch r.Method {
+	case "GET":
+		app.render(w, r, "showpost.page.tmpl", &templateData{Post: post, Comments: comments})
+		return
+	case "POST":
+		err := r.ParseForm()
+		if err != nil {
+			app.serverError(w, err)
+			return
+		}
+		form := forms.New(r.PostForm)
+		v := forms.NewValidator()
+		form.Errors = v
+
+		comment := &data.Comment{
+			PostID:  id,
+			Content: form.Get("comment"),
+		}
+		user := app.contextGetUser(r)
+		comment.User = user.Name
+
+		app.models.Comments.Insert(comment)
+		http.Redirect(w, r, fmt.Sprintf("/post/%d", id), 302)
+		return
+	}
+
 }

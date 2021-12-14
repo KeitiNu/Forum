@@ -11,5 +11,41 @@
     <img src="/static/{{.}}" alt="" class="postimg">
     {{end}}
 </div>
+<div>
+    <form method="POST">
+        <label for="comment">Comment</label>
+        <textarea name="comment" id="" cols="30" rows="10"></textarea>
+        <button type="submit" class="btn btn-primary" name="submitPost">Submit</button>
+    </form>
+</div>
+<div>
 {{end}}
+<div class="row">
+    <ul id="list_comment" class="col-md-12">
+    {{range .Comments}}
+            <!-- Start List Comment 2 -->
+            <li class="box_result row">
+                <div class="avatar_comment col-md-1">
+                    <img src="https://static.xx.fbcdn.net/rsrc.php/v1/yi/r/odA9sNLrE86.jpg" alt="avatar"/>
+                </div>
+                <div class="result_comment col-md-11">
+                    <h4>{{.User}}</h4>
+                    <p>{{.Content}}</p>
+                    <div class="tools_comment">
+                        <a class="like" href="#">Like</a>
+                        <span aria-hidden="true"> · </span>
+                        <a class="replay" href="#">Reply</a>
+                        <span aria-hidden="true"> · </span>
+                        <i class="fa fa-thumbs-o-up"></i> <span class="count">1</span>
+                        <span aria-hidden="true"> · </span>
+                        <span>{{.Created}}</span>
+                    </div>
+                    <ul class="child_replay"></ul>
+                </div>
+            </li>
+    {{end}}
+</ul>
+
+</div>
+</div>
 {{end}}
