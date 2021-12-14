@@ -83,7 +83,9 @@ func (m *PostModel) Get(id int) (*Post, error) {
 }
 
 func (m *PostModel) Latest(category string) ([]*Post, error) {
-	stmt := `SELECT user, title, content, created FROM posts
+	stmt := `SELECT p.id, user, title, content, created FROM posts p
+	LEFT JOIN post_category c ON p.id = c.post_id
+	WHERE c.category_id = ?
     ORDER BY created DESC LIMIT 15`
 
 	rows, err := m.DB.Query(stmt, category)
@@ -98,7 +100,7 @@ func (m *PostModel) Latest(category string) ([]*Post, error) {
 	for rows.Next() {
 		s := &Post{}
 
-		err := rows.Scan(&s.Title, &s.Content, &s.Created)
+		err := rows.Scan(&s.ID, &s.User, &s.Title, &s.Content, &s.Created)
 		if err != nil {
 			return nil, err
 		}

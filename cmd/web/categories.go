@@ -44,3 +44,13 @@ func (app *application) newCategory(w http.ResponseWriter, r *http.Request) {
 	}
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
+
+func (app *application) showCategory(w http.ResponseWriter, r *http.Request) {
+	category := r.URL.Path[10:]
+	fmt.Println(category)
+	posts, err := app.models.Posts.Latest(category)
+	if err != nil {
+		app.serverError(w, err)
+	}
+	app.render(w, r, "showcat.page.tmpl", &templateData{Posts: posts})
+}

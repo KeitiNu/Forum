@@ -1,0 +1,20 @@
+{{template "base" .}}
+{{define "body"}}
+<div>
+	<div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-2 justify-content-start">
+		{{range .Posts}}
+		<div class="col">
+			<div class="card border-warning category-card h-100">
+				<div class="card-body">
+					<a href="/post/{{.ID}}"><h5 class="card-title">{{.Title}}</h5></a>
+					<p class="card-text">{{.Content}}</p>
+				</div>
+				<div class="card-footer">
+					<small class="text-muted">341 active threads</small>
+				</div>
+			</div>
+		</div>
+		{{end}}
+	</div>
+</div>
+{{end}}

@@ -28,20 +28,10 @@
 				<input type="file" class="form-control" id="inputGroupFile01" name="myFile">
 			</div>
 		</div>
-        <div>
-            <input type="checkbox" id="scales" name="category" value="Golang"
-                   checked>
-            <label for="scales">Golang</label>
-          </div>
-
-          <div>
-            <input type="checkbox" id="horns" name="category" value="Javascript">
-            <label for="horns">Javascript</label>
-          </div>
 		<!-- Category tagging -->
 		<div class="mb-3">
 			<label class="form-label">Tags</label>
-			<select class="select form-control" multiple data-mdb-filter="true">
+			<select class="select form-control" multiple data-mdb-filter="true" name="category">
 				{{range .Categories}}
 				<option value="{{.Title}}">{{.Title}}</option>
 				{{end}}
