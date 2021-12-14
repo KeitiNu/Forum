@@ -13,7 +13,7 @@
 
 	<div>
 		<label class="form-label" for="email">E-Mail:
-			{{with .Errors.Get "password"}}
+			{{with .Errors.Get "email"}}
 				<span class="badge bg-danger">{{.}}</span>
 			{{end}}
 		</label>
@@ -29,7 +29,7 @@
 		<input class="form-control" type="password" id="pass" name="password">
 	</div>
 	<div>
-		<label class="form-label" for="pass">Confirm Password: 
+		<label class="form-label" for="pass">Confirm Password:
 			{{with .Errors.Get "password"}}
 				<span class="badge bg-danger">{{.}}</span>
 			{{end}}

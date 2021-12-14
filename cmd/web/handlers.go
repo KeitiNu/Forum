@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 	"time"
 
@@ -155,79 +154,4 @@ func (app *application) logout(w http.ResponseWriter, r *http.Request) {
 
 func (app *application) profile(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, "profile.page.tmpl", nil)
-}
-
-func (app *application) newCategory(w http.ResponseWriter, r *http.Request) {
-	switch r.Method {
-	case "GET": // When a person clicks the login link, the form appears.
-		app.render(w, r, "createcat.page.tmpl", &templateData{Form: forms.New(nil)})
-		return
-	case "POST": // If a user submits a form on the login page, we check the data and then run the database queries.
-		err := r.ParseForm()
-		if err != nil {
-			app.serverError(w, err)
-			return
-		}
-
-		// We make a form object with user input and error storage.
-		form := forms.New(r.PostForm)
-		v := forms.NewValidator()
-		form.Errors = v
-
-		category := &data.Category{
-			Title:       form.Get("catname"),
-			Description: form.Get("description"),
-		}
-
-		v.Check(category.Title != "", "title", "must be provided")
-		v.Check(category.Description != "", "description", "must be provided")
-		if !v.Valid() {
-			app.render(w, r, "createcat.page.tmpl", &templateData{Form: form})
-			return
-		}
-
-		app.models.Categories.Insert(category.Title, category.Description)
-		if err != nil {
-			fmt.Println("error happened", err)
-		}
-	}
-	http.Redirect(w, r, "/", http.StatusSeeOther)
-}
-
-func (app *application) submitPost(w http.ResponseWriter, r *http.Request) {
-	switch r.Method {
-	case "GET": // When a person clicks the login link, the form appears.
-		app.render(w, r, "submitpost.page.tmpl", &templateData{Form: forms.New(nil)})
-		return
-	case "POST": // If a user submits a form on the login page, we check the data and then run the database queries.
-		err := r.ParseForm()
-		if err != nil {
-			app.serverError(w, err)
-			return
-		}
-
-		// We make a form object with user input and error storage.
-		form := forms.New(r.PostForm)
-		v := forms.NewValidator()
-		form.Errors = v
-
-		post := &data.Post{
-			Title:   form.Get("title"),
-			Content: form.Get("content"),
-		}
-		user := app.contextGetUser(r)
-		post.User = user.Name
-		v.Check(post.Title != "", "title", "must be provided")
-		v.Check(post.Content != "", "content", "must be provided")
-		if !v.Valid() {
-			app.render(w, r, "submitpost.page.tmpl", &templateData{Form: form})
-			return
-		}
-
-		app.models.Posts.Insert(post.Title, post.Content, post.User)
-		if err != nil {
-			fmt.Println("error happened", err)
-		}
-	}
-	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
