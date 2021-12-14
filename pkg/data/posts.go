@@ -73,7 +73,9 @@ func (m *PostModel) Get(id int) (*Post, error) {
 		a.Content = s.Content
 		a.Created = s.Created
 		a.User = s.User
-		a.ImageSrc = s.ImageSrc[12:]
+		if s.ImageSrc != "" {
+			a.ImageSrc = s.ImageSrc[12:]
+		}
 		a.Category = append(a.Category, d)
 	}
 	fmt.Println(a)

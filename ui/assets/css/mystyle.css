@@ -39,3 +39,8 @@ label {
 			line-clamp: 2;
 	-webkit-box-orient: vertical;
 }
+
+.postimg {
+	max-width: 420px;
+	max-height: 420px;
+}

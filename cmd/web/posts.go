@@ -25,29 +25,32 @@ func (app *application) submitPost(w http.ResponseWriter, r *http.Request) {
 			app.serverError(w, err)
 			return
 		}
-
+		tempFilename := ""
 		file, _, err := r.FormFile("myFile")
-		if err != nil {
-			fmt.Println("Error retriving file from form-data")
-			fmt.Println(err)
-			return
+		// err.Error() asendus
+ 		if fmt.Sprintf("%s", err) != "http: no such file" {
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+			defer file.Close()
+
+			tempFile, err := ioutil.TempFile("./ui/assets/thread-images", "upload-*.png")
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+
+			defer tempFile.Close()
+
+			fileBytes, err := ioutil.ReadAll(file)
+			if err != nil {
+				fmt.Println(err)
+			}
+
+			tempFile.Write(fileBytes)
+			tempFilename = tempFile.Name()
 		}
-		defer file.Close()
-
-		tempFile, err := ioutil.TempFile("./ui/assets/thread-images", "upload-*.png")
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-
-		defer tempFile.Close()
-
-		fileBytes, err := ioutil.ReadAll(file)
-		if err != nil {
-			fmt.Println(err)
-		}
-
-		tempFile.Write(fileBytes)
 
 		// We make a form object with user input and error storage.
 		form := forms.New(r.PostForm)
@@ -57,8 +60,9 @@ func (app *application) submitPost(w http.ResponseWriter, r *http.Request) {
 		post := &data.Post{
 			Title:    form.Get("title"),
 			Content:  form.Get("content"),
-			ImageSrc: tempFile.Name(),
+			ImageSrc: tempFilename,
 		}
+
 		user := app.contextGetUser(r)
 		post.User = user.Name
 		v.Check(post.Title != "", "title", "must be provided")
