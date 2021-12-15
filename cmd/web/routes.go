@@ -23,6 +23,9 @@ func (app *application) routes() http.Handler {
 	mux.HandleFunc("/submit", app.requireAuthenticatedUser(app.submitPost))
 	mux.HandleFunc("/post/", app.showPost)
 	mux.HandleFunc("/category/", app.showCategory)
+	mux.HandleFunc("/edit/", app.editPost)
+	mux.HandleFunc("/delete/", app.deletePost)
+	mux.HandleFunc("/deletecomment/", app.deleteComment)
 	// Metrics with expvar stdlib package.
 	mux.Handle("/debug/vars", expvar.Handler())
 

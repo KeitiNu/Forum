@@ -2,6 +2,7 @@ package data
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	"time"
 )
@@ -29,14 +30,29 @@ func (c *CommentsModel) Insert(co *Comment) (int, error) {
 	}
 	id, err := result.LastInsertId()
 	if err != nil {
-		fmt.Println("INSERT", err)
+		fmt.Println(err)
 	}
 
 	return int(id), nil
 }
 
+func (c *CommentsModel) Get(id int) (*Comment, error) {
+
+	row := c.DB.QueryRow("SELECT user_id FROM comments WHERE id = ?", id)
+	comment := &Comment{}
+	err := row.Scan(&comment.User)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, ErrNoRecord
+		}
+		return nil, err
+	}
+	return comment, nil
+
+}
+
 func (c *CommentsModel) Latest(id int) ([]*Comment, error) {
-	stmt := `SELECT user_id, content, created FROM comments p
+	stmt := `SELECT id, user_id, content, created FROM comments p
 	WHERE p.post_id = ?
     ORDER BY created DESC LIMIT 15`
 
@@ -52,7 +68,7 @@ func (c *CommentsModel) Latest(id int) ([]*Comment, error) {
 	for rows.Next() {
 		s := &Comment{}
 
-		err := rows.Scan(&s.User, &s.Content, &s.Created)
+		err := rows.Scan(&s.ID, &s.User, &s.Content, &s.Created)
 		if err != nil {
 			return nil, err
 		}
@@ -63,4 +79,27 @@ func (c *CommentsModel) Latest(id int) ([]*Comment, error) {
 		return nil, err
 	}
 	return comments, nil
+}
+
+func (c *CommentsModel) Update(content string, id int) error {
+	stmt := `UPDATE comments SET content=?
+			WHERE id = ?`
+	_, err := c.DB.Exec(stmt, content, id)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	return nil
+}
+
+func (c *CommentsModel) Delete(id int) error {
+	stmt := `DELETE FROM comments WHERE id = ?`
+	_, err := c.DB.Exec(stmt, id)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	return nil
 }

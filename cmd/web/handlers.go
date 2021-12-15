@@ -9,8 +9,8 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-// All of the functions that run when a user enters an address are located here.
-// In the next file "routes.go", you can observe which function is applied to which address.
+// Create a variable to store the page where the client was before action (ex. logging in and returning directly to the post)
+var back string
 
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	// If a user types in an address that doesn't exist, a 404 Error is displayed.
@@ -31,6 +31,7 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET": // When a person clicks the login link, the form appears.
 		app.render(w, r, "login.page.tmpl", &templateData{Form: forms.New(nil)})
+		back = r.Header.Get("referer")
 		return
 	case "POST": // If a user submits a form on the login page, we check the data and then run the database queries.
 		err := r.ParseForm()
@@ -83,11 +84,12 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	// After login redirect the user to the homepage.
-	http.Redirect(w, r, "/", http.StatusSeeOther)
+	http.Redirect(w, r, back, http.StatusSeeOther)
 }
 func (app *application) register(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
+		back = r.Header.Get("referer")
 		app.render(w, r, "register.page.tmpl", &templateData{Form: forms.New(nil)})
 		return
 	case "POST":
@@ -140,7 +142,7 @@ func (app *application) register(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 		}
-		http.Redirect(w, r, "/", http.StatusSeeOther)
+		http.Redirect(w, r, back, http.StatusSeeOther)
 		return
 	}
 }
