@@ -1,0 +1,100 @@
+{{template "base"}}
+{{define "post-css"}}
+{{end}}
+{{define "post"}}
+<div class="col" id="{{.ID}}">
+	<div class="card border-warning category-card h-100">
+		<div class="card-body">
+			<form action="">
+				<input value="{{.ID}}" hidden>
+				<button type="button" class="btn btn-primary up-button" onclick="vote('{{.ID}}', 'up-button')">
+					<i class="bi bi-caret-up"></i>
+				</button>
+			</form>
+			
+			<p name="votes" class="votes" value="0">0</p>
+			
+			<form action="">
+				<input value="{{.ID}}" hidden>
+				<button type="button" class="btn btn-primary down-button" onclick="vote('{{.ID}}', 'down-button')">
+					<i class="bi bi-caret-down"></i>
+				</button>
+			</form>
+
+			<a href="/post/{{.ID}}"><h5 class="card-title">{{.Title}}</h5></a>
+			<p class="card-text">{{.Content}}</p>
+		</div>
+		<div class="card-footer">
+			<small class="text-muted">11 comments</small>
+		</div>
+	</div>
+</div>
+{{end}}
+
+{{define "post-js"}}
+	<script>
+		function vote(id, which) {
+			let post = document.getElementById(id);
+			let button = post.getElementsByClassName(which)[0];
+			let vote = post.getElementsByClassName("votes")[0];
+			let curVotes = parseInt(vote.innerHTML);
+			let number = 1
+			let otherbutton = post.getElementsByClassName('down-button')[0];
+
+			if (which == 'down-button') {
+				number = -1;
+				otherbutton = post.getElementsByClassName('up-button')[0];
+			};
+
+			if (button.classList.contains("active")) {
+				number *= -1;
+				button.classList.remove("active");
+			} else {
+				button.classList.add("active");
+			}
+
+			if (otherbutton.classList.contains("active")) {
+				otherbutton.classList.remove("active");
+				vote.innerHTML = curVotes + (number*2);
+			} else {
+				vote.innerHTML = curVotes + number
+			}
+
+		}
+	</script>
+
+
+	<!-- <script>
+		function vote(a) {
+			var card = document.getElementById()
+			if (a > 0) {
+				var element = document.getElementById("up-vote");
+			} else {
+				var element = document.getElementById("down-vote");
+			}
+
+			if (element.classList.contains("active")) {
+				element.classList.remove("active");
+				
+				var votesID = element.dataset.votes;
+
+				cur = parseInt(document.getElementById(votesID).innerHTML);
+				document.getElementById(votesID).innerHTML = cur - a
+			} else {
+				element.classList.add("active");
+				if (element.classList.contains("bi-caret-up")) {
+					if (document.getElementById("down-vote").classList.contains("active")) {
+						document.getElementById("down-button").click();
+					}
+				} else {
+					if (document.getElementById("up-vote").classList.contains("active")) {
+						document.getElementById("up-button").click();
+					}
+				}
+				cur = parseInt(document.getElementById(votesID).innerHTML);
+				document.getElementById(votesID).innerHTML = cur + a
+			}
+			
+		}
+	</script> -->
+{{end}}
