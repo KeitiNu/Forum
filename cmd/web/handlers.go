@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
@@ -156,4 +157,11 @@ func (app *application) logout(w http.ResponseWriter, r *http.Request) {
 
 func (app *application) profile(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, "profile.page.tmpl", nil)
+}
+
+func (app *application) test(w http.ResponseWriter, r *http.Request) {
+	r.ParseMultipartForm(1 << 20)
+
+	fmt.Println(r.Form.Get("postID"))
+	fmt.Println(r.Form.Get("type"))
 }

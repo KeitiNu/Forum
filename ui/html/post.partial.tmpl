@@ -5,18 +5,18 @@
 <div class="col" id="{{.ID}}">
 	<div class="card border-warning category-card h-100">
 		<div class="card-body">
-			<form action="">
+			<form id="form-up-{{.ID}}" onsubmit="return fetchpost('{{.ID}}', 'up')">
 				<input value="{{.ID}}" hidden>
-				<button type="button" class="btn btn-primary up-button" onclick="vote('{{.ID}}', 'up-button')">
+				<button type="submit" class="btn btn-primary up-button" onclick="vote('{{.ID}}', 'up-button')">
 					<i class="bi bi-caret-up"></i>
 				</button>
 			</form>
 			
 			<p name="votes" class="votes" value="0">0</p>
 			
-			<form action="">
+			<form id="form-down-{{.ID}}" onsubmit="return fetchpost('{{.ID}}', 'down')">
 				<input value="{{.ID}}" hidden>
-				<button type="button" class="btn btn-primary down-button" onclick="vote('{{.ID}}', 'down-button')">
+				<button type="submit" class="btn btn-primary down-button" onclick="vote('{{.ID}}', 'down-button')">
 					<i class="bi bi-caret-down"></i>
 				</button>
 			</form>
@@ -59,7 +59,27 @@
 			} else {
 				vote.innerHTML = curVotes + number
 			}
-
 		}
+
+		function fetchpost (id, updown) {
+			// (A) GET FORM DATA
+			// var form = document.getElementById("form-"+updown+"-"+id);
+			var formData = new FormData();
+			formData.append("postID", id);
+			formData.append("type", updown);
+			
+			// (B) FETCH
+			fetch("http://localhost:8090/test", {
+				method: "POST",
+				body: formData,
+			})
+			.then((res) => { return res.text(); })
+			.then((txt) => { console.log(txt); })
+			.catch((err) => { console.log(err); });
+			
+			// (C) PREVENT HTML FORM SUBMIT
+			return false;
+		}
+			
 	</script>
 {{end}}
