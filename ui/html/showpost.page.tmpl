@@ -1,5 +1,6 @@
 {{template "base".}}
 {{define "body"}}
+
 {{with .Post}}
 <div class="div">
     <h1>Title: {{.Title}}</h1>
@@ -8,15 +9,27 @@
     <h4>Categories: {{.Category}}</h4>
     <h4>Posted by: {{.User}}</h4>
     {{with .ImageSrc}}
-    <img src="/static/{{.}}" alt="" class="postimg">
+    {{end}}
+    {{if eq $.Post.User $.User.Name}}
+    <a href="/edit/{{.ID}}">Edit</a>
+    <a href="/delete/{{.ID}}" data-method="delete" data-confirm="Are you sure?">Delete</a>
     {{end}}
 </div>
 <div>
     <form method="POST">
         <label for="comment">Comment</label>
         <textarea name="comment" id="" cols="30" rows="10"></textarea>
-        <button type="submit" class="btn btn-primary" name="submitPost">Submit</button>
+        {{if $.AuthenticatedUser}}
+        <button type="submit" class="btn btn-primary" name="submitPost">Submit comment</button>
     </form>
+        {{else}}
+    </form>
+        <form action="/login">
+            <button type="submit" class="btn btn-primary" name="submitPost">Submit comment</button>
+        </form>
+
+        {{end}}
+
 </div>
 <div>
 {{end}}
@@ -25,27 +38,57 @@
     {{range .Comments}}
             <!-- Start List Comment 2 -->
             <li class="box_result row">
-                <div class="avatar_comment col-md-1">
-                    <img src="https://static.xx.fbcdn.net/rsrc.php/v1/yi/r/odA9sNLrE86.jpg" alt="avatar"/>
-                </div>
                 <div class="result_comment col-md-11">
                     <h4>{{.User}}</h4>
                     <p>{{.Content}}</p>
                     <div class="tools_comment">
                         <a class="like" href="#">Like</a>
-                        <span aria-hidden="true"> · </span>
+                        <span> · </span>
                         <a class="replay" href="#">Reply</a>
-                        <span aria-hidden="true"> · </span>
+                        <span> · </span>
                         <i class="fa fa-thumbs-o-up"></i> <span class="count">1</span>
-                        <span aria-hidden="true"> · </span>
+                        <span> · </span>
                         <span>{{.Created}}</span>
+                        {{if eq .User $.User.Name}}
+                        <a href="" data-toggle="modal" data-target="#exampleModal">Edit</a>
+                        <a href="/deletecomment/{{.ID}}">Delete</a>
+                        {{end}}
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Edit comment</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form method="POST">
+                                        <label for="comment">Comment</label>
+                                        <textarea name="commentUpdate" id="" cols="30" rows="10">{{.Content}}</textarea>
+                                        <textarea name="commentUpdateID" id="" cols="0" rows="0" hidden>{{.ID}}</textarea>
+                                        <textarea name="commentUpdateUser" id="" cols="0" rows="0" hidden>{{.User}}</textarea>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-primary" name="submitPost">Save changes</button>
+                                            </div>
+                                    </form>
+                                </div>
+
+                            </div>
+                            </div>
+                        </div>
                     </div>
                     <ul class="child_replay"></ul>
                 </div>
             </li>
     {{end}}
 </ul>
-
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </div>
 </div>
 {{end}}
+

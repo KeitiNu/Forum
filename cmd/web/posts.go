@@ -72,7 +72,6 @@ func (app *application) submitPost(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		categories := r.Form["category"]
-		fmt.Println(post.ImageSrc)
 		id, err := app.models.Posts.Insert(post.Title, post.Content, post.User, post.ImageSrc, categories)
 		if err != nil {
 			fmt.Println("error happened", err)
@@ -86,16 +85,79 @@ func (app *application) showPost(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.URL.Path[6:])
 	if err != nil {
 		app.serverError(w, err)
+		return
 	}
 	post, err := app.models.Posts.Get(id)
+	if err != nil {
+		app.notFound(w)
+		return
+	}
+	if post.Title == "" {
+		app.notFound(w)
+		return
+	}
 	comments, err := app.models.Comments.Latest(id)
 	if err != nil {
 		fmt.Println(err)
 	}
+	user := app.contextGetUser(r)
 	switch r.Method {
 	case "GET":
-		app.render(w, r, "showpost.page.tmpl", &templateData{Post: post, Comments: comments})
+
+		if user == nil {
+			user = &data.User{}
+		}
+		app.render(w, r, "showpost.page.tmpl", &templateData{User: user, Post: post, Comments: comments})
 		return
+	case "POST":
+		err := r.ParseForm()
+		if err != nil {
+			app.serverError(w, err)
+			return
+		}
+		user := app.contextGetUser(r)
+		form := forms.New(r.PostForm)
+		v := forms.NewValidator()
+		form.Errors = v
+		if a := form.Get("commentUpdate"); a != "" {
+			cid, _ := strconv.Atoi(form.Get("commentUpdateID"))
+			if user.Name != form.Get("commentUpdateUser") {
+				http.Error(w, http.StatusText(http.StatusForbidden), http.StatusForbidden)
+				return
+			}
+			app.models.Comments.Update(a, cid)
+		} else {
+			comment := &data.Comment{
+				PostID:  id,
+				Content: form.Get("comment"),
+			}
+			user := app.contextGetUser(r)
+			comment.User = user.Name
+
+			app.models.Comments.Insert(comment)
+		}
+	}
+	http.Redirect(w, r, fmt.Sprintf("/post/%d", id), http.StatusFound)
+}
+
+func (app *application) editPost(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(r.URL.Path[6:])
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	user := app.contextGetUser(r)
+	switch r.Method {
+	case "GET":
+		post, err := app.models.Posts.Get(id)
+		if user.Name != post.User {
+			http.Error(w, http.StatusText(http.StatusForbidden), http.StatusForbidden)
+			return
+		}
+		if err != nil {
+			fmt.Println(err)
+		}
+		app.render(w, r, "editpost.page.tmpl", &templateData{Post: post})
 	case "POST":
 		err := r.ParseForm()
 		if err != nil {
@@ -106,16 +168,58 @@ func (app *application) showPost(w http.ResponseWriter, r *http.Request) {
 		v := forms.NewValidator()
 		form.Errors = v
 
-		comment := &data.Comment{
-			PostID:  id,
-			Content: form.Get("comment"),
+		post := &data.Post{
+			Title:   form.Get("title"),
+			Content: form.Get("content"),
+			ID:      id,
 		}
-		user := app.contextGetUser(r)
-		comment.User = user.Name
-
-		app.models.Comments.Insert(comment)
-		http.Redirect(w, r, fmt.Sprintf("/post/%d", id), 302)
+		err = app.models.Posts.Update(post.Title, post.Content, post.ID)
+		if err != nil {
+			fmt.Println(err)
+		}
+		http.Redirect(w, r, fmt.Sprintf("/post/%d", id), http.StatusFound)
 		return
 	}
 
+}
+
+func (app *application) deletePost(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(r.URL.Path[8:])
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	user := app.contextGetUser(r)
+	post, _ := app.models.Posts.Get(id)
+	if user.Name != post.User {
+		http.Error(w, http.StatusText(http.StatusForbidden), http.StatusForbidden)
+		return
+	}
+	err = app.models.Posts.Delete(id)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	http.Redirect(w, r, "/", http.StatusFound)
+}
+
+func (app *application) deleteComment(w http.ResponseWriter, r *http.Request) {
+	back := r.Header.Get("referer")
+	id, err := strconv.Atoi(r.URL.Path[15:])
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	user := app.contextGetUser(r)
+	comment, _ := app.models.Comments.Get(id)
+	if user.Name != comment.User {
+		http.Error(w, http.StatusText(http.StatusForbidden), http.StatusForbidden)
+		return
+	}
+	err = app.models.Comments.Delete(id)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	http.Redirect(w, r, back, http.StatusFound)
 }
