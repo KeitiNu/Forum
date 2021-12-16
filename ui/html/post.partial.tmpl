@@ -62,39 +62,4 @@
 
 		}
 	</script>
-
-
-	<!-- <script>
-		function vote(a) {
-			var card = document.getElementById()
-			if (a > 0) {
-				var element = document.getElementById("up-vote");
-			} else {
-				var element = document.getElementById("down-vote");
-			}
-
-			if (element.classList.contains("active")) {
-				element.classList.remove("active");
-				
-				var votesID = element.dataset.votes;
-
-				cur = parseInt(document.getElementById(votesID).innerHTML);
-				document.getElementById(votesID).innerHTML = cur - a
-			} else {
-				element.classList.add("active");
-				if (element.classList.contains("bi-caret-up")) {
-					if (document.getElementById("down-vote").classList.contains("active")) {
-						document.getElementById("down-button").click();
-					}
-				} else {
-					if (document.getElementById("up-vote").classList.contains("active")) {
-						document.getElementById("up-button").click();
-					}
-				}
-				cur = parseInt(document.getElementById(votesID).innerHTML);
-				document.getElementById(votesID).innerHTML = cur + a
-			}
-			
-		}
-	</script> -->
 {{end}}
