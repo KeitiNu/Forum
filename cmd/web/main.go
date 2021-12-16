@@ -63,11 +63,12 @@ func main() {
 	}
 	// We create a http.Server configuration
 	srv := &http.Server{
-		Addr:     ":8090",
+		Addr:     ":" + os.Getenv("PORT"),
 		ErrorLog: errorLog,
 		Handler:  app.routes(),
 	}
-	fmt.Println("Started server on http://localhost:8090")
+	fmt.Println("JEU")
+	fmt.Printf("Started server on %s", srv.Addr)
 	srv.ListenAndServe()
 }
 
