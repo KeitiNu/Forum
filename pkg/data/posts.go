@@ -11,8 +11,7 @@ type Post struct {
 	ID       int
 	Title    string
 	Content  string
-	Likes    int
-	Dislikes int
+	Votes    int
 	Created  time.Time
 	ImageSrc string
 	User     string
@@ -24,8 +23,8 @@ type PostModel struct {
 }
 
 func (p *PostModel) Insert(title, content, user, imagesrc string, category []string) (int, error) {
-	stmt := `INSERT INTO posts (user, title, content, imagesrc, created)
-			VALUES(?, ?, ?, ?, datetime('now'))`
+	stmt := `INSERT INTO posts (user, title, content, imagesrc, created, votes)
+			VALUES(?, ?, ?, ?, datetime('now'), 0)`
 	result, err := p.DB.Exec(stmt, user, title, content, imagesrc)
 	if err != nil {
 		return 0, err
@@ -83,7 +82,7 @@ func (p *PostModel) Get(id int) (*Post, error) {
 }
 
 func (p *PostModel) Latest(category string) ([]*Post, error) {
-	stmt := `SELECT p.id, user, title, content, created FROM posts p
+	stmt := `SELECT p.id, user, title, content, created, votes FROM posts p
 	LEFT JOIN post_category c ON p.id = c.post_id
 	WHERE c.category_id = ?
     ORDER BY created DESC LIMIT 15`
@@ -100,7 +99,7 @@ func (p *PostModel) Latest(category string) ([]*Post, error) {
 	for rows.Next() {
 		s := &Post{}
 
-		err := rows.Scan(&s.ID, &s.User, &s.Title, &s.Content, &s.Created)
+		err := rows.Scan(&s.ID, &s.User, &s.Title, &s.Content, &s.Created, &s.Votes)
 		if err != nil {
 			return nil, err
 		}
@@ -134,4 +133,77 @@ func (p *PostModel) Delete(id int) error {
 	}
 
 	return nil
+}
+
+func (p *PostModel) AddVote(id, vote, username string) error {
+	stmt := ``
+	i, err := p.GetVote(id, vote, username)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			switch vote {
+			case "up":
+				stmt = `INSERT INTO vote (type, post_id, created, user_id) VALUES
+										(?, ?, datetime('now'), ?)`
+				_, err := p.DB.Exec(stmt, true, id, username)
+				if err != nil {
+					fmt.Println(err, "1")
+					return err
+				}
+				return nil
+			case "down":
+				stmt = `INSERT INTO vote (type, post_id, created, user_id) VALUES
+										(?, ?, datetime('now'), ?)`
+				_, err := p.DB.Exec(stmt, false, id, username)
+				if err != nil {
+					fmt.Println(err, "2")
+					return err
+				}
+				return nil
+			}
+		}
+	}
+	stmt = `DELETE FROM vote WHERE post_id = ? AND user_id = ?`
+	_, err = p.DB.Exec(stmt, id, username)
+	if err != nil {
+		fmt.Println("ERROR")
+		return err
+	}
+	switch vote {
+	case "up":
+		if i == "0" {
+			stmt = `INSERT INTO vote (type, post_id, created, user_id) VALUES
+								(?, ?, datetime('now'), ?)`
+			_, err := p.DB.Exec(stmt, true, id, username)
+			if err != nil {
+				fmt.Println(err, "3")
+				return err
+			}
+		}
+	case "down":
+		if i == "1" {
+			stmt = `INSERT INTO vote (type, post_id, created, user_id) VALUES
+								(?, ?, datetime('now'), ?)`
+			_, err := p.DB.Exec(stmt, false, id, username)
+			if err != nil {
+				fmt.Println(err, "4")
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+func (p *PostModel) GetVote(id, vote, username string) (string, error) {
+	s := ""
+	stmt := `SELECT type FROM vote WHERE user_id = ? AND post_id = ?`
+	res := p.DB.QueryRow(stmt, username, id)
+	err := res.Scan(&s)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return "", err
+		}
+	}
+
+	fmt.Println(s)
+	return s, nil
 }

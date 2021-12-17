@@ -63,7 +63,7 @@ func main() {
 	}
 	// We create a http.Server configuration
 	srv := &http.Server{
-		Addr:     ":" + os.Getenv("PORT"),
+		Addr:     ":8090",
 		ErrorLog: errorLog,
 		Handler:  app.routes(),
 	}

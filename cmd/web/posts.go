@@ -222,4 +222,14 @@ func (app *application) deleteComment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	http.Redirect(w, r, back, http.StatusFound)
+
+}
+
+func (app *application) test(w http.ResponseWriter, r *http.Request) {
+	r.ParseMultipartForm(1 << 20)
+
+	user := app.contextGetUser(r)
+	id := r.Form.Get("postID")
+	vote := r.Form.Get("type")
+	app.models.Posts.AddVote(id, vote, user.Name)
 }

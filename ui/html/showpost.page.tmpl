@@ -9,6 +9,7 @@
     <h4>Categories: {{.Category}}</h4>
     <h4>Posted by: {{.User}}</h4>
     {{with .ImageSrc}}
+    <img class="postimg" src="/static/{{.}}" alt="" >
     {{end}}
     {{if eq $.Post.User $.User.Name}}
     <a href="/edit/{{.ID}}">Edit</a>

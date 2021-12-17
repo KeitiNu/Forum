@@ -1,42 +1,57 @@
 {{template "base" .}}
 
 {{define "body"}}
-	<h2>Create a post</h2>
-	<form method="POST" id="threadform" action="/edit/{{.Post.ID}}">
-		<!-- Thread title -->
-		<div class="mb-3">
-			<label class="form-label">Title</label>
-			<input class="form-control" type="text" required name="title" placeholder="Post title" value="{{.Post.Title}}" maxlength="30" />
-		</div>
+<h2>Create a post</h2>
+<form method="POST" id="threadform" action="/edit/{{.Post.ID}}">
+	<!-- Thread title -->
+	<div class="mb-3">
+		<label class="form-label">Title</label>
+		<input class="form-control" type="text" required name="title" placeholder="Post title" value="{{.Post.Title}}"
+			maxlength="30" />
+	</div>
 
-		<!-- Content textarea -->
-		<div class="mb-3">
-			<label class="form-label">Content</label>
-			<textarea class="form-control" id="postcontent" name="content" onkeyup="charactercount()" maxlength="500" placeholder="Maximum 500 characters" required>{{.Post.Content}}</textarea>
-			<div class="d-flex justify-content-end">
-				<span id="words_count" class="badge bg-secondary rounded-pill">
-					<span id="textcount">0</span>/500
-				</span>
-			</div>
+	<!-- Content textarea -->
+	<div class="mb-3">
+		<label class="form-label">Content</label>
+		<textarea class="form-control" id="postcontent" name="content" onkeyup="charactercount()" maxlength="500"
+			placeholder="Maximum 500 characters" required>{{.Post.Content}}</textarea>
+		<div class="d-flex justify-content-end">
+			<span id="words_count" class="badge bg-secondary rounded-pill">
+				<span id="textcount">0</span>/500
+			</span>
 		</div>
-		<div id="textarea_count" class="badge pull-right"></div>
+	</div>
+	<div id="textarea_count" class="badge pull-right"></div>
+	<div class="mb-3">
+		<div class="input-group" id="myDIV">
+			<input type="file" class="form-control" id="inputGroupFile01" name="myFile">
+		</div>
+	</div>
 
-		<!-- Sumbit button -->
-		<div class="mb-3">
-			<button type="submit" class="btn btn-primary" name="submitPost">Submit</button>
-		</div>
-	</form>
+	<!-- Sumbit button -->
+	<div class="mb-3">
+		<button type="submit" class="btn btn-primary" name="submitPost">Submit</button>
+	</div>
+</form>
 
 {{end}}
 
 {{define "js"}}
 <script type="text/javascript">
-	function charactercount(){
-	const areatextarea = document.querySelector("#postcontent");
-	const areatext = document.querySelector("#postcontent").value.length;
-	const textcount = document.querySelector("#textcount");
-	const wordcount = document.querySelector("#words_count");
-	textcount.innerHTML = areatext;
+	function charactercount() {
+		const areatextarea = document.querySelector("#postcontent");
+		const areatext = document.querySelector("#postcontent").value.length;
+		const textcount = document.querySelector("#textcount");
+		const wordcount = document.querySelector("#words_count");
+		textcount.innerHTML = areatext;
+	};
+	function myFunction() {
+		var x = document.getElementById("myDIV");
+		if (x.style.display === "none") {
+			x.style.display = "block";
+		} else {
+			x.style.display = "none";
+		}
 	};
 </script>
 {{end}}
