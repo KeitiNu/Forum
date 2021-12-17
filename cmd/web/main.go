@@ -67,7 +67,8 @@ func main() {
 		ErrorLog: errorLog,
 		Handler:  app.routes(),
 	}
-	fmt.Println("Started server on http://localhost:8090")
+	fmt.Println("JEU")
+	fmt.Printf("Started server on %s", srv.Addr)
 	srv.ListenAndServe()
 }
 

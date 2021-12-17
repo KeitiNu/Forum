@@ -31,7 +31,7 @@
 		<!-- Category tagging -->
 		<div class="mb-3">
 			<label class="form-label">Tags</label>
-			<select class="select form-control" multiple data-mdb-filter="true" name="category">
+			<select class="select form-control" multiple data-mdb-filter="true" name="category" required>
 				{{range .Categories}}
 				<option value="{{.Title}}">{{.Title}}</option>
 				{{end}}

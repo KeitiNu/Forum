@@ -11,9 +11,9 @@
 					<i class="bi bi-caret-up"></i>
 				</button>
 			</form>
-			
-			<p name="votes" class="votes" value="0">0</p>
-			
+
+			<p name="votes" class="votes" value="0">{{.Votes}}</p>
+
 			<form id="form-down-{{.ID}}" onsubmit="return fetchpost('{{.ID}}', 'down')">
 				<input value="{{.ID}}" hidden>
 				<button type="submit" class="btn btn-primary down-button" onclick="vote('{{.ID}}', 'down-button')">
@@ -67,7 +67,7 @@
 			var formData = new FormData();
 			formData.append("postID", id);
 			formData.append("type", updown);
-			
+
 			// (B) FETCH
 			fetch("http://localhost:8090/test", {
 				method: "POST",
@@ -76,10 +76,10 @@
 			.then((res) => { return res.text(); })
 			.then((txt) => { console.log(txt); })
 			.catch((err) => { console.log(err); });
-			
+
 			// (C) PREVENT HTML FORM SUBMIT
 			return false;
 		}
-			
+
 	</script>
 {{end}}

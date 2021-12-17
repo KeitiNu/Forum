@@ -1,6 +1,6 @@
 module git.01.kood.tech/roosarula/forum
 
-// +heroku goVersion go1.17.2
+// +heroku goVersion go1.17
 go 1.17
 
 require github.com/mattn/go-sqlite3 v1.14.9
