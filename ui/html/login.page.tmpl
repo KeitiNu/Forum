@@ -7,17 +7,17 @@
 			<label class='error'>{{.}}</label>
 		{{end}}
 		<label class="form-label" for="username">Username:</label>
-		<input class="form-control" type="text" id="username" name="username" value="{{.Get "username"}}">
 		{{with .Errors.Get "username"}}
-			<label class='error'>{{.}}</label>
+			<span class='badge bg-danger'>{{.}}</span>
 		{{end}}
+		<input class="form-control" type="text" id="username" name="username" value="{{.Get "username"}}">
 	</div>
 	<div>
 		<label class="form-label" for="pass">Password (8 characters minimum):</label>
+		{{with .Errors.Get "password"}}
+				<span class='badge bg-danger'>{{.}}</span>
+		{{end}}
 		<input class="form-control" type="password" id="pass" name="password">
-			{{with .Errors.Get "password"}}
-				<label class='error'>{{.}}</label>
-			{{end}}
 	</div>
 	<input class="btn btn-primary" type="submit" value="Sign in">
 </form>
