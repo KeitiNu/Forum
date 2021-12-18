@@ -178,6 +178,13 @@ func (p *PostModel) AddVote(id, vote, username string) error {
 				fmt.Println(err, "3")
 				return err
 			}
+		} else {
+			stmt = `UPDATE posts SET votes = votes - 1 WHERE id = ?`
+			_, err := p.DB.Exec(stmt, id)
+			if err != nil {
+				fmt.Println(err, "3")
+				return err
+			}
 		}
 	case "down":
 		if i == "1" {
@@ -188,11 +195,19 @@ func (p *PostModel) AddVote(id, vote, username string) error {
 				fmt.Println(err, "4")
 				return err
 			}
+		} else {
+			stmt = `UPDATE posts SET votes = votes + 1 WHERE id = ?`
+			_, err := p.DB.Exec(stmt, id)
+			if err != nil {
+				fmt.Println(err, "3")
+				return err
+			}
 		}
 	}
 	return nil
 }
 
+// Check single vote
 func (p *PostModel) GetVote(id, vote, username string) (string, error) {
 	s := ""
 	stmt := `SELECT type FROM vote WHERE user_id = ? AND post_id = ?`
@@ -206,4 +221,41 @@ func (p *PostModel) GetVote(id, vote, username string) (string, error) {
 
 	fmt.Println(s)
 	return s, nil
+}
+
+// Check all votes for user
+func (p *PostModel) GetUserVotes(username string) map[string][]int {
+	votes := map[string][]int{}
+	stmt := `SELECT post_id, type from vote WHERE user_id = ?`
+	if username == "" {
+		return nil
+	}
+	rows, err := p.DB.Query(stmt, username)
+	if err != nil {
+		return nil
+	}
+
+	defer rows.Close()
+
+	vote := 0
+	postid := 0
+
+	for rows.Next() {
+
+		err := rows.Scan(&postid, &vote)
+		if err != nil {
+			return nil
+		}
+		if vote == 1 {
+			votes["upposts"] = append(votes["upposts"], postid)
+		} else {
+			votes["downposts"] = append(votes["downposts"], postid)
+		}
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil
+	}
+	fmt.Println(votes)
+	return votes
 }

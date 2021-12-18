@@ -60,7 +60,11 @@ func (app *application) addDefaultData(td *templateData, r *http.Request) *templ
 	if td == nil {
 		td = &templateData{}
 	}
-
 	td.AuthenticatedUser = app.contextGetUser(r)
+	if td.AuthenticatedUser == nil {
+		return td
+	} else {
+		td.UserVotes = app.models.Posts.GetUserVotes(td.AuthenticatedUser.Name)
+	}
 	return td
 }
