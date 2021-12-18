@@ -112,6 +112,59 @@ func (p *PostModel) Latest(category string) ([]*Post, error) {
 	return posts, nil
 }
 
+func (p *PostModel) GetUserPosts(username string) ([]*Post, error) {
+	stmt := `SELECT p.id, user, title, content, created, votes FROM posts p
+	WHERE user = ?
+    ORDER BY created DESC LIMIT 15`
+
+	rows, err := p.DB.Query(stmt, username)
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	posts := []*Post{}
+
+	for rows.Next() {
+		s := &Post{}
+
+		err := rows.Scan(&s.ID, &s.User, &s.Title, &s.Content, &s.Created, &s.Votes)
+		if err != nil {
+			return nil, err
+		}
+		posts = append(posts, s)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+	return posts, nil
+}
+
+func (p *PostModel) GetUserLiked(username string) ([]*Post, error) {
+	userVotes := p.GetUserVotes(username)
+	posts := []*Post{}
+	for i, x := range userVotes["upposts"] {
+		fmt.Println(i, x)
+		stmt := fmt.Sprintf(`SELECT p.id, user, title, content, created, votes FROM posts p
+	WHERE p.id = %d
+    ORDER BY created DESC LIMIT 15`, x)
+
+		row := p.DB.QueryRow(stmt, username)
+
+		s := &Post{}
+
+		err := row.Scan(&s.ID, &s.User, &s.Title, &s.Content, &s.Created, &s.Votes)
+		if err != nil {
+			return nil, err
+		}
+		posts = append(posts, s)
+	}
+
+	return posts, nil
+}
+
 func (p *PostModel) Update(title, content string, id int) error {
 	stmt := `UPDATE posts SET title=?, content=?
 			WHERE id = ?`

@@ -103,3 +103,33 @@ func (c *CommentsModel) Delete(id int) error {
 
 	return nil
 }
+
+func (c *CommentsModel) GetUserComments(username string) ([]*Comment, error) {
+	stmt := `SELECT id, user_id, content, created FROM comments p
+	WHERE p.user_id = ?
+    ORDER BY created DESC LIMIT 15`
+
+	rows, err := c.DB.Query(stmt, username)
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	comments := []*Comment{}
+
+	for rows.Next() {
+		s := &Comment{}
+
+		err := rows.Scan(&s.ID, &s.User, &s.Content, &s.Created)
+		if err != nil {
+			return nil, err
+		}
+		comments = append(comments, s)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+	return comments, nil
+}

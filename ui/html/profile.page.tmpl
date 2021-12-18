@@ -1,96 +1,127 @@
 {{template "base" .}}
 {{define "body"}}
-	<h1>Profile</h1>
-	<h2>User info</h2>
-	<ul class="list-group">
-		<li class="list-group-item active" aria-current="true">Username: {{.AuthenticatedUser.Name}}</li>
-		<li class="list-group-item">Email: {{.AuthenticatedUser.Email}}</li>
-		<li class="list-group-item">Account type: Regular User</li>
+<h1>Profile</h1>
+<h2>User info</h2>
+<ul class="list-group">
+	<li class="list-group-item active" aria-current="true">Username: {{.AuthenticatedUser.Name}}</li>
+	<li class="list-group-item">Email: {{.AuthenticatedUser.Email}}</li>
+	<li class="list-group-item">Account type: Regular User</li>
 
-	</ul>
+</ul>
 
-	<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#password_change_modal">Change password</button>
-	<!-- Modal for the button /\ -->
-		<div class="modal fade" id="password_change_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#password_change_modal">Change
+	password</button>
+<!-- Modal for the button /\ -->
+<div class="modal fade" id="password_change_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title" id="exampleModalLabel">New password</h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
 				<form>
-				<div class="mb-3">
-					<label for="current-password" class="col-form-label">Current Password:</label>
-					<input type="password" class="form-control" id="current-password">
-				</div>
-				<div class="mb-3">
-					<label for="new-password" class="col-form-label">New Password:</label>
-					<input type="password" class="form-control" id="new-password">
-				</div>
-				<div class="mb-3">
-					<label for="new-password-confirm" class="col-form-label">Confirm New Password:</label>
-					<input type="password" class="form-control" id="new-password-confirm">
-				</div>
+					<div class="mb-3">
+						<label for="current-password" class="col-form-label">Current Password:</label>
+						<input type="password" class="form-control" id="current-password">
+					</div>
+					<div class="mb-3">
+						<label for="new-password" class="col-form-label">New Password:</label>
+						<input type="password" class="form-control" id="new-password">
+					</div>
+					<div class="mb-3">
+						<label for="new-password-confirm" class="col-form-label">Confirm New Password:</label>
+						<input type="password" class="form-control" id="new-password-confirm">
+					</div>
 				</form>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
 				<button type="button" class="btn btn-primary">Set Password</button>
 			</div>
-			</div>
-		</div>
-		</div>
-
-	<h2>Notifications</h2>
-	<ol class="list-group">
-		<li class="list-group-item d-flex justify-content-between align-items-start">
-			<div class="ms-2 me-auto">
-				<div class="fw-bold">Subheading</div>
-				Cras justo odio
-			</div>
-			<span class="badge bg-primary rounded-pill">14</span>
-		</li>
-		<li class="list-group-item d-flex justify-content-between align-items-start">
-			<div class="ms-2 me-auto">
-				<div class="fw-bold">Subheading</div>
-				Cras justo odio
-			</div>
-			<span class="badge bg-primary rounded-pill">14</span>
-		</li>
-		<li class="list-group-item d-flex justify-content-between align-items-start">
-			<div class="ms-2 me-auto">
-				<div class="fw-bold">Subheading</div>
-				Cras justo odio
-			</div>
-			<span class="badge bg-primary rounded-pill">14</span>
-		</li>
-	</ol>
-	<h2>Become a moderator!</h2>
-	<button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#moderator_modal">Apply</button>
-  
-	<!-- Modal -->
-	<div class="modal fade" id="moderator_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-			<h5 class="modal-title" id="exampleModalLabel">Are you sure you wish to become a moderator?</h5>
-			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
-			A good moderator .
-			<ul>
-				<li>Lorem ipsum dolor, sit amet consectetur adipisicing elit.</li>
-				<li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad, aliquam?</li>
-				<li>Lorem ipsum dolor sit.</li>
-			</ul>
-			</div>
-			<div class="modal-footer">
-			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-			<button type="button" class="btn btn-primary">Confirm</button>
-			</div>
-		</div>
 		</div>
 	</div>
+</div>
+
+<h2>Notifications</h2>
+<ol class="list-group">
+	<li class="list-group-item d-flex justify-content-between align-items-start">
+		<div class="ms-2 me-auto">
+			<div class="fw-bold">Subheading</div>
+			Cras justo odio
+		</div>
+		<span class="badge bg-primary rounded-pill">14</span>
+	</li>
+	<li class="list-group-item d-flex justify-content-between align-items-start">
+		<div class="ms-2 me-auto">
+			<div class="fw-bold">Subheading</div>
+			Cras justo odio
+		</div>
+		<span class="badge bg-primary rounded-pill">14</span>
+	</li>
+	<li class="list-group-item d-flex justify-content-between align-items-start">
+		<div class="ms-2 me-auto">
+			<div class="fw-bold">Subheading</div>
+			Cras justo odio
+		</div>
+		<span class="badge bg-primary rounded-pill">14</span>
+	</li>
+</ol>
+<h2>Become a moderator!</h2>
+<button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#moderator_modal">Apply</button>
+
+<!-- Modal -->
+<div class="modal fade" id="moderator_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">Are you sure you wish to become a moderator?</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				A good moderator .
+				<ul>
+					<li>Lorem ipsum dolor, sit amet consectetur adipisicing elit.</li>
+					<li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad, aliquam?</li>
+					<li>Lorem ipsum dolor sit.</li>
+				</ul>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+				<button type="button" class="btn btn-primary">Confirm</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<h2>Your activity</h2>
+<a href="/profile/likes"><button type="button" class="btn btn-danger">Likes</button></a>
+<a href="/profile/posts"><button type="button" class="btn btn-danger">Posts</button></a>
+<a href="/profile/comments"><button type="button" class="btn btn-danger">Comments</button></a>
+{{if .Posts}}
+{{range .Posts}}
+{{block "post" .}}
+{{end}}
+{{end}}
+{{else}}
+{{range .Comments}}
+<li class="box_result row">
+	<div class="result_comment col-md-11">
+		<h4>{{.User}}</h4>
+		<p>{{.Content}}</p>
+		<div class="tools_comment">
+			<a class="like" href="#">Like</a>
+			<span> · </span>
+			<a class="replay" href="#">Reply</a>
+			<span> · </span>
+			<i class="fa fa-thumbs-o-up"></i> <span class="count">1</span>
+			<span> · </span>
+			<span>{{.Created}}</span>
+		</div>
+	</div>
+</li>
+{{end}}
+{{end}}
+
 
 {{end}}

@@ -155,5 +155,29 @@ func (app *application) logout(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) profile(w http.ResponseWriter, r *http.Request) {
-	app.render(w, r, "profile.page.tmpl", nil)
+	url := r.URL.Path[9:]
+	switch url {
+	case "likes":
+		user := app.contextGetUser(r)
+		posts, err := app.models.Posts.GetUserLiked(user.Name)
+		if err != nil {
+			app.serverError(w, err)
+		}
+		app.render(w, r, "profile.page.tmpl", &templateData{Posts: posts})
+	case "comments":
+		user := app.contextGetUser(r)
+		comments, err := app.models.Comments.GetUserComments(user.Name)
+		if err != nil {
+			app.serverError(w, err)
+		}
+		app.render(w, r, "profile.page.tmpl", &templateData{Comments: comments})
+	default:
+		user := app.contextGetUser(r)
+		posts, err := app.models.Posts.GetUserPosts(user.Name)
+		if err != nil {
+			app.serverError(w, err)
+		}
+		app.render(w, r, "profile.page.tmpl", &templateData{Posts: posts})
+	}
+
 }
