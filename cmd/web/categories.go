@@ -46,8 +46,13 @@ func (app *application) newCategory(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) showCategory(w http.ResponseWriter, r *http.Request) {
+	sortColumn := "created"
 	category := r.URL.Path[10:]
-	posts, err := app.models.Posts.Latest(category)
+	uq := r.URL.Query()
+	if uq.Get("col") != "" {
+		sortColumn = uq.Get("col")
+	}
+	posts, err := app.models.Posts.Latest(category, sortColumn, "DESC")
 	if err != nil {
 		app.serverError(w, err)
 	}

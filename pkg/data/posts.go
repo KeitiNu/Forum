@@ -81,12 +81,11 @@ func (p *PostModel) Get(id int) (*Post, error) {
 	return a, nil
 }
 
-func (p *PostModel) Latest(category string) ([]*Post, error) {
-	stmt := `SELECT p.id, user, title, content, created, votes FROM posts p
+func (p *PostModel) Latest(category, sortcolumn, sortdirection string) ([]*Post, error) {
+	stmt := fmt.Sprintf(`SELECT p.id, user, title, content, created, votes FROM posts p
 	LEFT JOIN post_category c ON p.id = c.post_id
 	WHERE c.category_id = ?
-    ORDER BY created DESC LIMIT 15`
-
+    ORDER BY %s %s LIMIT 15`, sortcolumn, sortdirection)
 	rows, err := p.DB.Query(stmt, category)
 	if err != nil {
 		return nil, err
@@ -145,8 +144,7 @@ func (p *PostModel) GetUserPosts(username string) ([]*Post, error) {
 func (p *PostModel) GetUserLiked(username string) ([]*Post, error) {
 	userVotes := p.GetUserVotes(username)
 	posts := []*Post{}
-	for i, x := range userVotes["upposts"] {
-		fmt.Println(i, x)
+	for _, x := range userVotes["upposts"] {
 		stmt := fmt.Sprintf(`SELECT p.id, user, title, content, created, votes FROM posts p
 	WHERE p.id = %d
     ORDER BY created DESC LIMIT 15`, x)
@@ -202,6 +200,12 @@ func (p *PostModel) AddVote(id, vote, username string) error {
 					fmt.Println(err, "1")
 					return err
 				}
+				stmt = `UPDATE posts SET votes = votes + 1 WHERE id = ?`
+				_, err = p.DB.Exec(stmt, id)
+				if err != nil {
+					fmt.Println(err, "3")
+					return err
+				}
 				return nil
 			case "down":
 				stmt = `INSERT INTO vote (type, post_id, created, user_id) VALUES
@@ -209,6 +213,12 @@ func (p *PostModel) AddVote(id, vote, username string) error {
 				_, err := p.DB.Exec(stmt, false, id, username)
 				if err != nil {
 					fmt.Println(err, "2")
+					return err
+				}
+				stmt = `UPDATE posts SET votes = votes - 1 WHERE id = ?`
+				_, err = p.DB.Exec(stmt, id)
+				if err != nil {
+					fmt.Println(err, "3")
 					return err
 				}
 				return nil
@@ -231,9 +241,37 @@ func (p *PostModel) AddVote(id, vote, username string) error {
 				fmt.Println(err, "3")
 				return err
 			}
+			stmt = `UPDATE posts SET votes = votes + 2 WHERE id = ?`
+			_, err = p.DB.Exec(stmt, id)
+			if err != nil {
+				fmt.Println(err, "3")
+				return err
+			}
+
+		} else if i == "" {
+			stmt = `UPDATE posts SET votes = votes + 1 WHERE id = ?`
+			_, err := p.DB.Exec(stmt, id)
+			if err != nil {
+				fmt.Println(err, "3")
+				return err
+			}
+			stmt = `INSERT INTO vote (type, post_id, created, user_id) VALUES
+								(?, ?, datetime('now'), ?)`
+			_, err = p.DB.Exec(stmt, true, id, username)
+			if err != nil {
+				fmt.Println(err, "3")
+				return err
+			}
 		} else {
 			stmt = `UPDATE posts SET votes = votes - 1 WHERE id = ?`
 			_, err := p.DB.Exec(stmt, id)
+			if err != nil {
+				fmt.Println(err, "3")
+				return err
+			}
+			stmt = `INSERT INTO vote (type, post_id, created, user_id) VALUES
+								(?, ?, datetime('now'), ?)`
+			_, err = p.DB.Exec(stmt, nil, id, username)
 			if err != nil {
 				fmt.Println(err, "3")
 				return err
@@ -248,9 +286,36 @@ func (p *PostModel) AddVote(id, vote, username string) error {
 				fmt.Println(err, "4")
 				return err
 			}
+			stmt = `UPDATE posts SET votes = votes - 2 WHERE id = ?`
+			_, err = p.DB.Exec(stmt, id)
+			if err != nil {
+				fmt.Println(err, "3")
+				return err
+			}
+		} else if i == "" {
+			stmt = `UPDATE posts SET votes = votes - 1 WHERE id = ?`
+			_, err := p.DB.Exec(stmt, id)
+			if err != nil {
+				fmt.Println(err, "3")
+				return err
+			}
+			stmt = `INSERT INTO vote (type, post_id, created, user_id) VALUES
+								(?, ?, datetime('now'), ?)`
+			_, err = p.DB.Exec(stmt, false, id, username)
+			if err != nil {
+				fmt.Println(err, "3")
+				return err
+			}
 		} else {
 			stmt = `UPDATE posts SET votes = votes + 1 WHERE id = ?`
 			_, err := p.DB.Exec(stmt, id)
+			if err != nil {
+				fmt.Println(err, "3")
+				return err
+			}
+			stmt = `INSERT INTO vote (type, post_id, created, user_id) VALUES
+								(?, ?, datetime('now'), ?)`
+			_, err = p.DB.Exec(stmt, nil, id, username)
 			if err != nil {
 				fmt.Println(err, "3")
 				return err
@@ -272,7 +337,6 @@ func (p *PostModel) GetVote(id, vote, username string) (string, error) {
 		}
 	}
 
-	fmt.Println(s)
 	return s, nil
 }
 
@@ -309,6 +373,5 @@ func (p *PostModel) GetUserVotes(username string) map[string][]int {
 	if err = rows.Err(); err != nil {
 		return nil
 	}
-	fmt.Println(votes)
 	return votes
 }

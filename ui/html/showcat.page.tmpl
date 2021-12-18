@@ -7,6 +7,8 @@
 
 {{define "body"}}
 <div>
+	<a href="?col=votes">Votes</a>
+	<a href="?col=created">Time</a>
 	<div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-2 justify-content-start">
 		{{range .Posts}}
 			{{block "post" .}}
