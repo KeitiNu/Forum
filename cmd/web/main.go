@@ -66,6 +66,10 @@ func main() {
 		Addr:     ":8090",
 		ErrorLog: errorLog,
 		Handler:  app.routes(),
+
+		 IdleTimeout: time.Minute,
+         ReadTimeout: 5 * time.Second,
+         WriteTimeout: 10 * time.Second,
 	}
 	fmt.Printf("Started server on http://localhost%s", srv.Addr)
 	srv.ListenAndServe()
