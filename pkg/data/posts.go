@@ -144,7 +144,7 @@ func (p *PostModel) GetUserPosts(username string) ([]*Post, error) {
 func (p *PostModel) GetUserLiked(username string) ([]*Post, error) {
 	userVotes := p.GetUserVotes(username)
 	posts := []*Post{}
-	for _, x := range userVotes["upposts"] {
+	for _, x := range userVotes[0] {
 		stmt := fmt.Sprintf(`SELECT p.id, user, title, content, created, votes FROM posts p
 	WHERE p.id = %d
     ORDER BY created DESC LIMIT 15`, x)
@@ -341,8 +341,8 @@ func (p *PostModel) GetVote(id, vote, username string) (string, error) {
 }
 
 // Check all votes for user
-func (p *PostModel) GetUserVotes(username string) map[string][]int {
-	votes := map[string][]int{}
+func (p *PostModel) GetUserVotes(username string) [][]int {
+	votes := make([][]int, 2)
 	stmt := `SELECT post_id, type from vote WHERE user_id = ?`
 	if username == "" {
 		return nil
@@ -361,17 +361,22 @@ func (p *PostModel) GetUserVotes(username string) map[string][]int {
 
 		err := rows.Scan(&postid, &vote)
 		if err != nil {
+			if err.Error() == `sql: Scan error on column index 1, name "type": converting NULL to int is unsupported` {
+				fmt.Println(err)
+				continue
+			}
 			return nil
 		}
 		if vote == 1 {
-			votes["upposts"] = append(votes["upposts"], postid)
+			votes[0] = append(votes[0], postid)
 		} else {
-			votes["downposts"] = append(votes["downposts"], postid)
+			votes[1] = append(votes[1], postid)
 		}
 	}
 
 	if err = rows.Err(); err != nil {
 		return nil
 	}
+	fmt.Println(votes)
 	return votes
 }

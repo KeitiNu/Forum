@@ -13,7 +13,7 @@ func (app *application) session(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		_, err := r.Cookie("session")
 		if err != nil {
-			c := &http.Cookie{Name: "session", Value: uuid.NewV4().String(), Expires: time.Now().Add(time.Hour)}
+			c := &http.Cookie{Name: "session", Value: uuid.NewV4().String(), Expires: time.Now().Add(time.Hour), Path: "/"}
 			http.SetCookie(w, c)
 		}
 		next.ServeHTTP(w, r)
