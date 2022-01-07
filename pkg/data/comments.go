@@ -51,8 +51,8 @@ func (c *CommentsModel) Get(id int) (*Comment, error) {
 }
 
 func (c *CommentsModel) Latest(id int) ([]*Comment, error) {
-	stmt := `SELECT id, user_id, content, created, votes FROM comments p
-	WHERE c.post_id = ?
+	stmt := `SELECT id, user_id, content, created, votes FROM comments
+	WHERE post_id = ?
     ORDER BY created DESC LIMIT 15`
 
 	rows, err := c.DB.Query(stmt, id)
