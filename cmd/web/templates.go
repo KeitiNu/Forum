@@ -18,6 +18,7 @@ type templateData struct {
 	Users             []*data.User
 	Categories        []*data.Category
 	UserVotes         [][]int
+	Sort              string
 }
 
 /* Each and every time we render a web page, our application must read the template files from disk.

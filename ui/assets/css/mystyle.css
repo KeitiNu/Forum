@@ -197,3 +197,43 @@ html {
 .down-button.active {
 	background-color: red
 }
+
+.commente {
+    display: grid;
+    grid-template-rows: 50px;
+    grid-template-columns: 100px 1fr;
+    border: 2px dotted red;
+    padding: 10px;
+    margin-top: 20px;
+    background: whitesmoke;
+  }
+
+
+  .comment-comments {
+    grid-column-start: 2;
+    order: 5;
+  }
+  .comment-downvote {
+    order: 4;
+    align-self: center;
+   justify-self: center;
+  }
+
+  .comment-upvote {
+    align-self: center;
+   justify-self: center;
+  }
+  .comment-username {
+    order: 1;
+  }
+  .comment-title {
+    grid-row: span 2;
+    order: 3;
+    font-size: x-large;
+  }
+
+  .votes {
+    order: 2;
+    align-self: center;
+   justify-self: center;
+  }

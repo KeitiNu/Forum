@@ -81,11 +81,11 @@ func (p *PostModel) Get(id int) (*Post, error) {
 	return a, nil
 }
 
-func (p *PostModel) Latest(category, sortcolumn, sortdirection string) ([]*Post, error) {
+func (p *PostModel) Latest(category, sortcolumn, sortdirection, days string) ([]*Post, error) {
 	stmt := fmt.Sprintf(`SELECT p.id, user, title, content, created, votes FROM posts p
 	LEFT JOIN post_category c ON p.id = c.post_id
-	WHERE c.category_id = ?
-    ORDER BY %s %s LIMIT 15`, sortcolumn, sortdirection)
+	WHERE c.category_id = ? AND p.created > date('now','-%s day')
+    ORDER BY %s %s LIMIT 15`, days, sortcolumn, sortdirection)
 	rows, err := p.DB.Query(stmt, category)
 	if err != nil {
 		return nil, err

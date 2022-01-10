@@ -47,12 +47,25 @@ func (app *application) newCategory(w http.ResponseWriter, r *http.Request) {
 
 func (app *application) showCategory(w http.ResponseWriter, r *http.Request) {
 	sortColumn := "created"
+	time := "9999"
 	category := r.URL.Path[10:]
 	uq := r.URL.Query()
 	if uq.Get("col") != "" {
 		sortColumn = uq.Get("col")
 	}
-	posts, err := app.models.Posts.Latest(category, sortColumn, "DESC")
+	if uq.Get("time") != "" {
+		time = uq.Get("time")
+	}
+
+	if sortColumn == "top" {
+		posts, err := app.models.Posts.Latest(category, "votes", "DESC", time)
+		if err != nil {
+			app.serverError(w, err)
+		}
+		app.render(w, r, "showcat.page.tmpl", &templateData{Posts: posts, Sort: "top"})
+		return
+	}
+	posts, err := app.models.Posts.Latest(category, sortColumn, "DESC", time)
 	if err != nil {
 		app.serverError(w, err)
 	}
