@@ -13,26 +13,32 @@
 		{{range .Posts}}
 			<div class="col" id="{{.ID}}">
 				<div class="card border-warning category-card h-100">
-					<div class="card-body">
-						<form id="form-up-{{.ID}}" onsubmit="return fetchpost('{{.ID}}', 'up')">
-							<input value="{{.ID}}" hidden>
-							<button type="submit" class="btn btn-primary up-button" onclick="vote('{{.ID}}', 'up-button')">
-								<i class="bi bi-caret-up"></i>
-							</button>
-						</form>
-			
-						<p name="votes" class="votes" value="0">{{.Votes}}</p>
-			
-						<form id="form-down-{{.ID}}" onsubmit="return fetchpost('{{.ID}}', 'down')">
-							<input value="{{.ID}}" hidden>
-							<button type="submit" class="btn btn-primary down-button" onclick="vote('{{.ID}}', 'down-button')">
-								<i class="bi bi-caret-down"></i>
-							</button>
-						</form>
-			
-						<a href="/post/{{.ID}}"><h5 class="card-title">{{.Title}}</h5></a>
-						<p class="card-text">{{.Content}}</p>
+					<div class="row no-gutters">
+						<div class="col-md-3">
+							<form id="form-up-{{.ID}}" onsubmit="return fetchpost('{{.ID}}', 'up')">
+								<input value="{{.ID}}" hidden>
+								<button type="submit" class="btn btn-primary up-button" onclick="vote('{{.ID}}', 'up-button')">
+									<i class="bi bi-caret-up"></i>
+								</button>
+							</form>
+				
+							<p name="votes" class="votes" value="0">{{.Votes}}</p>
+				
+							<form id="form-down-{{.ID}}" onsubmit="return fetchpost('{{.ID}}', 'down')">
+								<input value="{{.ID}}" hidden>
+								<button type="submit" class="btn btn-primary down-button" onclick="vote('{{.ID}}', 'down-button')">
+									<i class="bi bi-caret-down"></i>
+								</button>
+							</form>
+						</div>
+						<div class="col-md-9">
+							<div class="card-body">
+								<a href="/post/{{.ID}}"><h5 class="card-title">{{.Title}}</h5></a>
+								<p class="card-text">{{.Content}}</p>
+							</div>
+						</div>
 					</div>
+					
 					<div class="card-footer">
 						<small class="text-muted">11 comments</small>
 					</div>

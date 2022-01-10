@@ -18,6 +18,12 @@ label {
 	max-height: 500px;
 }
 
+.comment-card {
+	max-width: 700px;
+	width: 85%;
+	max-height: 500px;
+}
+
 .card-text {
 	overflow: hidden;
 	text-overflow: ellipsis;

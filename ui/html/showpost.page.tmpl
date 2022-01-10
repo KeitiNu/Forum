@@ -32,12 +32,11 @@
         {{end}}
 
 </div>
-<div>
 {{end}}
-<div class="row">
-    <ul id="list_comment" class="col-md-12">
+<div class="row row-cols-md-1 g-2 justify-content-center">
+    <!-- <ul id="list_comment" class="col-md-12"> -->
     {{range .Comments}}
-            <!-- Start List Comment 2 -->
+            <!-- Start List Comment 2
             <li class="box_result row">
                 <div class="result_comment col-md-11">
                     <h4>{{.User}}</h4>
@@ -49,47 +48,84 @@
                         <span> · </span>
                         <i class="fa fa-thumbs-o-up"></i> <span class="count">1</span>
                         <span> · </span>
-                        <span>{{.Created}}</span>
-                        {{if eq .User $.User.Name}}
-                        <a href="" data-toggle="modal" data-target="#exampleModal">Edit</a>
-                        <a href="/deletecomment/{{.ID}}">Delete</a>
-                        {{end}}
-                        <!-- Modal -->
-                        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Edit comment</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                                </div>
-                                <div class="modal-body">
-                                    <form method="POST">
-                                        <label for="comment">Comment</label>
-                                        <textarea name="commentUpdate" id="" cols="30" rows="10">{{.Content}}</textarea>
-                                        <textarea name="commentUpdateID" id="" cols="0" rows="0" hidden>{{.ID}}</textarea>
-                                        <textarea name="commentUpdateUser" id="" cols="0" rows="0" hidden>{{.User}}</textarea>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                            <button type="submit" class="btn btn-primary" name="submitPost">Save changes</button>
-                                            </div>
-                                    </form>
-                                </div>
+                        <span>{{.Created}}</span> -->
+	<div class="col" id="{{.ID}}">
+		<div class="card border-primary comment-card h-100">
+			<div class="row no-gutters">
+				<div class="col-md-2">
+					<form id="form-up-{{.ID}}" onsubmit="return fetchpost('{{.ID}}', 'up')">
+						<input value="{{.ID}}" hidden>
+						<button type="submit" class="btn btn-primary up-button" onclick="vote('{{.ID}}', 'up-button')">
+							<i class="bi bi-caret-up"></i>
+						</button>
+					</form>
+		
+					<p name="votes" class="votes" value="0">{{.Votes}}</p>
+		
+					<form id="form-down-{{.ID}}" onsubmit="return fetchpost('{{.ID}}', 'down')">
+						<input value="{{.ID}}" hidden>
+						<button type="submit" class="btn btn-primary down-button" onclick="vote('{{.ID}}', 'down-button')">
+							<i class="bi bi-caret-down"></i>
+						</button>
+					</form>
+				</div>
+				<div class="col-md-10">
+					<div class="card-body">
+						<p class="card-text">{{.Content}}</p>
+					</div>
+				</div>
+			</div>
+			{{if eq .User $.User.Name}}
+				<div class="card-footer">
+					<a href="" data-toggle="modal" data-target="#exampleModal">Edit</a>
+					<a href="/deletecomment/{{.ID}}">Delete</a>
+				</div>
+			{{end}}
+		</div>
+	</div>
 
-                            </div>
-                            </div>
-                        </div>
-                    </div>
-                    <ul class="child_replay"></ul>
+	
+	<!-- Modal -->
+	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+			<h5 class="modal-title" id="exampleModalLabel">Edit comment</h5>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			</div>
+			<div class="modal-body">
+				<form method="POST">
+					<label for="comment">Comment</label>
+					<textarea name="commentUpdate" id="" cols="30" rows="10">{{.Content}}</textarea>
+					<textarea name="commentUpdateID" id="" cols="0" rows="0" hidden>{{.ID}}</textarea>
+					<textarea name="commentUpdateUser" id="" cols="0" rows="0" hidden>{{.User}}</textarea>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						<button type="submit" class="btn btn-primary" name="submitPost">Save changes</button>
+						</div>
+				</form>
+			</div>
+
+		</div>
+		</div>
+	</div>
+	{{end}}
+
+</div>
+                    <!-- <ul class="child_replay"></ul>
                 </div>
-            </li>
-    {{end}}
-</ul>
+            </div> -->
+    
+<!-- </ul> -->
+
+<!-- </div> -->
+{{end}}
+
+{{define "js"}}
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-</div>
-</div>
 {{end}}
 
