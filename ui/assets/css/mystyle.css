@@ -87,8 +87,8 @@ label {
     padding-left: 12px;
 }
 
-  
-    
+
+
 /*HEADER LOGGED IN */
 
 .dropdown-menu.header {
@@ -122,7 +122,7 @@ label {
 .dropdown-item.header {
     color: whitesmoke;
     font-weight: 600;
-    
+
 }
 
 .dropdown-item.comment {
@@ -146,13 +146,13 @@ label {
   .inside-footer {
 	display: flex;
   }
-  
+
   .inside-footer-item {
 	flex-basis: 100%;
 	text-align: center;
   }
   .inside-footer-item a {
-	  color: whitesmoke; 
+	  color: whitesmoke;
  	}
 
 /*---------------------PAGES---------------------*/
@@ -177,6 +177,9 @@ html {
     padding-bottom: 50px;
   }
 
+.result_comment {
+    background: white;
+}
 /*LOG IN PAGE*/
 
 /*SIGN UP PAGE*/

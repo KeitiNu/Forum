@@ -27,9 +27,9 @@
 
     <body class="base-layout-body">
         {{if .AuthenticatedUser}}
-            {{template "header-in"}}
+            {{template "header-in" .}}
         {{else}}
-            {{template "header-out"}}
+            {{template "header-out" .}}
         {{end}}
         <div class="container content">
             <div class="content-inside">
@@ -46,6 +46,6 @@
         {{block "js" .}}
 		{{end}}
     </body>
-    
+
 </html>
 {{end}}

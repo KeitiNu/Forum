@@ -104,8 +104,8 @@ func (c *CommentsModel) Delete(id int) error {
 }
 
 func (c *CommentsModel) GetUserComments(username string) ([]*Comment, error) {
-	stmt := `SELECT id, user_id, content, created FROM comments p
-	WHERE c.user_id = ?
+	stmt := `SELECT id, user_id, content, created, votes FROM comments
+	WHERE user_id = ?
     ORDER BY created DESC LIMIT 15`
 
 	rows, err := c.DB.Query(stmt, username)

@@ -362,7 +362,7 @@ func (p *PostModel) GetUserVotes(username string) [][]int {
 		err := rows.Scan(&postid, &vote)
 		if err != nil {
 			if err.Error() == `sql: Scan error on column index 1, name "type": converting NULL to int is unsupported` {
-				fmt.Println(err)
+				// fmt.Println(err)
 				continue
 			}
 			return nil
@@ -377,6 +377,6 @@ func (p *PostModel) GetUserVotes(username string) [][]int {
 	if err = rows.Err(); err != nil {
 		return nil
 	}
-	fmt.Println(votes)
+	// fmt.Println(votes)
 	return votes
 }
