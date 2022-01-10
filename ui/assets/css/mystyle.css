@@ -183,3 +183,11 @@ html {
 /*LOG IN PAGE*/
 
 /*SIGN UP PAGE*/
+
+.up-button.active {
+	background-color: green
+}
+
+.down-button.active {
+	background-color: red
+}
