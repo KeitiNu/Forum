@@ -9,10 +9,6 @@ label {
     margin-top: 1rem;
 }
 
-.error {
-    color: rgb(165, 7, 7);
-}
-
 .category-card {
 	min-width: 200px;
 	max-height: 500px;
@@ -41,6 +37,7 @@ label {
 .navbar.header {
     background-color: #1A1A1B;
     border:1px solid #676869;
+    min-width: 542px;
 }
 
 .navbar-brand.header {
@@ -59,22 +56,23 @@ label {
 .btn.header.btn-outline-secondary.first {
     color: whitesmoke;
     border-color: whitesmoke;
-    font-weight: 700;
 }
 
 .btn.header.btn-outline-secondary.first:hover {
-    background-color: #45ffdb
+    background-color: #45ffdb;
+    color: #1A1A1B;
+    border:1px solid #45ffdb;
 }
 
 .btn.header.btn-outline-secondary.second {
     color: #1A1A1B;
-    font-weight: 700;
     border-color: whitesmoke;
     background: whitesmoke;
 }
 
 .btn.header.btn-outline-secondary.second:hover {
-    background-color: #45ffdb
+    background-color: #45ffdb;
+    border:1px solid #45ffdb;
 }
 
 
@@ -137,23 +135,16 @@ label {
 .footer {
     background-color: #1A1A1B;
     border:1px solid #676869;
-    margin-top: -50px;
+    margin-top: auto !important;
     color: whitesmoke;
     line-height: 50px;
     padding: 0 20px;
   }
 
-  .inside-footer {
-	display: flex;
-  }
-  
   .inside-footer-item {
 	flex-basis: 100%;
 	text-align: center;
   }
-  .inside-footer-item a {
-	  color: whitesmoke; 
- 	}
 
 /*---------------------PAGES---------------------*/
 
@@ -173,10 +164,66 @@ html {
     min-height: 100%;
   }
   .content-inside {
-    padding: 20px;
+    padding: 140px;
     padding-bottom: 50px;
+    top: 50%;
+    width: 100%;
+    height: 100%;
   }
 
 /*LOG IN PAGE*/
+
+.loginbox {
+    max-width: 310px;
+    min-width: 310px;
+    margin: auto;
+    padding: 3em 2em;
+    background-color: #1A1A1B;
+    padding-top: 50px;
+}
+
+.iconbox {
+    text-align: center;
+}
+
+.iconboxspan {
+    font-size: 50px;
+}
+
+.loginform {
+    padding-top: 30px;
+}
+
+.registerlink {
+    padding-top:30px;
+}
+
+.registerlink a {
+    color: whitesmoke;
+    text-decoration: none;
+}
+
+.registerlink a:hover {
+    color: #45ffdb;
+}
+
+.btn.loginbtn {
+color: whitesmoke;
+border:1px solid whitesmoke;
+background-color: #1A1A1B;
+min-width: 245px;
+}
+
+.btn.loginbtn:hover {
+background-color: #45ffdb;
+color: #1A1A1B;
+border:1px solid #45ffdb;
+}
+
+.error {
+    color: rgb(165, 7, 7);
+    font-size: 15px;
+
+}
 
 /*SIGN UP PAGE*/

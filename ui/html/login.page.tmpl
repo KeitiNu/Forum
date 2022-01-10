@@ -1,25 +1,35 @@
 {{template "base" .}}
 {{define "body"}}
-<form method="post">
-	{{with .Form}}
-	<div class="mb-3">
-		{{with .Errors.Get "generic"}}
-			<label class='error'>{{.}}</label>
-		{{end}}
-		<label class="form-label" for="username">Username:</label>
-		<input class="form-control" type="text" id="username" name="username" value="{{.Get "username"}}">
-		{{with .Errors.Get "username"}}
-			<label class='error'>{{.}}</label>
-		{{end}}
-	</div>
+<div class=loginbox>
+	<div class="iconbox">
+		<span class="iconboxspan">
+			<img src="/static/css/images/logo_white.png">
+		</span>
+		<form method="post" class="loginform">
+			{{with .Form}}
+			<div>
+				{{with .Errors.Get "generic"}}
+					<label class='error'>{{.}}</label>
+				{{end}}
+				<label class="form-label" for="username"></label>
+				<input class="form-control" type="text" id="username" name="username" placeholder="Username" value="{{.Get "username"}}">
+				{{with .Errors.Get "username"}}
+					<label class='error'>{{.}}</label>
+				{{end}}
+			</div>
+			<div>
+					<label class="form-label" for="pass"></label>
+					<input class="form-control" type="password" id="pass" name="password" placeholder="Password">
+					{{with .Errors.Get "password"}}
+						<label class='error'>{{.}}</label>
+					{{end}}
+			</div>
+			<input class="btn loginbtn" type="submit" value="Log In">
+			<div class="registerlink">
+				<a href="/register" >New user? Register</a>
+			</div>
+		</form>
 	<div>
-		<label class="form-label" for="pass">Password (8 characters minimum):</label>
-		<input class="form-control" type="password" id="pass" name="password">
-			{{with .Errors.Get "password"}}
-				<label class='error'>{{.}}</label>
-			{{end}}
-	</div>
-	<input class="btn btn-primary" type="submit" value="Sign in">
-</form>
+</div>
 {{end}}
 {{end}}
