@@ -252,14 +252,17 @@ border:1px solid #45ffdb;
 	background-color: red
 }
 
-.commente {
+/* POSTCARD */
+
+.post {
     display: grid;
     grid-template-rows: 50px;
     grid-template-columns: 100px 1fr;
-    border: 2px dotted red;
+    border: 2px dotted cyan;
     padding: 10px;
     margin-top: 20px;
-    background: whitesmoke;
+    background: black;
+    color: white;
   }
 
 

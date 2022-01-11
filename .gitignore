@@ -17,7 +17,5 @@
 # Go workspace file
 go.work
 
-# Images
-*.png
 
 run.sh

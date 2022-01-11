@@ -136,7 +136,7 @@ func (c *CommentsModel) GetUserComments(username string) ([]*Comment, error) {
 // Check single vote
 func (c *CommentsModel) GetVote(id, vote, username string) (string, error) {
 	var s string
-	stmt := `SELECT type FROM vote WHERE user_id = ? AND post_id = ?`
+	stmt := `SELECT type FROM vote WHERE user_id = ? AND comment_id = ?`
 	res := c.DB.QueryRow(stmt, username, id)
 	err := res.Scan(&s)
 	if err != nil {
@@ -153,6 +153,7 @@ func (c *CommentsModel) AddVote(id, vote, username string) error {
 	i, err := c.GetVote(id, vote, username)
 	if err != nil {
 		if err == sql.ErrNoRows {
+			fmt.Println("Here you go.")
 			switch vote {
 			case "up":
 				stmt = `INSERT INTO vote (type, comment_id, created, user_id) VALUES

@@ -49,7 +49,7 @@ func (p *PostModel) Insert(title, content, user, imagesrc string, category []str
 
 func (p *PostModel) Get(id int) (*Post, error) {
 
-	stmt := `SELECT a.id, title, content, created, user, imagesrc, b.category_id From posts a
+	stmt := `SELECT a.id, title, content, created, user, imagesrc, b.category_id, votes From posts a
 	LEFT JOIN post_category b ON a.id = b.post_id
     WHERE a.id = ?`
 
@@ -61,7 +61,7 @@ func (p *PostModel) Get(id int) (*Post, error) {
 	for rows.Next() {
 		s := &Post{}
 		d := ""
-		err := rows.Scan(&s.ID, &s.Title, &s.Content, &s.Created, &s.User, &s.ImageSrc, &d)
+		err := rows.Scan(&s.ID, &s.Title, &s.Content, &s.Created, &s.User, &s.ImageSrc, &d, &s.Votes)
 		if err == sql.ErrNoRows {
 			return nil, ErrNoRecord
 		} else if err != nil {
@@ -73,6 +73,7 @@ func (p *PostModel) Get(id int) (*Post, error) {
 		a.Content = s.Content
 		a.Created = s.Created
 		a.User = s.User
+		a.Votes = s.Votes
 		if s.ImageSrc != "" {
 			a.ImageSrc = s.ImageSrc[12:]
 		}
@@ -342,8 +343,8 @@ func (p *PostModel) GetVote(id, vote, username string) (string, error) {
 
 // Check all votes for user
 func (p *PostModel) GetUserVotes(username string) [][]int {
-	votes := make([][]int, 2)
-	stmt := `SELECT post_id, type from vote WHERE user_id = ?`
+	votes := make([][]int, 4)
+	stmt := `SELECT post_id, comment_id, type from vote WHERE user_id = ?`
 	if username == "" {
 		return nil
 	}
@@ -355,23 +356,36 @@ func (p *PostModel) GetUserVotes(username string) [][]int {
 	defer rows.Close()
 
 	vote := 0
-	postid := 0
+	var postID int
+	var commentID int
 
 	for rows.Next() {
 
-		err := rows.Scan(&postid, &vote)
+		err := rows.Scan(&postID, &commentID, &vote)
 		if err != nil {
-			if err.Error() == `sql: Scan error on column index 1, name "type": converting NULL to int is unsupported` {
+			if err.Error() == `sql: Scan error on column index 2, name "type": converting NULL to int is unsupported` {
 				// fmt.Println(err)
 				continue
 			}
 			return nil
 		}
-		if vote == 1 {
-			votes[0] = append(votes[0], postid)
-		} else {
-			votes[1] = append(votes[1], postid)
+		if commentID == 0 {
+			if vote == 1 {
+				votes[0] = append(votes[0], postID)
+			} else {
+				votes[1] = append(votes[1], postID)
+			}
+			continue
 		}
+		if postID == 0 {
+			if vote == 1 {
+				votes[2] = append(votes[2], commentID)
+			} else {
+				votes[3] = append(votes[3], commentID)
+			}
+			continue
+		}
+
 	}
 
 	if err = rows.Err(); err != nil {

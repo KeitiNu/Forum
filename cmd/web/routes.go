@@ -27,6 +27,7 @@ func (app *application) routes() http.Handler {
 	mux.HandleFunc("/delete/", app.deletePost)
 	mux.HandleFunc("/deletecomment/", app.deleteComment)
 	mux.HandleFunc("/test", app.test)
+	mux.HandleFunc("/testcomment", app.testcomment)
 	// Metrics with expvar stdlib package.
 	mux.Handle("/debug/vars", expvar.Handler())
 

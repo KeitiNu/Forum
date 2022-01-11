@@ -1,7 +1,11 @@
 let votes = document.querySelector('#uservotes').innerText;
-votes = votes.split(`]`).slice(0, 2);
+votes = votes.split(`]`).slice(0, 4);
+console.log(votes);
 const upvotes = votes[0].slice(2).split(' ');
 const downvotes = votes[1].slice(2).split(' ');
+const commentUpvotes = votes[2].slice(2).split(' ');
+const commentDownvotes = votes[3].slice(2).split(' ');
+console.log('upvotes: ', upvotes, 'downvotes: ', downvotes,  'com upvotes: ', commentUpvotes, 'com downvotes: ', commentDownvotes);
 for (const post of upvotes) {
     let button = document.querySelector(`#form-up-${post} button`);
     if (button) {
@@ -10,6 +14,18 @@ for (const post of upvotes) {
 }
 for (const post of downvotes) {
     let button = document.querySelector(`#form-down-${post} button`);
+    if (button) {
+        button.classList.add("active");
+    }
+}
+for (const comment of commentUpvotes) {
+    let button = document.querySelector(`#comment-up-${comment} button`);
+    if (button) {
+        button.classList.add("active");
+    }
+}
+for (const comment of commentDownvotes) {
+    let button = document.querySelector(`#comment-down-${comment} button`);
     if (button) {
         button.classList.add("active");
     }
@@ -53,6 +69,26 @@ function fetchpost(id, updown) {
 
     // (B) FETCH
     fetch("http://localhost:8090/test", {
+        method: "POST",
+        body: formData,
+    })
+        .then((res) => { return res.text(); })
+        .then((txt) => { console.log(txt); })
+        .catch((err) => { console.log(err); });
+
+    // (C) PREVENT HTML FORM SUBMIT
+    return false;
+}
+
+function fetchcomment(id, updown) {
+    // (A) GET FORM DATA
+    // var form = document.getElementById("form-"+updown+"-"+id);
+    var formData = new FormData();
+    formData.append("postID", id);
+    formData.append("type", updown);
+
+    // (B) FETCH
+    fetch("http://localhost:8090/testcomment", {
         method: "POST",
         body: formData,
     })

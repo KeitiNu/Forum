@@ -233,3 +233,11 @@ func (app *application) test(w http.ResponseWriter, r *http.Request) {
 	vote := r.Form.Get("type")
 	app.models.Posts.AddVote(id, vote, user.Name)
 }
+
+func (app *application) testcomment(w http.ResponseWriter, r *http.Request) {
+	r.ParseMultipartForm(1 << 20)
+	user := app.contextGetUser(r)
+	id := r.Form.Get("postID")
+	vote := r.Form.Get("type")
+	app.models.Comments.AddVote(id, vote, user.Name)
+}

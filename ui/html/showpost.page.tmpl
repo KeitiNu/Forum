@@ -3,11 +3,46 @@
 
 {{with .Post}}
 <div class="div">
-    <h1>Title: {{.Title}}</h1>
-    <h3>Content: {{.Content}}</h3>
-    <p>Created at: {{.Created}}</p>
-    <h4>Categories: {{.Category}}</h4>
-    <h4>Posted by: {{.User}}</h4>
+    <div class="post" id="{{.ID}}">
+		{{if $.AuthenticatedUser}}
+		<div class="comment-upvote">
+			<form id="form-up-{{.ID}}" onsubmit="return fetchpost('{{.ID}}', 'up')">
+				<input value="{{.ID}}" hidden>
+				<button type="submit" class="btn btn-primary up-button" onclick="vote('{{.ID}}', 'up-button')">
+					<i class="bi bi-caret-up"></i>
+				</button>
+			</form>
+		</div>
+		<div class="comment-downvote">
+			<form id="form-down-{{.ID}}" onsubmit="return fetchpost('{{.ID}}', 'down')">
+				<input value="{{.ID}}" hidden>
+				<button type="submit" class="btn btn-primary down-button" onclick="vote('{{.ID}}', 'down-button')">
+					<i class="bi bi-caret-down"></i>
+				</button>
+			</form>
+		</div>
+		{{else}}
+		<div class="comment-upvote">
+			<a href="/login">
+				<button type="submit" class="btn btn-primary">
+					<i class="bi bi-caret-up"></i>
+				</button>
+			</a>
+		</div>
+		<div class="comment-downvote">
+			<a href="/login">
+				<button type="submit" class="btn btn-primary">
+					<i class="bi bi-caret-down"></i>
+				</button>
+			</a>
+		</div>
+		{{end}}
+
+			<div class="comment-username">Posted by {{.User}}</div>
+			<p name="votes" class="votes" value="0">{{.Votes}}</p>
+			<div class="comment-title"><a href="/post/{{.ID}}">{{.Title}}</a></div>
+			<div class="comment-comments">8 comments</div>
+	</div>
     {{with .ImageSrc}}
     <img class="postimg" src="/static/{{.}}" alt="" >
     {{end}}
@@ -53,16 +88,16 @@
 		<div class="card border-primary comment-card h-100">
 			<div class="row no-gutters">
 				<div class="col-md-2">
-					<form id="form-up-{{.ID}}" onsubmit="return fetchpost('{{.ID}}', 'up')">
+					<form id="comment-up-{{.ID}}" onsubmit="return fetchcomment('{{.ID}}', 'up')">
 						<input value="{{.ID}}" hidden>
 						<button type="submit" class="btn btn-primary up-button" onclick="vote('{{.ID}}', 'up-button')">
 							<i class="bi bi-caret-up"></i>
 						</button>
 					</form>
-		
+
 					<p name="votes" class="votes" value="0">{{.Votes}}</p>
-		
-					<form id="form-down-{{.ID}}" onsubmit="return fetchpost('{{.ID}}', 'down')">
+
+					<form id="comment-down-{{.ID}}" onsubmit="return fetchcomment('{{.ID}}', 'down')">
 						<input value="{{.ID}}" hidden>
 						<button type="submit" class="btn btn-primary down-button" onclick="vote('{{.ID}}', 'down-button')">
 							<i class="bi bi-caret-down"></i>
@@ -84,7 +119,7 @@
 		</div>
 	</div>
 
-	
+
 	<!-- Modal -->
 	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog" role="document">
@@ -117,7 +152,7 @@
                     <!-- <ul class="child_replay"></ul>
                 </div>
             </div> -->
-    
+
 <!-- </ul> -->
 
 <!-- </div> -->
