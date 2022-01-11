@@ -177,7 +177,6 @@ html {
     min-height: 100%;
   }
   .content-inside {
-    padding: 140px;
     padding-bottom: 50px;
     top: 50%;
     width: 100%;
@@ -188,6 +187,10 @@ html {
     background: white;
 }
 /*LOG IN PAGE*/
+
+.loginboxcontent {
+    padding: 140px;
+}
 
 .loginbox {
     max-width: 310px;
