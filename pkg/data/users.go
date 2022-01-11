@@ -61,19 +61,20 @@ func (p *password) Matches(plaintextPassword string) (bool, error) {
 }
 
 func ValidateEmail(v *forms.Validator, email string) {
-	v.Check(email != "", "email", "must be provided")
-	v.Check(forms.Matches(email, forms.EmailRX), "email", "must be a valid email address")
+	v.Check(email != "", "email", "Please enter a valid email address!")
+	v.Check(forms.Matches(email, forms.EmailRX), "email", "Please enter a valid email address!")
 }
 
 func ValidatePasswordPlaintext(v *forms.Validator, password string) {
-	v.Check(password != "", "password", "must be provided")
-	v.Check(len(password) >= 8, "password", "must be at least 8 character long")
-	v.Check(len(password) <= 72, "password", "must not be more than 72 characters long")
+	v.Check(password != "", "password", "Please enter your password!")
+	v.Check(len(password) >= 8, "password", "Password must be atleast 8 characters long!")
+	v.Check(len(password) <= 72, "password", "Password must not be over 72 characters long!")
 }
 
 func ValidateUser(v *forms.Validator, user *User) {
-	v.Check(user.Name != "", "username", "must be provided")
-	v.Check(len(user.Name) <= 500, "username", "must not be more than 500 characters long")
+	v.Check(user.Name != "", "username", "Please enter your username!")
+	v.Check(len(user.Name) >= 8, "username", "Username must be atleast 8 characters long!")
+	v.Check(len(user.Name) <= 16, "username", "Username must not be over 16 characters long!")
 
 	// Call the standalone ValidateEmail() helper.
 	ValidateEmail(v, user.Email)
@@ -95,8 +96,9 @@ func ValidateUser(v *forms.Validator, user *User) {
 }
 
 func ValidateLogin(v *forms.Validator, user *User) {
-	v.Check(user.Name != "", "username", "must be provided")
-	v.Check(len(user.Name) <= 500, "username", "must not be more than 500 characters long")
+	v.Check(user.Name != "", "username", "Please enter your username!")
+	v.Check(len(user.Name) >= 8, "username", "Username must be atleast 8 characters long!")
+	v.Check(len(user.Name) <= 16, "username", "Username must not be over 16 characters long!")
 
 	// ValidatePasswordPlaintext() helper.
 	if user.Password.plaintext != nil {
