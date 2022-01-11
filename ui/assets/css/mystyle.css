@@ -198,7 +198,7 @@ html {
 	background-color: red
 }
 
-.commente {
+.post {
     display: grid;
     grid-template-rows: 50px;
     grid-template-columns: 100px 1fr;
@@ -209,24 +209,24 @@ html {
   }
 
 
-  .comment-comments {
+  .post-comments {
     grid-column-start: 2;
     order: 5;
   }
-  .comment-downvote {
+  .post-downvote {
     order: 4;
     align-self: center;
    justify-self: center;
   }
 
-  .comment-upvote {
+  .post-upvote {
     align-self: center;
    justify-self: center;
   }
-  .comment-username {
+  .post-username {
     order: 1;
   }
-  .comment-title {
+  .post-title {
     grid-row: span 2;
     order: 3;
     font-size: x-large;
