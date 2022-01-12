@@ -3,20 +3,20 @@
 
 {{with .Post}}
 <div class="div">
-    <div class="post-card" id="{{.ID}}">
+    <div class="post-card" id="post{{.ID}}">
 		{{if $.AuthenticatedUser}}
 		<div class="post-upvote">
 			<form id="form-up-{{.ID}}" onsubmit="return fetchpost('{{.ID}}', 'up')">
-				<input value="{{.ID}}" hidden>
-				<button type="submit" class="btn btn-primary up-button" onclick="vote('{{.ID}}', 'up-button')">
+				<!-- <input value="{{.ID}}" hidden> -->
+				<button type="submit" class="btn btn-primary up-button" onclick="vote('post{{.ID}}', 'up-button')">
 					<i class="bi bi-caret-up"></i>
 				</button>
 			</form>
 		</div>
 		<div class="post-downvote">
 			<form id="form-down-{{.ID}}" onsubmit="return fetchpost('{{.ID}}', 'down')">
-				<input value="{{.ID}}" hidden>
-				<button type="submit" class="btn btn-primary down-button" onclick="vote('{{.ID}}', 'down-button')">
+				<!-- <input value="{{.ID}}" hidden> -->
+				<button type="submit" class="btn btn-primary down-button" onclick="vote('post{{.ID}}', 'down-button')">
 					<i class="bi bi-caret-down"></i>
 				</button>
 			</form>
@@ -71,12 +71,12 @@
 <div class="row row-cols-md-1 g-2 justify-content-center">
     {{range .Comments}}
 	<div class="col" >
-		<div class="card border-primary comment-card h-100" id="{{.ID}}">
+		<div class="card border-primary comment-card h-100" id="comment{{.ID}}">
 			<div class="row no-gutters">
 				<div class="col-md-2">
 					<form id="comment-up-{{.ID}}" onsubmit="return fetchcomment('{{.ID}}', 'up')">
-						<input value="{{.ID}}" hidden>
-						<button type="submit" class="btn btn-primary up-button" onclick="vote('{{.ID}}', 'up-button')">
+						<!-- <input value="{{.ID}}" hidden> -->
+						<button type="submit" class="btn btn-primary up-button" onclick="vote('comment{{.ID}}', 'up-button')">
 							<i class="bi bi-caret-up"></i>
 						</button>
 					</form>
@@ -84,8 +84,8 @@
 					<p name="votes" class="votes" value="0">{{.Votes}}</p>
 
 					<form id="comment-down-{{.ID}}" onsubmit="return fetchcomment('{{.ID}}', 'down')">
-						<input value="{{.ID}}" hidden>
-						<button type="submit" class="btn btn-primary down-button" onclick="vote('{{.ID}}', 'down-button')">
+						<!-- <input value="{{.ID}}" hidden> -->
+						<button type="submit" class="btn btn-primary down-button" onclick="vote('comment{{.ID}}', 'down-button')">
 							<i class="bi bi-caret-down"></i>
 						</button>
 					</form>

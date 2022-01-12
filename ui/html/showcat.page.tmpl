@@ -18,12 +18,12 @@
 	<a href="?col=created">New</a>
 	{{end}}
 	{{range .Posts}}
-	<div class="post-card" id="{{.ID}}">
+	<div class="post-card" id="post{{.ID}}">
 		{{if $.AuthenticatedUser}}
 		<div class="post-upvote">
 			<form id="form-up-{{.ID}}" onsubmit="return fetchpost('{{.ID}}', 'up')">
 				<input value="{{.ID}}" hidden>
-				<button type="submit" class="btn btn-primary up-button" onclick="vote('{{.ID}}', 'up-button')">
+				<button type="submit" class="btn btn-primary up-button" onclick="vote('post{{.ID}}', 'up-button')">
 					<i class="bi bi-caret-up"></i>
 				</button>
 			</form>
@@ -31,7 +31,7 @@
 		<div class="post-downvote">
 			<form id="form-down-{{.ID}}" onsubmit="return fetchpost('{{.ID}}', 'down')">
 				<input value="{{.ID}}" hidden>
-				<button type="submit" class="btn btn-primary down-button" onclick="vote('{{.ID}}', 'down-button')">
+				<button type="submit" class="btn btn-primary down-button" onclick="vote('post{{.ID}}', 'down-button')">
 					<i class="bi bi-caret-down"></i>
 				</button>
 			</form>
