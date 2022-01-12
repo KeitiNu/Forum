@@ -18,7 +18,7 @@
 	<a href="?col=created">New</a>
 	{{end}}
 	{{range .Posts}}
-	<div class="post" id="{{.ID}}">
+	<div class="post-card" id="{{.ID}}">
 		{{if $.AuthenticatedUser}}
 		<div class="post-upvote">
 			<form id="form-up-{{.ID}}" onsubmit="return fetchpost('{{.ID}}', 'up')">

@@ -257,7 +257,7 @@ border:1px solid #45ffdb;
 
 /* POSTCARD */
 
-.post {
+.post-card {
     display: grid;
     grid-template-rows: 50px;
     grid-template-columns: 100px 1fr;
