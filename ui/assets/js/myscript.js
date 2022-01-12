@@ -30,15 +30,15 @@ for (const comment of commentDownvotes) {
         button.classList.add("active");
     }
 }
-function vote(id, which) {
+function vote(id, updown, postcom) {
     let post = document.getElementById(id);
-    let button = post.getElementsByClassName(which)[0];
+    let button = post.getElementsByClassName(updown)[0];
     let vote = post.getElementsByClassName("votes")[0];
     let curVotes = parseInt(vote.innerHTML);
     let number = 1
     let otherbutton = post.getElementsByClassName('down-button')[0];
 
-    if (which == 'down-button') {
+    if (updown == 'down-button') {
         number = -1;
         otherbutton = post.getElementsByClassName('up-button')[0];
     };
