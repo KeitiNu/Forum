@@ -313,7 +313,7 @@ border:1px solid #45ffdb;
 
 /* POSTCARD */
 
-.post {
+.post-card {
     display: grid;
     grid-template-rows: 50px;
     grid-template-columns: 100px 1fr;
@@ -325,24 +325,24 @@ border:1px solid #45ffdb;
   }
 
 
-  .comment-comments {
+  .post-comments {
     grid-column-start: 2;
     order: 5;
   }
-  .comment-downvote {
+  .post-downvote {
     order: 4;
     align-self: center;
    justify-self: center;
   }
 
-  .comment-upvote {
+  .post-upvote {
     align-self: center;
    justify-self: center;
   }
-  .comment-username {
+  .post-username {
     order: 1;
   }
-  .comment-title {
+  .post-title {
     grid-row: span 2;
     order: 3;
     font-size: x-large;
@@ -352,4 +352,10 @@ border:1px solid #45ffdb;
     order: 2;
     align-self: center;
    justify-self: center;
+  }
+
+  .form-control {
+    border: 3px solid #45ffdb; 
+    border-radius: 4px; 
+    background-color: #f8f8f8d8
   }

@@ -3,33 +3,33 @@
 
 {{with .Post}}
 <div class="div">
-    <div class="post" id="{{.ID}}">
+    <div class="post-card" id="post{{.ID}}">
 		{{if $.AuthenticatedUser}}
-		<div class="comment-upvote">
+		<div class="post-upvote">
 			<form id="form-up-{{.ID}}" onsubmit="return fetchpost('{{.ID}}', 'up')">
-				<input value="{{.ID}}" hidden>
-				<button type="submit" class="btn btn-primary up-button" onclick="vote('{{.ID}}', 'up-button')">
+				<!-- <input value="{{.ID}}" hidden> -->
+				<button type="submit" class="btn btn-primary up-button" onclick="vote('post{{.ID}}', 'up-button')">
 					<i class="bi bi-caret-up"></i>
 				</button>
 			</form>
 		</div>
-		<div class="comment-downvote">
+		<div class="post-downvote">
 			<form id="form-down-{{.ID}}" onsubmit="return fetchpost('{{.ID}}', 'down')">
-				<input value="{{.ID}}" hidden>
-				<button type="submit" class="btn btn-primary down-button" onclick="vote('{{.ID}}', 'down-button')">
+				<!-- <input value="{{.ID}}" hidden> -->
+				<button type="submit" class="btn btn-primary down-button" onclick="vote('post{{.ID}}', 'down-button')">
 					<i class="bi bi-caret-down"></i>
 				</button>
 			</form>
 		</div>
 		{{else}}
-		<div class="comment-upvote">
+		<div class="post-upvote">
 			<a href="/login">
 				<button type="submit" class="btn btn-primary">
 					<i class="bi bi-caret-up"></i>
 				</button>
 			</a>
 		</div>
-		<div class="comment-downvote">
+		<div class="post-downvote">
 			<a href="/login">
 				<button type="submit" class="btn btn-primary">
 					<i class="bi bi-caret-down"></i>
@@ -38,10 +38,10 @@
 		</div>
 		{{end}}
 
-			<div class="comment-username">Posted by {{.User}}</div>
+			<div class="post-username">Posted by {{.User}}</div>
 			<p name="votes" class="votes" value="0">{{.Votes}}</p>
-			<div class="comment-title"><a href="/post/{{.ID}}">{{.Title}}</a></div>
-			<div class="comment-comments">8 comments</div>
+			<div class="post-title"><a href="/post/{{.ID}}">{{.Title}}</a></div>
+			<!-- <div class="post-comments">8 comments</div> -->
 	</div>
     {{with .ImageSrc}}
     <img class="postimg" src="/static/{{.}}" alt="" >
@@ -54,7 +54,7 @@
 <div>
     <form method="POST">
         <label for="comment">Comment</label>
-        <textarea name="comment" id="" cols="30" rows="10"></textarea>
+        <textarea name="comment" id="" cols="30" rows="10" required></textarea>
         {{if $.AuthenticatedUser}}
         <button type="submit" class="btn btn-primary" name="submitPost">Submit comment</button>
     </form>
@@ -69,28 +69,14 @@
 </div>
 {{end}}
 <div class="row row-cols-md-1 g-2 justify-content-center">
-    <!-- <ul id="list_comment" class="col-md-12"> -->
     {{range .Comments}}
-            <!-- Start List Comment 2
-            <li class="box_result row">
-                <div class="result_comment col-md-11">
-                    <h4>{{.User}}</h4>
-                    <p>{{.Content}}</p>
-                    <div class="tools_comment">
-                        <a class="like" href="#">Like</a>
-                        <span> · </span>
-                        <a class="replay" href="#">Reply</a>
-                        <span> · </span>
-                        <i class="fa fa-thumbs-o-up"></i> <span class="count">1</span>
-                        <span> · </span>
-                        <span>{{.Created}}</span> -->
-	<div class="col" id="{{.ID}}">
-		<div class="card border-primary comment-card h-100">
+	<div class="col" >
+		<div class="card border-primary comment-card h-100" id="comment{{.ID}}">
 			<div class="row no-gutters">
 				<div class="col-md-2">
 					<form id="comment-up-{{.ID}}" onsubmit="return fetchcomment('{{.ID}}', 'up')">
-						<input value="{{.ID}}" hidden>
-						<button type="submit" class="btn btn-primary up-button" onclick="vote('{{.ID}}', 'up-button')">
+						<!-- <input value="{{.ID}}" hidden> -->
+						<button type="submit" class="btn btn-primary up-button" onclick="vote('comment{{.ID}}', 'up-button')">
 							<i class="bi bi-caret-up"></i>
 						</button>
 					</form>
@@ -98,8 +84,8 @@
 					<p name="votes" class="votes" value="0">{{.Votes}}</p>
 
 					<form id="comment-down-{{.ID}}" onsubmit="return fetchcomment('{{.ID}}', 'down')">
-						<input value="{{.ID}}" hidden>
-						<button type="submit" class="btn btn-primary down-button" onclick="vote('{{.ID}}', 'down-button')">
+						<!-- <input value="{{.ID}}" hidden> -->
+						<button type="submit" class="btn btn-primary down-button" onclick="vote('comment{{.ID}}', 'down-button')">
 							<i class="bi bi-caret-down"></i>
 						</button>
 					</form>
@@ -149,13 +135,6 @@
 	{{end}}
 
 </div>
-                    <!-- <ul class="child_replay"></ul>
-                </div>
-            </div> -->
-
-<!-- </ul> -->
-
-<!-- </div> -->
 {{end}}
 
 {{define "js"}}
