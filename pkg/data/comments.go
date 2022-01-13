@@ -153,7 +153,6 @@ func (c *CommentsModel) AddVote(id, vote, username string) error {
 	i, err := c.GetVote(id, vote, username)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			fmt.Println("Here you go.")
 			switch vote {
 			case "up":
 				stmt = `INSERT INTO vote (type, comment_id, created, user_id) VALUES

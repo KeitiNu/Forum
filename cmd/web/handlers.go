@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
@@ -31,7 +32,9 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET": // When a person clicks the login link, the form appears.
 		app.render(w, r, "login.page.tmpl", &templateData{Form: forms.New(nil)})
-		back = r.Header.Get("referer")
+		if r.Header.Get("referer") != "http://localhost:8090/login" {
+			back = r.Header.Get("referer")
+		}
 		return
 	case "POST": // If a user submits a form on the login page, we check the data and then run the database queries.
 		err := r.ParseForm()
@@ -39,6 +42,7 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 			app.serverError(w, err)
 			return
 		}
+		fmt.Println(r.Header.Get("referer"))
 
 		// We make a form object with user input and error storage.
 		form := forms.New(r.PostForm)
@@ -49,7 +53,10 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 		user := &data.User{
 			Name: form.Get("username"),
 		}
-		user.Password.Set(form.Get("password"))
+		err = user.Password.Set(form.Get("password"))
+		if err != nil {
+			app.serverError(w, err)
+		}
 
 		// Validate the user struct and return the error messages to the client if any of
 		// the checks fail.

@@ -37,7 +37,7 @@ func (app *application) newCategory(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		app.models.Categories.Insert(category.Title, category.Description)
+		err = app.models.Categories.Insert(category.Title, category.Description)
 		if err != nil {
 			fmt.Println("error happened", err)
 		}

@@ -188,7 +188,7 @@ func (p *PostModel) Delete(id int) error {
 }
 
 func (p *PostModel) AddVote(id, vote, username string) error {
-	stmt := ``
+	var stmt string
 	i, err := p.GetVote(id, vote, username)
 	if err != nil {
 		if err == sql.ErrNoRows {

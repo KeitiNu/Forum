@@ -14,7 +14,10 @@ import (
 // then sends a generic 500 Internal Server Error response to the user.
 func (app *application) serverError(w http.ResponseWriter, err error) {
 	trace := fmt.Sprintf("%s\n%s", err.Error(), debug.Stack())
-	app.errorLog.Output(2, trace)
+	err = app.errorLog.Output(2, trace)
+	if err != nil {
+		app.serverError(w, err)
+	}
 
 	http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 }
@@ -52,7 +55,10 @@ func (app *application) render(w http.ResponseWriter, r *http.Request, name stri
 	}
 
 	// If there aren't any errors we display it to our client.
-	buf.WriteTo(w)
+	_, err = buf.WriteTo(w)
+	if err != nil {
+		app.serverError(w, err)
+	}
 }
 
 // Adding data to every template. For the moment we use it to add information about user to each page.

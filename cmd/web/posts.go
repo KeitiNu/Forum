@@ -48,7 +48,10 @@ func (app *application) submitPost(w http.ResponseWriter, r *http.Request) {
 				fmt.Println(err)
 			}
 
-			tempFile.Write(fileBytes)
+			_, err = tempFile.Write(fileBytes)
+			if err != nil {
+				app.serverError(w, err)
+			}
 			tempFilename = tempFile.Name()
 		}
 
@@ -125,7 +128,10 @@ func (app *application) showPost(w http.ResponseWriter, r *http.Request) {
 				http.Error(w, http.StatusText(http.StatusForbidden), http.StatusForbidden)
 				return
 			}
-			app.models.Comments.Update(a, cid)
+			err = app.models.Comments.Update(a, cid)
+			if err != nil {
+				app.serverError(w, err)
+			}
 		} else {
 			comment := &data.Comment{
 				PostID:  id,
@@ -134,7 +140,10 @@ func (app *application) showPost(w http.ResponseWriter, r *http.Request) {
 			user := app.contextGetUser(r)
 			comment.User = user.Name
 
-			app.models.Comments.Insert(comment)
+			_, err = app.models.Comments.Insert(comment)
+			if err != nil {
+				app.serverError(w, err)
+			}
 		}
 	}
 	http.Redirect(w, r, fmt.Sprintf("/post/%d", id), http.StatusFound)
@@ -226,18 +235,30 @@ func (app *application) deleteComment(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) test(w http.ResponseWriter, r *http.Request) {
-	r.ParseMultipartForm(1 << 20)
+	err := r.ParseMultipartForm(1 << 20)
+	if err != nil {
+		app.serverError(w, err)
+	}
 
 	user := app.contextGetUser(r)
 	id := r.Form.Get("postID")
 	vote := r.Form.Get("type")
-	app.models.Posts.AddVote(id, vote, user.Name)
+	err = app.models.Posts.AddVote(id, vote, user.Name)
+	if err != nil {
+		app.serverError(w, err)
+	}
 }
 
 func (app *application) testcomment(w http.ResponseWriter, r *http.Request) {
-	r.ParseMultipartForm(1 << 20)
+	err := r.ParseMultipartForm(1 << 20)
+	if err != nil {
+		app.serverError(w, err)
+	}
 	user := app.contextGetUser(r)
 	id := r.Form.Get("postID")
 	vote := r.Form.Get("type")
-	app.models.Comments.AddVote(id, vote, user.Name)
+	err = app.models.Comments.AddVote(id, vote, user.Name)
+	if err != nil {
+		app.serverError(w, err)
+	}
 }

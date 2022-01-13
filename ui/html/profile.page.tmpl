@@ -103,39 +103,53 @@ Modal
 	</div>
 </div>
 
-<h2>Your activity</h2>
-<a href="/profile/likes"><button type="button" class="btn btn-danger">Likes</button></a>
-<a href="/profile/posts"><button type="button" class="btn btn-danger">Posts</button></a>
-<a href="/profile/comments"><button type="button" class="btn btn-danger">Comments</button></a>
-{{if .Posts}}
-{{range .Posts}}
-{{block "post" .}}
-{{end}}
-{{end}}
-{{else}}
-{{range .Comments}}
-<li class="box_result row">
-	<div class="result_comment col-md-11">
-		<h4>{{.User}}</h4>
-		<p>{{.Content}}</p>
-		<div class="tools_comment">
-			<a class="like" href="#">Like</a>
-			<span> · </span>
-			<a class="replay" href="#">Reply</a>
-			<span> · </span>
-			<i class="fa fa-thumbs-o-up"></i> <span class="count">1</span>
-			<span> · </span>
-			<span>{{.Created}}</span>
+<div class="activity">
+	<h2>Your activity</h2>
+	<a href="/profile/likes"><button type="button" class="btn btn-danger">Likes</button></a>
+	<a href="/profile/posts"><button type="button" class="btn btn-danger">Posts</button></a>
+	<a href="/profile/comments"><button type="button" class="btn btn-danger">Comments</button></a>
+	{{range .Posts}}
+	<div class="post-card" id="post{{.ID}}">
+		<div class="post-upvote">
+			<form id="form-up-{{.ID}}" onsubmit="return fetchpost('{{.ID}}', 'up')">
+				<input value="{{.ID}}" hidden>
+				<button type="submit" class="btn btn-primary up-button" onclick="vote('post{{.ID}}', 'up-button')">
+					<i class="bi bi-caret-up"></i>
+				</button>
+			</form>
 		</div>
+		<div class="post-downvote">
+			<form id="form-down-{{.ID}}" onsubmit="return fetchpost('{{.ID}}', 'down')">
+				<input value="{{.ID}}" hidden>
+				<button type="submit" class="btn btn-primary down-button" onclick="vote('post{{.ID}}', 'down-button')">
+					<i class="bi bi-caret-down"></i>
+				</button>
+			</form>
+		</div>
+
+
+		<div class="post-username">Posted by {{.User}}</div>
+		<p name="votes" class="votes" value="0">{{.Votes}}</p>
+		<div class="post-title"><a href="/post/{{.ID}}">{{.Title}}</a></div>
+		<!-- <div class="post-comments">8 comments</div> -->
 	</div>
-</li>
-{{end}}
-{{end}} -->
-
-
-{{end}}
-{{define "js"}}
-	{{block "post-js" .}}
-
 	{{end}}
+	{{range .Comments}}
+	<li class="box_result row">
+		<div class="result_comment col-md-11">
+			<h4>{{.User}}</h4>
+			<p>{{.Content}}</p>
+			<div class="tools_comment">
+				<a class="like" href="#">Like</a>
+				<span> · </span>
+				<a class="replay" href="#">Reply</a>
+				<span> · </span>
+				<i class="fa fa-thumbs-o-up"></i> <span class="count">1</span>
+				<span> · </span>
+				<span>{{.Created}}</span>
+			</div>
+		</div>
+	</li>
+	{{end}}
+</div>
 {{end}}
