@@ -1,17 +1,26 @@
 {{template "base" .}}
 {{define "body"}}
-<h1>Profile</h1>
-<h2>User info</h2>
-<ul class="list-group">
-	<li class="list-group-item active" aria-current="true">Username: {{.AuthenticatedUser.Name}}</li>
-	<li class="list-group-item">Email: {{.AuthenticatedUser.Email}}</li>
-	<li class="list-group-item">Account type: Regular User</li>
+<div class="profilecontent">
+	<div class="profilebox">
+		<div class="profileheader">
+			<a>Profile</a>
+		</div>
+		<div class="profilepicture">
+			<img class="profilepageimg" src="/static/css/images/profile.png">
+		</div>
+		<div class="profilename">
+			<a>{{.AuthenticatedUser.Name}}</a> 
+		</div>
+		<div class="profileinfo">
+			<a>Email: {{.AuthenticatedUser.Email}}</a>
+			<a>Account type: Regular User</a>
+		</div>
+	</div>
+</div>
 
-</ul>
-
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#password_change_modal">Change
+<!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#password_change_modal">Change
 	password</button>
-<!-- Modal for the button /\ -->
+Modal for the button /\
 <div class="modal fade" id="password_change_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -70,7 +79,7 @@
 <h2>Become a moderator!</h2>
 <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#moderator_modal">Apply</button>
 
-<!-- Modal -->
+Modal
 <div class="modal fade" id="moderator_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -121,7 +130,7 @@
 	</div>
 </li>
 {{end}}
-{{end}}
+{{end}} -->
 
 
 {{end}}

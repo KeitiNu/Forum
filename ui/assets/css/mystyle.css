@@ -9,32 +9,9 @@ label {
     margin-top: 1rem;
 }
 
-.category-card {
-	min-width: 200px;
-	max-height: 500px;
-}
-
-.comment-card {
-	max-width: 700px;
-	width: 85%;
-	max-height: 500px;
-}
-
-.card-text {
-	overflow: hidden;
-	text-overflow: ellipsis;
-	display: -webkit-box;
-	-webkit-line-clamp: 5;
-			line-clamp: 2;
-	-webkit-box-orient: vertical;
-}
-
-.postimg {
-	max-width: 420px;
-	max-height: 420px;
-}
-
 /*---------------------HEADERS % FOOTER---------------------*/
+
+
 /*HEADER LOGGED OUT */
 #header-mainlogo {
     width: 9rem;
@@ -92,7 +69,6 @@ label {
 }
 
 
-
 /*HEADER LOGGED IN */
 
 .dropdown-menu.header {
@@ -137,6 +113,7 @@ label {
 
 /*HEADER LOGGED IN (admin) */
 
+
 /*FOOTER */
 .footer {
     background-color: #1A1A1B;
@@ -161,6 +138,7 @@ label {
  	}
 
 /*---------------------PAGES---------------------*/
+
 
 /*BASE.LAYOUT */
 html {
@@ -244,7 +222,9 @@ border:1px solid #45ffdb;
 
 }
 
+
 /*SIGN UP PAGE*/
+
 
 /* ERROR PAGE */
 
@@ -301,7 +281,41 @@ border:1px solid #45ffdb;
     text-decoration: none;
 }
 
-/* /////// */
+
+/* MAINPAGE */
+
+.categorycontent {
+    background: #1A1A1B;
+    height: 1px;
+}
+
+
+.card-text {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-line-clamp: 5;
+			line-clamp: 2;
+	-webkit-box-orient: vertical;
+}
+
+.category-card {
+	min-width: 200px;
+	max-height: 500px;
+}
+
+/* INSIDE THREAT PAGE */
+
+  .comment-card {
+	max-width: 700px;
+	width: 85%;
+	max-height: 500px;
+}
+
+.postimg {
+	max-width: 420px;
+	max-height: 420px;
+}
 
 .up-button.active {
 	background-color: green
@@ -310,8 +324,6 @@ border:1px solid #45ffdb;
 .down-button.active {
 	background-color: red
 }
-
-/* POSTCARD */
 
 .post-card {
     display: grid;
@@ -354,8 +366,54 @@ border:1px solid #45ffdb;
    justify-self: center;
   }
 
-  .form-control {
-    border: 3px solid #45ffdb; 
-    border-radius: 4px; 
-    background-color: #f8f8f8d8
+
+  /* PROFILE PAGE */
+
+  .profilecontent {
+      padding-top: 250px;
   }
+
+  .profilebox {
+    max-width: 550px;
+    min-width: 550px;
+    min-height: 250px;
+    max-height: 250px;
+    margin: auto;
+    background-color: #1A1A1B;
+    border:1px solid #676869;
+    padding: 20px;
+}
+
+.profileheader {
+    text-align: center;
+}
+
+.profilepicture {
+    width: 160px;
+    height: 160px;
+}
+
+.profilepageimg {
+    max-width: 100%;  
+    height: auto;   
+}
+
+/* CREATE POST PAGE */
+
+.createpostcontent {
+    padding-top: 160px;
+}
+
+.createpostbox {
+    max-width: 750px;
+    min-width: 750px;
+    min-height: 500px;
+    max-height: 500px;
+    margin: auto;
+    background-color: #1A1A1B;
+    border:1px solid #676869;
+}
+
+.createpostheader {
+    color: whitesmoke;
+}
