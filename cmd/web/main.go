@@ -67,12 +67,15 @@ func main() {
 		ErrorLog: errorLog,
 		Handler:  app.routes(),
 
-		 IdleTimeout: time.Minute,
-         ReadTimeout: 5 * time.Second,
-         WriteTimeout: 10 * time.Second,
+		IdleTimeout:  time.Minute,
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 10 * time.Second,
 	}
 	fmt.Printf("Started server on http://localhost%s", srv.Addr)
-	srv.ListenAndServe()
+	err = srv.ListenAndServe()
+	if err != nil {
+		errorLog.Fatal(err)
+	}
 }
 
 // The openDB() function returns a sql.DB connection pool.
