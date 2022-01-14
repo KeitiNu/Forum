@@ -486,3 +486,20 @@ a.dropdown-item:hover {
 span.badge.me-2.bg-primary {
     background-color: #1A1A1B;
 }
+
+
+/* CREATE CATEGORY PAGE */
+
+.createcatebox {
+    max-width: 750px;
+    min-width: 750px;
+    min-height: 410px;
+    margin: auto;
+    background-color: #1A1A1B;
+    border:1px solid #676869;
+    border-radius: 10px;
+}
+
+.submitcatebuttons {
+    padding-top: 20px;
+}
