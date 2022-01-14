@@ -115,6 +115,11 @@ label {
 
 
 /*FOOTER */
+.footercontent {
+    padding-top: 40px;
+    width: 100%;
+}
+
 .footer {
     background-color: #1A1A1B;
     border-top:1px solid #676869;
@@ -122,7 +127,8 @@ label {
     color: whitesmoke;
     line-height: 50px;
     padding: 0 20px;
-    min-width: 434px;
+    width: 100%;
+    
   }
 
   .inside-footer {
@@ -144,12 +150,14 @@ label {
 html {
     height: 100%;
     margin: 0;
+    width: 100%;
 }
 .base-layout-body {
     padding-top: 70px;
     height: 100%;
     background-color: #030303;
     margin: 0;
+    width: 100%;
 }
 
 .content {
@@ -401,19 +409,80 @@ border:1px solid #45ffdb;
 /* CREATE POST PAGE */
 
 .createpostcontent {
-    padding-top: 160px;
+    padding-top: 110px;
 }
 
 .createpostbox {
     max-width: 750px;
     min-width: 750px;
     min-height: 500px;
-    max-height: 500px;
     margin: auto;
     background-color: #1A1A1B;
     border:1px solid #676869;
+    border-radius: 10px;
 }
 
-.createpostheader {
+.createpostboxinside {
+    padding: 45px 45px 20px 45px;
+}
+
+.createpostboxinside label {
     color: whitesmoke;
+}
+
+.createpostheader h1 {
+    font-size: 45px;
+    color: whitesmoke;
+    padding-bottom: 10px;
+}
+
+.submitpostbuttons {
+    padding-top: 40px;
+}
+
+.cancelbtn {
+    color: #1A1A1B;
+    border:1px solid whitesmoke;
+    background-color: whitesmoke;
+    min-width: 110px;
+}
+
+.cancelbtn:hover {
+    color:whitesmoke;
+    border:1px solid rgb(165, 7, 7);
+    background-color: rgb(165, 7, 7);
+}
+
+.submitbtn {
+    color: whitesmoke;
+    border:1px solid whitesmoke;
+    background-color: #1A1A1B;
+    min-width: 110px;
+    }
+
+.submitbtn:hover {
+    background-color: #45ffdb;
+    color: #1A1A1B;
+    border:1px solid #45ffdb;
+}
+
+.badger {
+    color: whitesmoke;
+    border:1px solid whitesmoke;
+    background-color: #1A1A1B;
+}
+
+a.dropdown-item {
+    color: whitesmoke;
+    background-color: #1A1A1B;
+    font-size: 18px;
+}
+
+a.dropdown-item:hover {
+    background-color: #45ffdb;
+    color: #1A1A1B;
+}
+
+span.badge.me-2.bg-primary {
+    background-color: #1A1A1B;
 }
