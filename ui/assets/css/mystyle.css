@@ -377,34 +377,47 @@ border:1px solid #45ffdb;
 
   /* PROFILE PAGE */
 
-  .profilecontent {
-      padding-top: 250px;
-  }
-
   .profilebox {
-    max-width: 550px;
-    min-width: 550px;
-    min-height: 250px;
-    max-height: 250px;
+    max-width: 750px;
+    min-width: 750px;
+    min-height: 355px;
     margin: auto;
     background-color: #1A1A1B;
     border:1px solid #676869;
-    padding: 20px;
-}
+    border-radius: 10px;
 
-.profileheader {
-    text-align: center;
-}
+  }
 
-.profilepicture {
-    width: 160px;
-    height: 160px;
-}
+  .accountdetails {
+      display: flex;
+      flex-direction: row;
+  }
 
-.profilepageimg {
-    max-width: 100%;  
-    height: auto;   
-}
+  .accounth2 {
+      color: whitesmoke;
+      padding-bottom: 15px;
+      padding-top: 10px;
+  }
+
+  .accountdetails h3 {
+      font-size: 25px;
+      color: whitesmoke;
+  }
+
+  .profilename {
+      flex-grow: 1;
+      color: #45ffdb;
+  }
+
+  .profileemail {
+      flex-grow: 1;
+      color: #45ffdb;
+  }
+
+  .profileaccount {
+      flex-grow: 1;
+      color: #45ffdb;
+  }
 
 /* CREATE POST PAGE */
 
