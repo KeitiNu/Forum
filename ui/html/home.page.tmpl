@@ -1,32 +1,42 @@
 {{template "base" .}}
 {{define "body"}}
-<div class="categorycontent">
 
-    {{if .AuthenticatedUser}}
-    <h2>Hello, {{.AuthenticatedUser.Name}}. You have been logged in.</h2>
-    <a href="/submit">Submit Post</a>
-    <a href="/newcategory">Create Category</a>
-    {{else}}
-    <h2>Hello!</h2>
-	{{end}}
-
-	<div>
-		{{range .Categories}}
-		<div>
-			<div class="card border-warning category-card h-100">
-				<div class="card-body">
-					<a href="/category/{{.Title}}"><h5 class="card-title">{{.Title}}</h5></a>
-					<p class="card-text">{{.Description}}</p>
+<div class="mainpagecontent">
+	<div class="mainpagebox">
+		<div class="mainpageboxinside">
+				<div class="mainpageboxheader">
+					{{if .AuthenticatedUser}}
+					<h1>Hello, <a class="kodify">{{.AuthenticatedUser.Name}}</a>! Welcome to <a class="kodify">kodify</a>!</h1>
+					<div class="adderbuttons">
+						<a class="btn adderbutton" href="/newcategory">Create Category</a>
+						<a class="btn adderbutton" href="/submit">Submit Post</a>
+					</div>
+					{{else}}
+					<h1>Hello! Welcome to <a class="kodify">kodify</a>!</h1>
+					{{end}}
 				</div>
-
-				<!-- <div class="card-footer">
-					<small class="text-muted">341 active threads</small>
-				</div> -->
-
-			</div>
+				<div class="categories">
+					<div class="insidecategories">
+						{{range .Categories}}
+					<div>
+						<div class="insidecatepadding">
+							<div class="catecard">
+								<div class="card-body">
+									<a href="/category/{{.Title}}"><h5 class="catecardtitle stretched-link">{{.Title}}</h5></a>
+									<p class="card-text">{{.Description}}</p>
+								</div>
+				
+								<!-- <div class="card-footer">
+									<small class="text-muted">341 active threads</small>
+								</div> -->
+				
+							</div>
+						</div>
+					</div>
+					{{end}}
+					</div>
+				</div>
 		</div>
-		{{end}}
 	</div>
-
 </div>
 {{end}}
