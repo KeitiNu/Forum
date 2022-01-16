@@ -24,7 +24,7 @@
 			<form id="form-up-{{.ID}}" onsubmit="return fetchpost('{{.ID}}', 'up')">
 				<input value="{{.ID}}" hidden>
 				<button type="submit" class="btn btn-primary up-button" onclick="vote('post{{.ID}}', 'up-button')">
-					<i class="bi bi-caret-up"></i>
+					<i class="bi bi-caret-up-fill"></i>
 				</button>
 			</form>
 		</div>
@@ -32,7 +32,7 @@
 			<form id="form-down-{{.ID}}" onsubmit="return fetchpost('{{.ID}}', 'down')">
 				<input value="{{.ID}}" hidden>
 				<button type="submit" class="btn btn-primary down-button" onclick="vote('post{{.ID}}', 'down-button')">
-					<i class="bi bi-caret-down"></i>
+					<i class="bi bi-caret-down-fill"></i>
 				</button>
 			</form>
 		</div>
@@ -40,14 +40,14 @@
 		<div class="post-upvote">
 			<a href="/login">
 				<button type="submit" class="btn btn-primary">
-					<i class="bi bi-caret-up"></i>
+					<i class="bi bi-caret-up-fill"></i>
 				</button>
 			</a>
 		</div>
 		<div class="post-downvote">
 			<a href="/login">
 				<button type="submit" class="btn btn-primary">
-					<i class="bi bi-caret-down"></i>
+					<i class="bi bi-caret-down-fill"></i>
 				</button>
 			</a>
 		</div>

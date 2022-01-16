@@ -318,11 +318,13 @@ border:1px solid #45ffdb;
 }
 
 .up-button.active {
-	background-color: green
+	background-color: #4DFF48;
+	border: 1px solid #4DFF48;
 }
 
 .down-button.active {
-	background-color: red
+	background-color: #FF5050;
+	border: 1px solid #FF5050;
 }
 
 .post-card {

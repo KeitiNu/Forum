@@ -24,6 +24,7 @@ func (app *application) routes() http.Handler {
 	mux.HandleFunc("/post/", app.showPost)
 	mux.HandleFunc("/category/", app.showCategory)
 	mux.HandleFunc("/edit/", app.editPost)
+	mux.HandleFunc("/editimage/", app.editPostImage)
 	mux.HandleFunc("/delete/", app.deletePost)
 	mux.HandleFunc("/deletecomment/", app.deleteComment)
 	mux.HandleFunc("/test", app.test)
