@@ -321,7 +321,7 @@ border:1px solid #45ffdb;
 }
 
 .kodify {
-    color: #45ffdb;
+    color: #45ffdb!important; 
     text-decoration: none;
 }
 
@@ -404,6 +404,127 @@ border:1px solid #45ffdb;
 	max-height: 500px;
 }
 
+
+/* INSIDE CATEGORY PAGE */
+
+.insidecateboxheader {
+    padding-bottom: 30px;
+}
+
+.insidecateboxheader h1 {
+    font-size: 45px;
+    padding-bottom: 20px;
+}
+
+.headercard {
+    padding: 2px;
+    min-width: 200px;
+    max-height: 500px;
+    height: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    word-wrap: break-word;
+    background-color: #1A1A1B;
+}
+
+.headercard h2 {
+    color: whitesmoke;
+    font-size: 20px;
+}
+
+.filtercard {
+    padding: 2px;
+    min-width: 200px;
+    max-height: 500px;
+    height: 100%;
+    border-radius: 10px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    word-wrap: break-word;
+    background-color: #1A1A1B;
+}
+
+.filter-body {
+    text-align: center;
+}
+
+.post-card {
+    display: flex;
+}
+
+.votingbuttons {
+    padding-right: 20px;
+}
+
+.postdetails {
+    flex-grow: 8;
+}
+
+.post-username {
+    font-size: 10px;
+    color: #676869;
+}
+
+.post-title {
+    color: #45ffdb;
+    font-size: 30px;
+    text-decoration: none;
+}
+
+.post-title:hover {
+    color: #45ffdb;
+}
+
+.post-description {
+    color: whitesmoke;
+    font-size: 16px;
+}
+
+.up-button {
+    background: #1A1A1B;
+    z-index: 2;
+    position: relative;
+
+}
+
+.up-button.active {
+    border:1px solid #45ffdb;
+}
+
+.upb {
+    color: #45ffdb;
+}
+
+.down-button {
+    background: #1A1A1B;
+    z-index: 2;
+    position: relative;
+}
+
+.down-button.active {
+    border:1px solid rgb(165, 7, 7);; 
+}
+
+.downb {
+    color: rgb(165, 7, 7);;
+}
+
+.votecounter {
+    text-align: center;
+}
+
+.votes {
+    text-decoration: none;
+    color: whitesmoke;
+}
+
+
+
+
+
+
 /* INSIDE THREAT PAGE */
 
   .comment-card {
@@ -417,54 +538,11 @@ border:1px solid #45ffdb;
 	max-height: 420px;
 }
 
-.up-button.active {
-	background-color: green
-}
-
-.down-button.active {
-	background-color: red
-}
-
-.post-card {
-    display: grid;
-    grid-template-rows: 50px;
-    grid-template-columns: 100px 1fr;
-    border: 2px dotted cyan;
-    padding: 10px;
-    margin-top: 20px;
-    background: black;
-    color: white;
-  }
-
-
   .post-comments {
     grid-column-start: 2;
     order: 5;
   }
-  .post-downvote {
-    order: 4;
-    align-self: center;
-   justify-self: center;
-  }
-
-  .post-upvote {
-    align-self: center;
-   justify-self: center;
-  }
-  .post-username {
-    order: 1;
-  }
-  .post-title {
-    grid-row: span 2;
-    order: 3;
-    font-size: x-large;
-  }
-
-  .votes {
-    order: 2;
-    align-self: center;
-   justify-self: center;
-  }
+  
 
 
   /* PROFILE PAGE */
