@@ -9,7 +9,7 @@
 			<form id="form-up-{{.ID}}" onsubmit="return fetchpost('{{.ID}}', 'up')">
 				<!-- <input value="{{.ID}}" hidden> -->
 				<button type="submit" class="btn btn-primary up-button" onclick="vote('post{{.ID}}', 'up-button')">
-					<i class="bi bi-caret-up"></i>
+					<i class="bi bi-caret-up-fill"></i>
 				</button>
 			</form>
 		</div>
@@ -17,7 +17,7 @@
 			<form id="form-down-{{.ID}}" onsubmit="return fetchpost('{{.ID}}', 'down')">
 				<!-- <input value="{{.ID}}" hidden> -->
 				<button type="submit" class="btn btn-primary down-button" onclick="vote('post{{.ID}}', 'down-button')">
-					<i class="bi bi-caret-down"></i>
+					<i class="bi bi-caret-down-fill"></i>
 				</button>
 			</form>
 		</div>
@@ -25,14 +25,14 @@
 		<div class="post-upvote">
 			<a href="/login">
 				<button type="submit" class="btn btn-primary">
-					<i class="bi bi-caret-up"></i>
+					<i class="bi bi-caret-up-fill"></i>
 				</button>
 			</a>
 		</div>
 		<div class="post-downvote">
 			<a href="/login">
 				<button type="submit" class="btn btn-primary">
-					<i class="bi bi-caret-down"></i>
+					<i class="bi bi-caret-down-fill"></i>
 				</button>
 			</a>
 		</div>
@@ -51,6 +51,8 @@
 	<a href="/delete/{{.ID}}" data-method="delete" data-confirm="Are you sure?">Delete</a>
 	{{end}}
 </div>
+
+<!-- Commenting Section -->
 <div>
 	<form method="POST">
 		<label for="comment">Comment</label>
@@ -68,6 +70,8 @@
 
 </div>
 {{end}}
+
+<!-- Previous Comments Section -->
 <div class="row row-cols-md-1 g-2 justify-content-center">
 	{{range .Comments}}
 	<div class="col">
@@ -79,7 +83,7 @@
 						<!-- <input value="{{.ID}}" hidden> -->
 						<button type="submit" class="btn btn-primary up-button"
 							onclick="vote('comment{{.ID}}', 'up-button')">
-							<i class="bi bi-caret-up"></i>
+							<i class="bi bi-caret-up-fill"></i>
 						</button>
 					</form>
 
@@ -89,14 +93,14 @@
 						<!-- <input value="{{.ID}}" hidden> -->
 						<button type="submit" class="btn btn-primary down-button"
 							onclick="vote('comment{{.ID}}', 'down-button')">
-							<i class="bi bi-caret-down"></i>
+							<i class="bi bi-caret-down-fill"></i>
 						</button>
 					</form>
 					{{else}}
 						<!-- <input value="{{.ID}}" hidden> -->
 						<a href="/login">
 							<button type="submit" class="btn btn-primary up-button">
-								<i class="bi bi-caret-up"></i>
+								<i class="bi bi-caret-up-fill"></i>
 							</button>
 						</a>
 
@@ -105,7 +109,7 @@
 						<!-- <input value="{{.ID}}" hidden> -->
 						<a href="/login">
 							<button type="submit" class="btn btn-primary down-button">
-								<i class="bi bi-caret-down"></i>
+								<i class="bi bi-caret-down-fill"></i>
 							</button>
 						</a>
 					{{end}}

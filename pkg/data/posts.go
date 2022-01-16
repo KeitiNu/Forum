@@ -176,6 +176,17 @@ func (p *PostModel) Update(title, content string, id int) error {
 	return nil
 }
 
+func (p *PostModel) UpdateImage(imagesrc string, id int) error {
+	stmt := `UPDATE posts SET Imagesrc=? WHERE id = ?`
+	_, err := p.DB.Exec(stmt, imagesrc, id)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	return nil
+}
+
 func (p *PostModel) Delete(id int) error {
 	stmt := `DELETE FROM posts WHERE id = ?`
 	_, err := p.DB.Exec(stmt, id)

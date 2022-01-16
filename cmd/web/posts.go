@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"git.01.kood.tech/roosarula/forum/pkg/data"
 	"git.01.kood.tech/roosarula/forum/pkg/forms"
@@ -190,6 +191,34 @@ func (app *application) editPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+}
+
+func (app *application) editPostImage(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("running editPostImage")
+	id, err := strconv.Atoi(strings.Split(r.URL.Path[11:], "?")[0])
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	err = r.ParseForm()
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	form := forms.New(r.PostForm)
+	v := forms.NewValidator()
+	form.Errors = v
+
+	post := &data.Post{
+		ImageSrc: form.Get("image"),
+		ID:       id,
+	}
+	err = app.models.Posts.UpdateImage(post.ImageSrc, post.ID)
+	if err != nil {
+		fmt.Println(err)
+	}
+	http.Redirect(w, r, fmt.Sprintf("/edit/%d", id), http.StatusFound)
 }
 
 func (app *application) deletePost(w http.ResponseWriter, r *http.Request) {

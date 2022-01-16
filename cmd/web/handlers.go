@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 	"time"
 
@@ -32,7 +31,7 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET": // When a person clicks the login link, the form appears.
 		app.render(w, r, "login.page.tmpl", &templateData{Form: forms.New(nil)})
-		if r.Header.Get("referer") != "http://localhost:8090/login" {
+		if r.Header.Get("referer") != "http://localhost:8090/login" && r.Header.Get("referer") != "http://localhost:8090/signup" {
 			back = r.Header.Get("referer")
 		}
 		return
@@ -42,7 +41,6 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 			app.serverError(w, err)
 			return
 		}
-		fmt.Println(r.Header.Get("referer"))
 
 		// We make a form object with user input and error storage.
 		form := forms.New(r.PostForm)
