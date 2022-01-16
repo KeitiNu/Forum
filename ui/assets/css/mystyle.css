@@ -115,6 +115,11 @@ label {
 
 
 /*FOOTER */
+.footercontent {
+    padding-top: 40px;
+    width: 100%;
+}
+
 .footer {
     background-color: #1A1A1B;
     border-top:1px solid #676869;
@@ -122,7 +127,8 @@ label {
     color: whitesmoke;
     line-height: 50px;
     padding: 0 20px;
-    min-width: 434px;
+    width: 100%;
+    
   }
 
   .inside-footer {
@@ -144,12 +150,14 @@ label {
 html {
     height: 100%;
     margin: 0;
+    width: 100%;
 }
 .base-layout-body {
     padding-top: 70px;
     height: 100%;
     background-color: #030303;
     margin: 0;
+    width: 100%;
 }
 
 .content {
@@ -284,11 +292,102 @@ border:1px solid #45ffdb;
 
 /* MAINPAGE */
 
+.mainpagecontent {
+    padding-top: 40px;
+}
+
+.mainpagebox {
+    min-width: 750px;
+    min-height: auto;
+    margin: auto;
+    background-color: #1A1A1B;
+    border:1px solid #676869;
+    border-radius: 10px;
+}
+
+.mainpageboxinside {
+    padding: 45px 45px 20px 45px;
+}
+
 .categorycontent {
     background: #1A1A1B;
     height: 1px;
 }
 
+.mainpageboxheader h1 {
+    font-size: 45px;
+    color: whitesmoke;
+    padding-bottom: 10px;
+}
+
+.kodify {
+    color: #45ffdb;
+    text-decoration: none;
+}
+
+.kodify:hover {
+    color: #45ffdb;
+}
+
+.adderbuttons {
+    padding-bottom: 10px;
+}
+
+.adderbuttons a {
+    color: whitesmoke;
+    border:1px solid whitesmoke;
+    background-color: #1A1A1B;
+    min-width: 110px;
+    text-decoration: none;
+}
+    
+.adderbuttons a:hover {
+    background-color: #45ffdb;
+    color: #1A1A1B;
+    border:1px solid #45ffdb;
+}
+    
+.categories {
+    border:1px solid whitesmoke;
+    border-radius: 10px;
+}
+
+.insidecategories {
+    padding: 20px;
+}
+
+.insidecatepadding {
+    padding: 3px;
+}
+
+.catecard {
+    padding: 2px;
+    min-width: 200px;
+    max-height: 500px;
+    height: 100%;
+    border:1px solid #676869;
+    border-radius: 10px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    word-wrap: break-word;
+    background-color: #1A1A1B;
+    transition: transform .2s;
+}
+
+.catecard:hover {
+    transform: scale(1.02);
+}
+
+.card-body a {
+    text-decoration: none;
+}
+
+.catecardtitle {
+    color: #45ffdb;
+    font-size: 30px;
+    text-decoration: none;
+}
 
 .card-text {
 	overflow: hidden;
@@ -297,6 +396,7 @@ border:1px solid #45ffdb;
 	-webkit-line-clamp: 5;
 			line-clamp: 2;
 	-webkit-box-orient: vertical;
+    color: whitesmoke;
 }
 
 .category-card {
@@ -371,51 +471,142 @@ border:1px solid #45ffdb;
 
   /* PROFILE PAGE */
 
-  .profilecontent {
-      padding-top: 250px;
-  }
-
   .profilebox {
-    max-width: 550px;
-    min-width: 550px;
-    min-height: 250px;
-    max-height: 250px;
+    max-width: 750px;
+    min-width: 750px;
+    min-height: 355px;
     margin: auto;
     background-color: #1A1A1B;
     border:1px solid #676869;
-    padding: 20px;
-}
+    border-radius: 10px;
 
-.profileheader {
-    text-align: center;
-}
+  }
 
-.profilepicture {
-    width: 160px;
-    height: 160px;
-}
+  .accountdetails {
+      display: flex;
+      flex-direction: row;
+  }
 
-.profilepageimg {
-    max-width: 100%;  
-    height: auto;   
-}
+  .accounth2 {
+      color: whitesmoke;
+      padding-bottom: 15px;
+      padding-top: 10px;
+  }
+
+  .accountdetails h3 {
+      font-size: 25px;
+      color: whitesmoke;
+  }
+
+  .profilename {
+      flex-grow: 1;
+      color: #45ffdb;
+  }
+
+  .profileemail {
+      flex-grow: 1;
+      color: #45ffdb;
+  }
+
+  .profileaccount {
+      flex-grow: 1;
+      color: #45ffdb;
+  }
 
 /* CREATE POST PAGE */
 
 .createpostcontent {
-    padding-top: 160px;
+    padding-top: 110px;
 }
 
 .createpostbox {
     max-width: 750px;
     min-width: 750px;
     min-height: 500px;
-    max-height: 500px;
     margin: auto;
     background-color: #1A1A1B;
     border:1px solid #676869;
+    border-radius: 10px;
 }
 
-.createpostheader {
+.createpostboxinside {
+    padding: 45px 45px 20px 45px;
+}
+
+.createpostboxinside label {
     color: whitesmoke;
+}
+
+.createpostheader h1 {
+    font-size: 45px;
+    color: whitesmoke;
+    padding-bottom: 10px;
+}
+
+.submitpostbuttons {
+    padding-top: 40px;
+}
+
+.cancelbtn {
+    color: #1A1A1B;
+    border:1px solid whitesmoke;
+    background-color: whitesmoke;
+    min-width: 110px;
+}
+
+.cancelbtn:hover {
+    color:whitesmoke;
+    border:1px solid rgb(165, 7, 7);
+    background-color: rgb(165, 7, 7);
+}
+
+.submitbtn {
+    color: whitesmoke;
+    border:1px solid whitesmoke;
+    background-color: #1A1A1B;
+    min-width: 110px;
+    }
+
+.submitbtn:hover {
+    background-color: #45ffdb;
+    color: #1A1A1B;
+    border:1px solid #45ffdb;
+}
+
+.badger {
+    color: whitesmoke;
+    border:1px solid whitesmoke;
+    background-color: #1A1A1B;
+}
+
+a.dropdown-item {
+    color: whitesmoke;
+    background-color: #1A1A1B;
+    font-size: 18px;
+}
+
+a.dropdown-item:hover {
+    background-color: #45ffdb;
+    color: #1A1A1B;
+}
+
+span.badge.me-2.bg-primary {
+    background-color: #1A1A1B;
+}
+
+
+/* CREATE CATEGORY PAGE */
+
+.createcatebox {
+    max-width: 750px;
+    min-width: 750px;
+    min-height: 410px;
+    margin: auto;
+    background-color: #1A1A1B;
+    border:1px solid #676869;
+    border-radius: 10px;
+}
+
+.submitcatebuttons {
+    padding-top: 20px;
 }

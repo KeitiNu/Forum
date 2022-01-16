@@ -1,22 +1,36 @@
 {{template "base" .}}
 {{define "body"}}
-<div class="profilecontent">
+
+<div class="createpostcontent">
 	<div class="profilebox">
-		<div class="profileheader">
-			<a>Profile</a>
-		</div>
-		<div class="profilepicture">
-			<img class="profilepageimg" src="/static/css/images/profile.png">
-		</div>
-		<div class="profilename">
-			<a>{{.AuthenticatedUser.Name}}</a> 
-		</div>
-		<div class="profileinfo">
-			<a>Email: {{.AuthenticatedUser.Email}}</a>
-			<a>Account type: Regular User</a>
+		<div class="createpostboxinside">
+			<div class="createpostheader">
+				<h1>Profile</h1>
+			</div>
+			<div class="accounth2">
+				<h2>Account details</h2>
+			</div>
+			<div class="accountdetails">
+				<div class="profilename">
+					<h3>Username</h3>
+					<a>{{.AuthenticatedUser.Name}}</a> 
+				</div>
+				<div class="profileemail">
+					<h3>Email</h3>
+					<a>{{.AuthenticatedUser.Email}}</a>
+				</div>
+				<div class="profileaccount">
+					<h3>Account type</h3>
+					<a>Regular User</a>
+				</div>
+			</div>
+			<div class="submitpostbuttons">
+				<a href="/" class="btn submitbtn" >Back</a>
+			</div>
 		</div>
 	</div>
 </div>
+
 
 <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#password_change_modal">Change
 	password</button>
@@ -131,7 +145,7 @@ Modal
 		<div class="post-username">Posted by {{.User}}</div>
 		<p name="votes" class="votes" value="0">{{.Votes}}</p>
 		<div class="post-title"><a href="/post/{{.ID}}">{{.Title}}</a></div>
-		<!-- <div class="post-comments">8 comments</div> -->
+		<div class="post-comments">8 comments</div>
 	</div>
 	{{end}}
 	{{range .Comments}}
@@ -151,5 +165,5 @@ Modal
 		</div>
 	</li>
 	{{end}}
-</div>
+</div> -->
 {{end}}
