@@ -71,7 +71,6 @@ func (app *application) addDefaultData(td *templateData, r *http.Request) *templ
 		return td
 	} else {
 		td.UserVotes = app.models.Posts.GetUserVotes(td.AuthenticatedUser.Name)
-		fmt.Println(td.UserVotes)
 	}
 	return td
 }

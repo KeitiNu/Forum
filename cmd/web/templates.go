@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"html/template"
 	"path/filepath"
+	"time"
 
 	"git.01.kood.tech/roosarula/forum/pkg/data"
 	"git.01.kood.tech/roosarula/forum/pkg/forms"
@@ -21,8 +23,39 @@ type templateData struct {
 	Sort              string
 }
 
-/* Each and every time we render a web page, our application must read the template files from disk.
-This could be speeded up by caching the templates in memory. */
+var functions = template.FuncMap{
+	"timeAgo":   timeAgo,
+	"humanDate": humanDate,
+}
+
+func humanDate(t time.Time) string {
+	return t.Format("Mon 02 Jan 2006 15:04:05 MST")
+}
+
+// Converts content creation time to a string "x (minutes/hours/...) ago"
+func timeAgo(t time.Time) string {
+	s := time.Now()
+	timeDiff := int(s.Sub(t).Minutes())
+	switch {
+	case timeDiff >= 525600:
+		return fmt.Sprintf("%d year ago", timeDiff/525600)
+	case timeDiff >= 2880:
+		return fmt.Sprintf("%d days ago", timeDiff/1440)
+	case timeDiff >= 1440:
+		return fmt.Sprintf("%d day ago", timeDiff/1440)
+	case timeDiff > 120:
+		return fmt.Sprintf("%d hours ago", timeDiff/60)
+	case timeDiff > 60:
+		return fmt.Sprintf("%d hour ago", timeDiff/60)
+	case timeDiff > 1:
+		return fmt.Sprintf("%d minutes ago", timeDiff)
+	default:
+		return fmt.Sprintf("%d minute ago", timeDiff)
+
+	}
+
+}
+
 func newTemplateCache(dir string) (map[string]*template.Template, error) {
 	// Initialize a new map to act as the cache.
 	cache := map[string]*template.Template{}
@@ -42,7 +75,7 @@ func newTemplateCache(dir string) (map[string]*template.Template, error) {
 		name := filepath.Base(page)
 
 		// Parse the page template file in to a template set.
-		ts, err := template.ParseFiles(page)
+		ts, err := template.New(name).Funcs(functions).ParseFiles(page)
 		if err != nil {
 			return nil, err
 		}

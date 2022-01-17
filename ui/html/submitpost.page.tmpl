@@ -21,7 +21,7 @@
 					<label class="form-label">Title</label>
 					<input class="form-control" type="text" required name="title" placeholder="Post title" value="" maxlength="30"/>
 				</div>
-			
+
 				<!-- Content textarea -->
 				<div class="">
 					<label class="form-label">Description</label>
@@ -33,7 +33,7 @@
 					</div>
 				</div>
 				<div id="textarea_count" class="badge pull-right"></div>
-			
+
 				<!-- Image upload -->
 				<div class="">
 					<label class="form-label">Upload Image</label>
@@ -44,14 +44,14 @@
 				</div>
 				<!-- Category tagging -->
 				<div class="">
-					<label class="form-label">Tags</label>
-					<select class="form-select form-control" id="tags-input" name="category" required multiple data-allow-clear="true" data-show-all-suggestions="true" data-max="5">
+					<label class="form-label">Tags (maximum 5)</label>
+					<select class="form-select form-control" id="tags-input" name="category" required multiple data-allow-clear="true" data-show-all-suggestions="true" data-suggestions-threshold="0" data-max="5">
 						{{range .Categories}}
 						<option class="dropdownoption"value="{{.Title}}">{{.Title}}</option>
 						{{end}}
 					</select>
 				</div>
-			
+
 				<!-- Sumbit button -->
 				<div class="submitpostbuttons">
 					<a href="/" class="btn cancelbtn" >Cancel</a>
@@ -60,7 +60,7 @@
 			</form>
 		</div>
 	</div>
-</div>	
+</div>
 {{end}}
 
 {{define "js"}}
@@ -77,6 +77,4 @@
 	var checkedOne = Array.prototype.slice.call(checkboxes).some(x => x.checked);
 	console.log(checkedOne)
 </script>
-
-
 {{end}}

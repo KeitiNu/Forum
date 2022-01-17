@@ -6,59 +6,103 @@
 {{end}}
 
 {{define "body"}}
-<div>
-	<a href="?col=top">Top</a>
-	{{if eq .Sort "top"}}
-	<div>
-		<a href="?col=top&time=1">Day</a>
-		<a href="?col=top&time=7">Week</a>
-		<a href="?col=top&time=31">Month</a>
-		<a href="?col=top&time=365">Year</a>
-	</div>
-	<a href="?col=created">New</a>
-	{{end}}
-	{{range .Posts}}
-	<div class="post-card" id="post{{.ID}}">
-		{{if $.AuthenticatedUser}}
-		<div class="post-upvote">
-			<form id="form-up-{{.ID}}" onsubmit="return fetchpost('{{.ID}}', 'up')">
-				<input value="{{.ID}}" hidden>
-				<button type="submit" class="btn btn-primary up-button" onclick="vote('post{{.ID}}', 'up-button')">
-					<i class="bi bi-caret-up-fill"></i>
-				</button>
-			</form>
-		</div>
-		<div class="post-downvote">
-			<form id="form-down-{{.ID}}" onsubmit="return fetchpost('{{.ID}}', 'down')">
-				<input value="{{.ID}}" hidden>
-				<button type="submit" class="btn btn-primary down-button" onclick="vote('post{{.ID}}', 'down-button')">
-					<i class="bi bi-caret-down-fill"></i>
-				</button>
-			</form>
-		</div>
-		{{else}}
-		<div class="post-upvote">
-			<a href="/login">
-				<button type="submit" class="btn btn-primary">
-					<i class="bi bi-caret-up-fill"></i>
-				</button>
-			</a>
-		</div>
-		<div class="post-downvote">
-			<a href="/login">
-				<button type="submit" class="btn btn-primary">
-					<i class="bi bi-caret-down-fill"></i>
-				</button>
-			</a>
-		</div>
-		{{end}}
 
-			<div class="post-username">Posted by {{.User}}</div>
-			<p name="votes" class="votes" value="0">{{.Votes}}</p>
-			<div class="post-title"><a href="/post/{{.ID}}">{{.Title}}</a></div>
-			<!-- <div class="post-comments">8 comments</div> -->
+<div class="mainpagecontent">
+	<div class="mainpagebox">
+		<div class="mainpageboxinside">
+			<div class="insidecateboxheader">
+				<div class="headercard">
+					<h1 class="kodify">Jõulupeo müsteerium</h1>
+					<h2>What really happened?</h2>
+				</div>
+			</div>
+			<div class="adderbuttons">
+				<a class="btn adderbutton" href="/">Back</a>
+				<a class="btn adderbutton" href="/submit">Submit Post</a>
+			</div>
+			<div class="categories">
+				<div class="insidecategories">
+					<div class="insidecatepadding">
+						<div class="filtercard">
+							<div class="filter-body">
+								<div class="adderbuttons">
+									<a class="btn adderbutton" href="?col=created">New</a>
+									<a class="btn adderbutton" href="?col=top&time=1">Day</a>
+									<a class="btn adderbutton" href="?col=top&time=7">Week</a>
+									<a class="btn adderbutton" href="?col=top&time=31">Month</a>
+									<a class="btn adderbutton" href="?col=top&time=365">Year</a>
+									<a class="btn adderbutton" href="?col=top">All time</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					{{range .Posts}}
+					<div class="insidecatepadding">
+						<div class="catecard">
+							<div class="card-body">
+								<div class="post-card" id="post{{.ID}}">
+									<div class="votingbuttons">
+										{{if $.AuthenticatedUser}}
+										<div class="post-upvote">
+											<form id="form-up-{{.ID}}" onsubmit="return fetchpost('{{.ID}}', 'up')">
+												<input value="{{.ID}}" hidden>
+												<button type="submit" class="btn up-button" onclick="vote('post{{.ID}}', 'up-button')">
+													<i class="bi upb bi-caret-up"></i>
+												</button>
+											</form>
+										</div>
+
+										<div class="votecounter">
+											<a name="votes" class="votes" value="0">{{.Votes}}</a>
+										</div>
+
+										<div class="post-downvote">
+											<form id="form-down-{{.ID}}" onsubmit="return fetchpost('{{.ID}}', 'down')">
+												<input value="{{.ID}}" hidden>
+												<button type="submit" class="btn down-button" onclick="vote('post{{.ID}}', 'down-button')">
+													<i class="bi downb bi-caret-down"></i>
+												</button>
+											</form>
+										</div>
+										{{else}}
+
+										<div class="post-upvote">
+											<a href="/login">
+												<button type="submit" class="btn up-button">
+													<i class="bi upb bi-caret-up"></i>
+												</button>
+											</a>
+										</div>
+
+										<div class="votecounter">
+											<p name="votes" class="votes" value="0">{{.Votes}}</p>
+										</div>
+
+										<div class="post-downvote">
+											<a href="/login">
+												<button type="submit" class="btn down-button">
+												<i class="bi downb bi-caret-down"></i>
+												</button>
+											</a>
+										</div>
+										{{end}}
+									</div>
+
+									<div class="postdetails">
+										<div class="post-username">Posted by {{.User}}</div>
+										<div class="post-title"><a class="post-title stretched-link" href="/post/{{.ID}}">{{.Title}}</a></div>
+										<div class="post-description">{{timeAgo .Created}}</div>
+										<!-- <div class="post-comments">8 comments</div> -->
+									</div>
+
+								</div>
+							</div>
+						</div>
+					</div>
+					{{end}}
+				</div>
+			</div>
+		</div>
 	</div>
-	{{end}}
-</div>
 </div>
 {{end}}
