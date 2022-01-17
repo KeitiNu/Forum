@@ -35,6 +35,10 @@ func main() {
 	if err != nil {
 		errorLog.Fatal(err)
 	}
+	err = Migrate(db)
+	if err != nil {
+		errorLog.Fatal(err)
+	}
 	defer db.Close()
 
 	// Data and configuration for app
