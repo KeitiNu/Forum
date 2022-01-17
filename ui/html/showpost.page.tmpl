@@ -58,7 +58,7 @@
 							<div class="postdetails">
 								<div class="post-username-thread">Posted by {{.User}} {{timeAgo .Created}}</div>
 								<div class="post-title-thread"><a class="post-title-thread stretched-link" href="/post/{{.ID}}">{{.Title}}</a></div>
-								<div class="post-description-thread">Random description hardcoded for leo yeee boi.</div>
+								<div class="post-description-thread">{{.Content}}</div>
 								<!-- <div class="post-comments">8 comments</div> -->
 							</div>
 
@@ -195,6 +195,10 @@
 					{{end}}
 				</div>
 			</div>
+		
+</div>
+
+
 		</div>
 	</div>
 </div>
