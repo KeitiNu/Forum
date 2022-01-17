@@ -30,8 +30,8 @@ func (app *application) newCategory(w http.ResponseWriter, r *http.Request) {
 			Description: form.Get("description"),
 		}
 
-		v.Check(category.Title != "", "title", "must be provided")
-		v.Check(category.Description != "", "description", "must be provided")
+		v.Check(category.Title != "", "title", "Name must be provided")
+		v.Check(category.Description != "", "description", "Description must be provided")
 		if !v.Valid() {
 			app.render(w, r, "createcat.page.tmpl", &templateData{Form: form})
 			return
@@ -56,18 +56,24 @@ func (app *application) showCategory(w http.ResponseWriter, r *http.Request) {
 	if uq.Get("time") != "" {
 		time = uq.Get("time")
 	}
+	
+	categories, err := app.models.Categories.GetOne(category)
+	
+	if err != nil {
+		app.serverError(w, err)
+	}
 
 	if sortColumn == "top" {
 		posts, err := app.models.Posts.Latest(category, "votes", "DESC", time)
 		if err != nil {
 			app.serverError(w, err)
 		}
-		app.render(w, r, "showcat.page.tmpl", &templateData{Posts: posts, Sort: "top"})
+		app.render(w, r, "showcat.page.tmpl", &templateData{Posts: posts, Sort: "top", Categories: categories})
 		return
 	}
 	posts, err := app.models.Posts.Latest(category, sortColumn, "DESC", time)
 	if err != nil {
 		app.serverError(w, err)
 	}
-	app.render(w, r, "showcat.page.tmpl", &templateData{Posts: posts})
+	app.render(w, r, "showcat.page.tmpl", &templateData{Posts: posts, Categories: categories})
 }

@@ -56,3 +56,31 @@ func (m *CategoryModel) Latest() ([]*Category, error) {
 	}
 	return categories, nil
 }
+
+func (m *CategoryModel) GetOne(title string) ([]*Category, error) {
+	stmt := `SELECT title, description FROM categories WHERE title = ?`
+
+	rows, err := m.DB.Query(stmt, title)
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	category := []*Category{}
+
+	for rows.Next() {
+		s := &Category{}
+
+		err := rows.Scan(&s.Title, &s.Description)
+		if err != nil {
+			return nil, err
+		}
+		category= append(category, s)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+	return category, nil
+}

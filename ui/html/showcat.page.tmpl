@@ -12,8 +12,10 @@
 		<div class="mainpageboxinside">
 			<div class="insidecateboxheader">
 				<div class="headercard">
-					<h1 class="kodify">Jõulupeo müsteerium</h1>
-					<h2>What really happened?</h2>
+					{{range .Categories}}
+						<h1 class="kodify">{{.Title}}</h1>
+						<h2>{{.Description}}</h2>
+					{{end}}
 				</div>
 			</div>
 			<div class="adderbuttons">
@@ -91,8 +93,7 @@
 									<div class="postdetails">
 										<div class="post-username">Posted by {{.User}} {{timeAgo .Created}}</div>
 										<div class="post-title"><a class="post-title stretched-link" href="/post/{{.ID}}">{{.Title}}</a></div>
-										<div class="post-description">Random description hardcoded for leo yeee boi.</div>
-										
+										<div class="post-description">{{.Content}}</div>
 										<!-- <div class="post-comments">8 comments</div> -->
 									</div>
 
