@@ -1,6 +1,8 @@
 package forms
 
-import "regexp"
+import (
+	"regexp"
+)
 
 // email Regex
 var (

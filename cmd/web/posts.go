@@ -64,6 +64,7 @@ func (app *application) submitPost(w http.ResponseWriter, r *http.Request) {
 		post := &data.Post{
 			Title:    form.Get("title"),
 			Content:  form.Get("content"),
+			Category: r.Form["category"],
 			ImageSrc: tempFilename,
 		}
 
@@ -71,6 +72,7 @@ func (app *application) submitPost(w http.ResponseWriter, r *http.Request) {
 		post.User = user.Name
 		v.Check(post.Title != "", "title", "must be provided")
 		v.Check(post.Content != "", "content", "must be provided")
+		v.Check(len(post.Category) != 0, "category", "must be provided")
 		if !v.Valid() {
 			app.render(w, r, "submitpost.page.tmpl", &templateData{Form: form})
 			return

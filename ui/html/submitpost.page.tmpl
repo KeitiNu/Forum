@@ -16,16 +16,22 @@
 				<h1>Create a post</h1>
 			</div>
 			<form method="POST" id="threadform" action="/submit" enctype="multipart/form-data">
+				{{with $.Form}}
 				<!-- Thread title -->
 				<div class="">
 					<label class="form-label">Title</label>
-					<input class="form-control" type="text" required name="title" placeholder="Post title" value="" maxlength="30"/>
+					<input class="form-control" type="text" name="title" placeholder="Post title" value=""
+						maxlength="30" />
+					{{with .Errors.Get "title"}}
+					<label class='error'>{{.}}</label>
+					{{end}}
 				</div>
 
 				<!-- Content textarea -->
 				<div class="">
 					<label class="form-label">Description</label>
-					<textarea class="form-control" id="postcontent" name="content" onkeyup="charactercount()" maxlength="500" placeholder="Maximum 500 characters" required></textarea>
+					<textarea class="form-control" id="postcontent" name="content" onkeyup="charactercount()"
+						maxlength="500" placeholder="Maximum 500 characters"></textarea>
 					<div class="d-flex justify-content-end">
 						<span id="words_count" class="badge badger">
 							<span id="textcount">0</span>/500
@@ -33,28 +39,37 @@
 					</div>
 				</div>
 				<div id="textarea_count" class="badge pull-right"></div>
-
+				{{with .Errors.Get "title"}}
+				<label class='error'>{{.}}</label>
+				{{end}}
+				{{end}}
 				<!-- Image upload -->
 				<div class="">
 					<label class="form-label">Upload Image</label>
 					<div class="input-group">
-						<input type="file" class="form-control" id="inputGroupFile01" name="myFile"
-							>
+						<input type="file" class="form-control" id="inputGroupFile01" name="myFile">
 					</div>
 				</div>
 				<!-- Category tagging -->
 				<div class="">
 					<label class="form-label">Tags (maximum 5)</label>
-					<select class="form-select form-control" id="tags-input" name="category" required multiple data-allow-clear="true" data-show-all-suggestions="true" data-suggestions-threshold="0" data-max="5">
+					<select class="form-select form-control" id="tags-input" name="category" multiple
+						data-allow-clear="true" data-show-all-suggestions="true" data-suggestions-threshold="0"
+						data-max="5">
 						{{range .Categories}}
-						<option class="dropdownoption"value="{{.Title}}">{{.Title}}</option>
+						<option class="dropdownoption" value="{{.Title}}">{{.Title}}</option>
 						{{end}}
 					</select>
+					{{with .Form}}
+					{{with .Errors.Get "category"}}
+					<label class='error'>{{.}}</label>
+					{{end}}
+					{{end}}
 				</div>
 
 				<!-- Sumbit button -->
 				<div class="submitpostbuttons">
-					<a href="/" class="btn cancelbtn" >Cancel</a>
+					<a href="/" class="btn cancelbtn">Cancel</a>
 					<button type="submit" class="btn submitbtn" name="submitPost">Submit</button>
 				</div>
 			</form>

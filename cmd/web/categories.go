@@ -30,8 +30,8 @@ func (app *application) newCategory(w http.ResponseWriter, r *http.Request) {
 			Description: form.Get("description"),
 		}
 
-		v.Check(category.Title != "", "title", "must be provided")
-		v.Check(category.Description != "", "description", "must be provided")
+		v.Check(category.Title != "", "title", "Name must be provided")
+		v.Check(category.Description != "", "description", "Description must be provided")
 		if !v.Valid() {
 			app.render(w, r, "createcat.page.tmpl", &templateData{Form: form})
 			return
