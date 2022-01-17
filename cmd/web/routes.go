@@ -1,7 +1,6 @@
 package main
 
 import (
-	"expvar"
 	"net/http"
 )
 
@@ -29,8 +28,6 @@ func (app *application) routes() http.Handler {
 	mux.HandleFunc("/deletecomment/", app.deleteComment)
 	mux.HandleFunc("/test", app.test)
 	mux.HandleFunc("/testcomment", app.testcomment)
-	// Metrics with expvar stdlib package.
-	mux.Handle("/debug/vars", expvar.Handler())
 
-	return app.metrics(app.authenticate(app.session(mux)))
+	return app.authenticate(app.session(mux))
 }

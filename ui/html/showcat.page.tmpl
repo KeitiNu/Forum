@@ -26,12 +26,12 @@
 						<div class="filtercard">
 							<div class="filter-body">
 								<div class="adderbuttons">
-									<a class="btn adderbutton" href="?col=top">All time</a>
 									<a class="btn adderbutton" href="?col=created">New</a>
 									<a class="btn adderbutton" href="?col=top&time=1">Day</a>
 									<a class="btn adderbutton" href="?col=top&time=7">Week</a>
 									<a class="btn adderbutton" href="?col=top&time=31">Month</a>
 									<a class="btn adderbutton" href="?col=top&time=365">Year</a>
+									<a class="btn adderbutton" href="?col=top">All time</a>
 								</div>
 							</div>
 						</div>
@@ -51,11 +51,11 @@
 												</button>
 											</form>
 										</div>
-	
+
 										<div class="votecounter">
 											<a name="votes" class="votes" value="0">{{.Votes}}</a>
 										</div>
-	
+
 										<div class="post-downvote">
 											<form id="form-down-{{.ID}}" onsubmit="return fetchpost('{{.ID}}', 'down')">
 												<input value="{{.ID}}" hidden>
@@ -65,7 +65,7 @@
 											</form>
 										</div>
 										{{else}}
-	
+
 										<div class="post-upvote">
 											<a href="/login">
 												<button type="submit" class="btn up-button">
@@ -73,11 +73,11 @@
 												</button>
 											</a>
 										</div>
-	
+
 										<div class="votecounter">
 											<p name="votes" class="votes" value="0">{{.Votes}}</p>
 										</div>
-	
+
 										<div class="post-downvote">
 											<a href="/login">
 												<button type="submit" class="btn down-button">
@@ -91,7 +91,7 @@
 									<div class="postdetails">
 										<div class="post-username">Posted by {{.User}}</div>
 										<div class="post-title"><a class="post-title stretched-link" href="/post/{{.ID}}">{{.Title}}</a></div>
-										<div class="post-description">Some random description hardcoded for leo to fix later yes good.</div>
+										<div class="post-description">{{timeAgo .Created}}</div>
 										<!-- <div class="post-comments">8 comments</div> -->
 									</div>
 
