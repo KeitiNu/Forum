@@ -83,5 +83,4 @@ func (m *CategoryModel) GetOne(title string) ([]*Category, error) {
 		return nil, err
 	}
 	return category, nil
-
 }
