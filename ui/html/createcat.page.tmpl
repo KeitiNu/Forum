@@ -13,7 +13,7 @@
                     </div>
                     <div>
                         <label class="form-label">Description</label>
-                        <textarea class="form-control" name="description" onkeyup="charactercount()" maxlength="500" placeholder="Maximum 500 characters" required></textarea>
+                        <textarea class="form-control" name="description" id="cat-description" onkeyup="charactercount()" maxlength="500" placeholder="Maximum 500 characters" required></textarea>
                         <div class="d-flex justify-content-end">
                             <span id="words_count" class="badge badger">
                                 <span id="textcount">0</span>/500
@@ -30,4 +30,20 @@
         </div>
 	</div>
 </div>
+{{end}}
+
+{{define "js"}}
+<script type="text/javascript">
+	function charactercount() {
+		const areatextarea = document.querySelector("#cat-description");
+		const areatext = document.querySelector("#cat-description").value.length;
+		const textcount = document.querySelector("#textcount");
+		const wordcount = document.querySelector("#words_count");
+		textcount.innerHTML = areatext;
+	};
+
+	var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+	var checkedOne = Array.prototype.slice.call(checkboxes).some(x => x.checked);
+	console.log(checkedOne)
+</script>
 {{end}}
