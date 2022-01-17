@@ -56,18 +56,24 @@ func (app *application) showCategory(w http.ResponseWriter, r *http.Request) {
 	if uq.Get("time") != "" {
 		time = uq.Get("time")
 	}
+	
+	categories, err := app.models.Categories.GetOne(category)
+	
+	if err != nil {
+		app.serverError(w, err)
+	}
 
 	if sortColumn == "top" {
 		posts, err := app.models.Posts.Latest(category, "votes", "DESC", time)
 		if err != nil {
 			app.serverError(w, err)
 		}
-		app.render(w, r, "showcat.page.tmpl", &templateData{Posts: posts, Sort: "top"})
+		app.render(w, r, "showcat.page.tmpl", &templateData{Posts: posts, Sort: "top", Categories: categories})
 		return
 	}
 	posts, err := app.models.Posts.Latest(category, sortColumn, "DESC", time)
 	if err != nil {
 		app.serverError(w, err)
 	}
-	app.render(w, r, "showcat.page.tmpl", &templateData{Posts: posts})
+	app.render(w, r, "showcat.page.tmpl", &templateData{Posts: posts, Categories: categories})
 }
