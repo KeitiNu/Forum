@@ -452,6 +452,7 @@ border:1px solid #45ffdb;
 
 .post-card {
     display: flex;
+    position:relative;
 }
 
 .votingbuttons {
@@ -460,6 +461,7 @@ border:1px solid #45ffdb;
 
 .postdetails {
     flex-grow: 8;
+    position: relative;
 }
 
 .post-username {
@@ -525,9 +527,56 @@ border:1px solid #45ffdb;
 
 
 
-/* INSIDE THREAT PAGE */
+/* INSIDE THREAD PAGE */
 
-  .comment-card {
+
+.mainbpageboxheaderthread {
+    padding-bottom: 40px;
+}
+
+.post-description-comment {
+    color: whitesmoke;
+    font-size: 30px;
+}
+
+.post-username-thread {
+    font-size: 13px;
+    color: #676869;
+}
+
+.post-title-thread {
+    color: #45ffdb;
+    font-size: 45px;
+    text-decoration: none;
+}
+
+.post-title-thread:hover {
+    color: #45ffdb;
+}
+
+.post-description-thread {
+    color: whitesmoke;
+    font-size: 18px;
+}
+
+.commentingbox {
+    padding: 20px 20px 0 20px;
+}
+
+.commentbox {
+    outline: none;
+    resize: none;
+    overflow: auto;
+    background-color: #1A1A1B;
+    color: whitesmoke;
+    border:1px solid #676869;
+    border-radius: 10px;
+    max-width: 100%;
+    min-width: 100%;
+
+}
+
+.comment-card {
 	max-width: 700px;
 	width: 85%;
 	max-height: 500px;
@@ -538,10 +587,17 @@ border:1px solid #45ffdb;
 	max-height: 420px;
 }
 
-  .post-comments {
-    grid-column-start: 2;
-    order: 5;
-  }
+.postimgdiv {
+    padding: 20px 0px 0px 60px;
+}
+
+.comment ::placeholder {
+    color: #676869;
+}
+
+.com {
+    text-align: end;
+}
   
 
 
