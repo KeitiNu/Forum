@@ -18,10 +18,16 @@
 					{{end}}
 				</div>
 			</div>
+			{{if .AuthenticatedUser}}
 			<div class="adderbuttons">
 				<a class="btn adderbutton" href="/">Back</a>
 				<a class="btn adderbutton" href="/submit">Submit Post</a>
 			</div>
+			{{else}}
+			<div class="adderbuttons">
+				<a class="btn adderbutton" href="/">Back</a>
+			</div>
+			{{end}}
 			<div class="categories">
 				<div class="insidecategories">
 					<div class="insidecatepadding">
