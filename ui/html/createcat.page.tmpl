@@ -10,7 +10,7 @@
                 {{with .Form}}
                 <div>
                     <label class="form-label">Name</label>
-                    <input class="form-control" type="text" name="catname" placeholder="Category name" value=""
+                    <input class="form-control" type="text" name="catname" placeholder="Category name" value="{{.Get "catname"}}"
                         maxlength="50" />
                     {{with .Errors.Get "title"}}
                     <label class='error'>{{.}}</label>
@@ -20,7 +20,7 @@
 
                     <label class="form-label">Description</label>
                     <textarea class="form-control" name="description" id="cat-description" onkeyup="charactercount()" maxlength="500"
-                        placeholder="Maximum 500 characters"></textarea>
+                        placeholder="Maximum 500 characters">{{.Get "description"}}</textarea>
                     <div class="d-flex justify-content-end">
                         <span id="words_count" class="badge badger">
                             <span id="textcount">0</span>/500
