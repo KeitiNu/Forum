@@ -9,7 +9,7 @@
             <form method="post">
                 {{with .Form}}
                 <div>
-                    <label class="form-label">Name</label>
+                    <label class="form-label labels">Name</label>
                     <input class="form-control" type="text" name="catname" placeholder="Category name" value=""
                         maxlength="50" />
                     {{with .Errors.Get "title"}}
@@ -18,17 +18,22 @@
                 </div>
                 <div>
 
-                    <label class="form-label">Description</label>
+                    <label class="form-label labels">Description</label>
                     <textarea class="form-control" name="description" onkeyup="charactercount()" maxlength="500"
                         placeholder="Maximum 500 characters"></textarea>
-                    <div class="d-flex justify-content-end">
-                        <span id="words_count" class="badge badger">
-                            <span id="textcount">0</span>/500
-                        </span>
+                    <div class="">
+                        <div class="d-flex justify-content-end">
+                            <span id="words_count" class="badge badger">
+                                <span id="textcount">0</span>/500
+                            </span>
+                        </div>
+                        <div>
+                            {{with .Errors.Get "description"}}
+                            <label class='error'>{{.}}</label>
+                            {{end}}
+                            
+                        </div>
                     </div>
-                    {{with .Errors.Get "description"}}
-                    <label class='error'>{{.}}</label>
-                    {{end}}
                 </div>
                 <div id="textarea_count" class="badge pull-right"></div>
 

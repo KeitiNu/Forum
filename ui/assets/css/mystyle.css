@@ -665,7 +665,11 @@ border:1px solid #45ffdb;
     padding: 45px 45px 20px 45px;
 }
 
-.createpostboxinside label {
+.createpostboxinside.form-label label {
+    color: whitesmoke;
+}
+
+.labels {
     color: whitesmoke;
 }
 
