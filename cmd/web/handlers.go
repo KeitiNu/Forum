@@ -99,6 +99,9 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, back, http.StatusSeeOther)
 }
 func (app *application) register(w http.ResponseWriter, r *http.Request) {
+	if r.Header.Get("referer") != "http://localhost:8090/login" && r.Header.Get("referer") != "http://localhost:8090/signup" {
+		back = r.Header.Get("referer")
+	}
 	switch r.Method {
 	case "GET":
 		back = r.Header.Get("referer")
