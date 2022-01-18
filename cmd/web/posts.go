@@ -70,9 +70,9 @@ func (app *application) submitPost(w http.ResponseWriter, r *http.Request) {
 
 		user := app.contextGetUser(r)
 		post.User = user.Name
-		v.Check(post.Title != "", "title", "must be provided")
-		v.Check(post.Content != "", "content", "must be provided")
-		v.Check(len(post.Category) != 0, "category", "must be provided")
+		v.Check(post.Title != "", "title", "Title must be provided")
+		v.Check(post.Content != "", "content", "Description must be provided")
+		v.Check(len(post.Category) != 0, "category", "At least 1 category must be chosen")
 		if !v.Valid() {
 			app.render(w, r, "submitpost.page.tmpl", &templateData{Form: form})
 			return
