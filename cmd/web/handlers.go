@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"net/http"
 	"time"
 
@@ -13,18 +14,24 @@ import (
 var back string
 
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
-	// If a user types in an address that doesn't exist, a 404 Error is displayed.
-	if r.URL.Path != "/" {
-		w.WriteHeader(404)
-		app.render(w, r, "400.page.tmpl", nil)
-		return
+	switch r.Method {
+	case "GET":
+
+		// If a user types in an address that doesn't exist, a 404 Error is displayed.
+		if r.URL.Path != "/" {
+			w.WriteHeader(404)
+			app.render(w, r, "400.page.tmpl", nil)
+			return
+		}
+		// If the user connects to the home address, the frontpage is displayed.
+		categories, err := app.models.Categories.Latest()
+		if err != nil {
+			app.serverError(w, err)
+		}
+		app.render(w, r, "home.page.tmpl", &templateData{Categories: categories})
+	case "POST":
+		app.serverError(w, errors.New("POST METHOD NOT ALLOWED"))
 	}
-	// If the user connects to the home address, the frontpage is displayed.
-	categories, err := app.models.Categories.Latest()
-	if err != nil {
-		app.serverError(w, err)
-	}
-	app.render(w, r, "home.page.tmpl", &templateData{Categories: categories})
 }
 
 func (app *application) login(w http.ResponseWriter, r *http.Request) {

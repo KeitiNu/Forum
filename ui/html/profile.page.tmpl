@@ -13,7 +13,7 @@
 			<div class="accountdetails">
 				<div class="profilename">
 					<h3>Username</h3>
-					<a>{{.AuthenticatedUser.Name}}</a> 
+					<a>{{.AuthenticatedUser.Name}}</a>
 				</div>
 				<div class="profileemail">
 					<h3>Email</h3>
@@ -81,7 +81,7 @@
 								</div>
 							</div>
 							{{end}}
-						
+
 							{{range .Comments}}
 							<div class="insidecatepadding">
 								<div class="catecard">
@@ -90,15 +90,15 @@
 											<div class="votingbuttons">
 											</div>
 											<div class="postdetails">
-												<div class="post-username">Posted by {{.User}} {{.Created}}</div>
+												<div class="post-username">Posted by {{.User}} {{timeAgo .Created}}</div>
 												<div class="post-description-thread">{{.Content}}</div>
 											</div>
-										</div>		
+										</div>
 									</div>
 								</div>
 							</div>
 							{{end}}
-						</div>	
+						</div>
 					</div>
 				</div>
 			</div>
