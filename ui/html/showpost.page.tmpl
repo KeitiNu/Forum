@@ -84,20 +84,25 @@
 				<div class="categories">
 					<div class="commentingbox">
 						<form class="comment" method="POST">
+							{{with $.Form}}
+							{{with .Errors.Get "comment"}}
+							<label style="color: whitesmoke;">{{.}}</label>
+							{{end}}
+							{{end}}
 							<textarea class="commentbox " name="comment" id="" placeholder="Write your comment here"
 								maxlength="2050"></textarea>
 							{{if $.AuthenticatedUser}}
 							<div class="com">
 								<button type="submit" class="btn submitbtn" name="submitPost">Submit comment</button>
 							</div>
-						{{else}}
+							{{else}}
 						</form>
 						<a href="/login">
 							<div class="com">
 								<button class="btn submitbtn" name="submitPost">Submit comment</button>
 							</div>
-							</a>
-							{{end}}
+						</a>
+						{{end}}
 					</div>
 					{{end}}
 
@@ -108,10 +113,11 @@
 								<div class="card-body">
 									<div class="post-card" id="comment{{.ID}}">
 										<div class="votingbuttons">
+											</form>
 											{{if $.AuthenticatedUser}}
 											<div class="post-upvote">
 												<form id="comment-up-{{.ID}}"
-													onsubmit="return fetchpost('{{.ID}}', 'up')">
+													onsubmit="return fetchcomment('{{.ID}}', 'up')">
 													<input value="{{.ID}}" hidden>
 													<button type="submit" class="btn up-button"
 														onclick="vote('comment{{.ID}}', 'up-button')">
@@ -126,9 +132,9 @@
 
 											<div class="post-downvote">
 												<form id="comment-down-{{.ID}}"
-													onsubmit="return fetchpost('{{.ID}}', 'down')">
+													onsubmit="return fetchcomment('{{.ID}}', 'down')">
 													<input value="{{.ID}}" hidden>
-													<button type="submit" class="btn down-button"
+													<button class="btn down-button"
 														onclick="vote('comment{{.ID}}', 'down-button')">
 														<i class="bi downb bi-caret-down"></i>
 													</button>

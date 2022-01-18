@@ -1,11 +1,10 @@
 let votes = document.querySelector('#uservotes').innerText;
 votes = votes.split(`]`).slice(0, 4);
-console.log(votes);
 const upvotes = votes[0].slice(2).split(' ');
 const downvotes = votes[1].slice(2).split(' ');
 const commentUpvotes = votes[2].slice(2).split(' ');
 const commentDownvotes = votes[3].slice(2).split(' ');
-console.log('upvotes: ', upvotes, 'downvotes: ', downvotes,  'com upvotes: ', commentUpvotes, 'com downvotes: ', commentDownvotes);
+console.log('upvotes: ', upvotes, 'downvotes: ', downvotes,  'commentupvotes: ', commentUpvotes, 'commentdownvotes: ', commentDownvotes);
 for (const post of upvotes) {
     let button = document.querySelector(`#form-up-${post} button`);
     if (button) {
@@ -46,10 +45,8 @@ function vote(id, updown, postcom) {
     if (button.classList.contains("active")) {
         number *= -1;
         button.classList.remove("active");
-        console.log(button)
     } else {
         button.classList.add("active");
-        console.log(button)
     }
 
     if (otherbutton.classList.contains("active")) {

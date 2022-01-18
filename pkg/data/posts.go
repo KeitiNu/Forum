@@ -402,6 +402,6 @@ func (p *PostModel) GetUserVotes(username string) [][]int {
 	if err = rows.Err(); err != nil {
 		return nil
 	}
-	// fmt.Println(votes)
+	fmt.Println(votes)
 	return votes
 }

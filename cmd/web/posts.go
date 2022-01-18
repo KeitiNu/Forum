@@ -126,6 +126,12 @@ func (app *application) showPost(w http.ResponseWriter, r *http.Request) {
 		form := forms.New(r.PostForm)
 		v := forms.NewValidator()
 		form.Errors = v
+		comment := form.Get("comment")
+		v.Check(comment != "", "comment", "Cannot add empty comment")
+		if !v.Valid() {
+			app.render(w, r, "showpost.page.tmpl", &templateData{Form: form, User: user, Post: post, Comments: comments})
+			return
+		}
 		if a := form.Get("commentUpdate"); a != "" {
 			cid, _ := strconv.Atoi(form.Get("commentUpdateID"))
 			if user.Name != form.Get("commentUpdateUser") {

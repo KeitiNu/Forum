@@ -144,7 +144,6 @@ func (c *CommentsModel) GetVote(id, vote, username string) (string, error) {
 			return "", err
 		}
 	}
-
 	return s, nil
 }
 
