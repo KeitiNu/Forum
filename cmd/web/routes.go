@@ -29,5 +29,5 @@ func (app *application) routes() http.Handler {
 	mux.HandleFunc("/test", app.test)
 	mux.HandleFunc("/testcomment", app.testcomment)
 
-	return app.authenticate(app.session(mux))
+	return app.recoverPanic(app.authenticate(app.session(mux)))
 }

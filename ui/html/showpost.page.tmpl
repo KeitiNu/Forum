@@ -80,7 +80,7 @@
 				<div class="categories">
 					<div class="commentingbox">
 						<form  class="comment" method="POST">
-							<textarea class="commentbox "name="comment" id="" placeholder="Write your comment here"></textarea>
+							<textarea class="commentbox "name="comment" id="" placeholder="Write your comment here" maxlength="2050"></textarea>
 							{{if $.AuthenticatedUser}}
 							<div class="com">
 								<button type="submit" class="btn submitbtn" name="submitPost">Submit comment</button>

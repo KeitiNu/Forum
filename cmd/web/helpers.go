@@ -18,7 +18,6 @@ func (app *application) serverError(w http.ResponseWriter, err error) {
 	if err != nil {
 		app.serverError(w, err)
 	}
-
 	http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 }
 
