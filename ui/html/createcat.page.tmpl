@@ -47,3 +47,19 @@
     </div>
 </div>
 {{end}}
+
+{{define "js"}}
+<script type="text/javascript">
+	function charactercount() {
+		// const areatextarea = document.querySelector("#postcontent");
+		const areatext = document.querySelector("#cat-description").value.length;
+		const textcount = document.querySelector("#textcount");
+		const wordcount = document.querySelector("#words_count");
+		textcount.innerHTML = areatext;
+	};
+
+	var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+	var checkedOne = Array.prototype.slice.call(checkboxes).some(x => x.checked);
+	console.log(checkedOne)
+</script>
+{{end}}

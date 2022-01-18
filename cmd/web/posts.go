@@ -70,11 +70,12 @@ func (app *application) submitPost(w http.ResponseWriter, r *http.Request) {
 
 		user := app.contextGetUser(r)
 		post.User = user.Name
-		v.Check(post.Title != "", "title", "must be provided")
-		v.Check(post.Content != "", "content", "must be provided")
-		v.Check(len(post.Category) != 0, "category", "must be provided")
+		categoryList, _ := app.models.Categories.Latest()
+		v.Check(post.Title != "", "title", "Title must be provided")
+		v.Check(post.Content != "", "content", "Description must be provided")
+		v.Check(len(post.Category) != 0, "category", "Atleast 1 category must be provided")
 		if !v.Valid() {
-			app.render(w, r, "submitpost.page.tmpl", &templateData{Form: form})
+			app.render(w, r, "submitpost.page.tmpl", &templateData{Form: form, Categories: categoryList})
 			return
 		}
 		categories := r.Form["category"]

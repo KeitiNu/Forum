@@ -20,7 +20,7 @@
 				<!-- Thread title -->
 				<div class="">
 					<label class="form-label">Title</label>
-					<input class="form-control" type="text" name="title" placeholder="Post title" value=""
+					<input class="form-control" type="text" name="title" placeholder="Post title" value="{{.Get "title"}}"
 						maxlength="40" />
 					{{with .Errors.Get "title"}}
 					<label class='error'>{{.}}</label>
@@ -31,7 +31,7 @@
 				<div class="">
 					<label class="form-label">Description</label>
 					<textarea class="form-control" id="postcontent" name="content" onkeyup="charactercount()"
-						maxlength="500" placeholder="Maximum 500 characters"></textarea>
+						maxlength="500" placeholder="Maximum 500 characters">{{.Get "content"}}</textarea>
 					<div class="d-flex justify-content-end">
 						<span id="words_count" class="badge badger">
 							<span id="textcount">0</span>/500
@@ -81,7 +81,7 @@
 {{define "js"}}
 <script type="text/javascript">
 	function charactercount() {
-		const areatextarea = document.querySelector("#postcontent");
+		// const areatextarea = document.querySelector("#postcontent");
 		const areatext = document.querySelector("#postcontent").value.length;
 		const textcount = document.querySelector("#textcount");
 		const wordcount = document.querySelector("#words_count");

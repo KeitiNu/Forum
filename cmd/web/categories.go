@@ -39,6 +39,13 @@ func (app *application) newCategory(w http.ResponseWriter, r *http.Request) {
 
 		err = app.models.Categories.Insert(category.Title, category.Description)
 		if err != nil {
+			if err.Error() == "UNIQUE constraint failed: categories.title" {
+				v.Check(1 > 2, "title", "Category already exists")
+				if !v.Valid() {
+					app.render(w, r, "createcat.page.tmpl", &templateData{Form: form})
+					return
+				}
+			}
 			fmt.Println("error happened", err)
 		}
 	}
@@ -56,9 +63,9 @@ func (app *application) showCategory(w http.ResponseWriter, r *http.Request) {
 	if uq.Get("time") != "" {
 		time = uq.Get("time")
 	}
-	
+
 	categories, err := app.models.Categories.GetOne(category)
-	
+
 	if err != nil {
 		app.serverError(w, err)
 	}
