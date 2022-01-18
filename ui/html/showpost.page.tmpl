@@ -84,14 +84,14 @@
 				<div class="categories">
 					<div class="commentingbox">
 						<form class="comment" method="POST">
-							{{with $.Form}}
-							{{with .Errors.Get "comment"}}
-							<label style="color: whitesmoke;">{{.}}</label>
-							{{end}}
-							{{end}}
 							<textarea class="commentbox " name="comment" id="" placeholder="Write your comment here"
 								maxlength="2050"></textarea>
 							{{if $.AuthenticatedUser}}
+							{{with $.Form}}
+							{{with .Errors.Get "comment"}}
+							<label class="error">{{.}}</label>
+							{{end}}
+							{{end}}
 							<div class="com">
 								<button type="submit" class="btn submitbtn" name="submitPost">Submit comment</button>
 							</div>
