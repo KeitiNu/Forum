@@ -10,14 +10,14 @@
 			<form method="POST" id="threadform" action="/edit/{{.Post.ID}}">
 				<!-- Thread title -->
 				<div class="mb-3">
-					<label class="form-label">Title</label>
+					<label class="form-label labels">Title</label>
 					<input class="form-control" type="text" required name="title" placeholder="Post title" value="{{.Post.Title}}"
 						maxlength="30" />
 				</div>
 			
 				<!-- Content textarea -->
 				<div class="mb-3">
-					<label class="form-label">Content</label>
+					<label class="form-label labels">Content</label>
 					<textarea class="form-control" id="postcontent" name="content" onkeyup="charactercount()" maxlength="500"
 						placeholder="Maximum 500 characters" required>{{.Post.Content}}</textarea>
 					<div class="d-flex justify-content-end">

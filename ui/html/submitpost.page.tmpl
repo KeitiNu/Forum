@@ -19,7 +19,7 @@
 				{{with $.Form}}
 				<!-- Thread title -->
 				<div class="">
-					<label class="form-label">Title</label>
+					<label class="form-label labels">Title</label>
 					<input class="form-control" type="text" name="title" placeholder="Post title" value="{{.Get "title"}}"
 						maxlength="40" />
 					{{with .Errors.Get "title"}}
@@ -29,7 +29,7 @@
 
 				<!-- Content textarea -->
 				<div class="">
-					<label class="form-label">Description</label>
+					<label class="form-label labels">Description</label>
 					<textarea class="form-control" id="postcontent" name="content" onkeyup="charactercount()"
 						maxlength="500" placeholder="Maximum 500 characters">{{.Get "content"}}</textarea>
 					<div class="d-flex justify-content-end">
@@ -45,14 +45,14 @@
 				{{end}}
 				<!-- Image upload -->
 				<div class="">
-					<label class="form-label">Upload Image</label>
+					<label class="form-label labels">Upload Image</label>
 					<div class="input-group">
 						<input type="file" class="form-control" id="inputGroupFile01" name="myFile">
 					</div>
 				</div>
 				<!-- Category tagging -->
 				<div class="">
-					<label class="form-label">Tags (maximum 5)</label>
+					<label class="form-label labels">Tags (maximum 5)</label>
 					<select class="form-select form-control" id="tags-input" name="category" multiple
 						data-allow-clear="true" data-show-all-suggestions="true" data-suggestions-threshold="0"
 						data-max="5">
