@@ -64,7 +64,7 @@
 
 							{{if eq $.Post.User $.User.Name}}
 							<div>
-								<a class="btn submitbtn" href="edit/{{.ID}}">Edit</a>
+								<!-- EDIT BUTTON <a class="btn submitbtn" href="edit/{{.ID}}">Edit</a> -->
 								<a class="btn cancelbtn" href="/delete/{{.ID}}" data-method="delete" data-confirm="Are you sure?">Delete</a>
 
 							</div>
@@ -113,11 +113,11 @@
 														</button>
 													</form>
 												</div>
-				
+
 												<div class="votecounter">
 													<a name="votes" class="votes" value="0">{{.Votes}}</a>
 												</div>
-				
+
 												<div class="post-downvote">
 													<form id="comment-down-{{.ID}}" onsubmit="return fetchpost('{{.ID}}', 'down')">
 														<input value="{{.ID}}" hidden>
@@ -134,11 +134,11 @@
 														</button>
 													</a>
 												</div>
-				
+
 												<div class="votecounter">
 													<p name="votes" class="votes" value="0">{{.Votes}}</p>
 												</div>
-				
+
 												<div class="post-downvote">
 													<a href="/login">
 														<button type="submit" class="btn down-button">
@@ -148,7 +148,7 @@
 												</div>
 												{{end}}
 											</div>
-											
+
 											<div class="postdetails">
 												<div class="post-username">Posted by {{.User}} {{timeAgo .Created}}</div>
 												<p class="post-description-comment card-text">{{.Content}}</p>
@@ -156,7 +156,7 @@
 											{{if eq .User $.User.Name}}
 											<div>
 												<div>
-													<a class="btn submitbtn" href="" data-toggle="modal" data-target="#exampleModal">Edit</a>
+													<!-- EDIT BUTTON <a class="btn submitbtn" href="" data-toggle="modal" data-target="#exampleModal">Edit</a> -->
 													<a class="btn cancelbtn" href="/deletecomment/{{.ID}}">Delete</a>
 												</div>
 											</div>
@@ -185,17 +185,17 @@
 														</div>
 													</form>
 												</div>
-								
+
 											</div>
 										</div>
 									</div>
-							</div>	
+							</div>
 						</div>
 					</div>
 					{{end}}
 				</div>
 			</div>
-		
+
 </div>
 
 

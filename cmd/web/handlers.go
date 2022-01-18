@@ -104,7 +104,6 @@ func (app *application) register(w http.ResponseWriter, r *http.Request) {
 	}
 	switch r.Method {
 	case "GET":
-		back = r.Header.Get("referer")
 		app.render(w, r, "register.page.tmpl", &templateData{Form: forms.New(nil)})
 		return
 	case "POST":
