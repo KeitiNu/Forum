@@ -126,10 +126,15 @@ func (app *application) register(w http.ResponseWriter, r *http.Request) {
 			app.serverError(w, err)
 			return
 		}
+		// Confirm password match
+		plainPass := form.Get("password")
+		confirmPass := form.Get("confirm_password")
+		v.Check(plainPass == confirmPass, "password", "Passwords don't match")
 
 		// Validate the user struct and return the error messages to the client if any of
 		// the checks fail.
-		if data.ValidateUser(v, user); !v.Valid() {
+		data.ValidateUser(v, user)
+		if !v.Valid() {
 			app.render(w, r, "register.page.tmpl", &templateData{Form: form})
 			return
 		}
