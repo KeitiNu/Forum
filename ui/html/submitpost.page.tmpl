@@ -48,13 +48,12 @@
 					<label class="form-label labels">Upload Image</label>
 					<div class="input-group">
 						<input type="file" class="form-control" id="inputGroupFile01" name="myFile">
-						
-						{{with .Form}}
-						{{with .Errors.Get "image"}}
-						<label class='error'>{{.}}</label>
-						{{end}}
-						{{end}}
 					</div>
+					{{with .Form}}
+					{{with .Errors.Get "image"}}
+					<label class='error'>{{.}}</label>
+					{{end}}
+					{{end}}
 				</div>
 				<!-- Category tagging -->
 				<div class="">

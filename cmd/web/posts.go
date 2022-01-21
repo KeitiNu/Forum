@@ -78,7 +78,7 @@ func (app *application) submitPost(w http.ResponseWriter, r *http.Request) {
 		v.Check(post.Title != "", "title", "Title must be provided")
 		v.Check(post.Content != "", "content", "Description must be provided")
 		v.Check(len(post.Category) != 0, "category", "At least 1 category must be provided")
-		v.Check(len(fileBytes) <= 20000000, "image", "Image can't be over 20 Megabytes")
+		v.Check(len(fileBytes) <= 20000000, "image", "Image can't be over 20 MB")
 		if !v.Valid() {
 			app.render(w, r, "submitpost.page.tmpl", &templateData{Form: form, Categories: categoryList})
 			return
