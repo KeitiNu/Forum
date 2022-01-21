@@ -48,6 +48,12 @@
 					<label class="form-label labels">Upload Image</label>
 					<div class="input-group">
 						<input type="file" class="form-control" id="inputGroupFile01" name="myFile">
+						
+						{{with .Form}}
+						{{with .Errors.Get "image"}}
+						<label class='error'>{{.}}</label>
+						{{end}}
+						{{end}}
 					</div>
 				</div>
 				<!-- Category tagging -->
@@ -90,6 +96,8 @@
 
 	var checkboxes = document.querySelectorAll('input[type="checkbox"]');
 	var checkedOne = Array.prototype.slice.call(checkboxes).some(x => x.checked);
-	console.log(checkedOne)
+
+	let input = document.getElementById(inputGroupFile01)
+	let span = document.getElementById("erroringimage")
 </script>
 {{end}}

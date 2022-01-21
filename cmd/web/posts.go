@@ -21,6 +21,7 @@ func (app *application) submitPost(w http.ResponseWriter, r *http.Request) {
 		app.render(w, r, "submitpost.page.tmpl", &templateData{Form: forms.New(nil), Categories: categories})
 		return
 	case "POST": // If a user submits a form on the login page, we check the data and then run the database queries.
+		var fileBytes []byte
 		err := r.ParseMultipartForm(20 << 20)
 		if err != nil {
 			app.serverError(w, err)
@@ -28,6 +29,7 @@ func (app *application) submitPost(w http.ResponseWriter, r *http.Request) {
 		}
 		tempFilename := ""
 		file, _, err := r.FormFile("myFile")
+
 		// err.Error() asendus
 		if fmt.Sprintf("%s", err) != "http: no such file" {
 			if err != nil {
@@ -36,24 +38,26 @@ func (app *application) submitPost(w http.ResponseWriter, r *http.Request) {
 			}
 			defer file.Close()
 
-			tempFile, err := ioutil.TempFile("./ui/assets/thread-images", "upload-*.png")
-			if err != nil {
-				fmt.Println(err)
-				return
-			}
-
-			defer tempFile.Close()
-
-			fileBytes, err := ioutil.ReadAll(file)
+			fileBytes, err = ioutil.ReadAll(file)
 			if err != nil {
 				fmt.Println(err)
 			}
+			
+			if len(fileBytes) <= 20000000 {
+				tempFile, err := ioutil.TempFile("./ui/assets/thread-images", "upload-*.png")
+				if err != nil {
+					fmt.Println(err)
+					return
+				}
 
-			_, err = tempFile.Write(fileBytes)
-			if err != nil {
-				app.serverError(w, err)
+				defer tempFile.Close()
+
+				_, err = tempFile.Write(fileBytes)
+				if err != nil {
+					app.serverError(w, err)
+				}
+				tempFilename = tempFile.Name()
 			}
-			tempFilename = tempFile.Name()
 		}
 
 		// We make a form object with user input and error storage.
@@ -73,7 +77,8 @@ func (app *application) submitPost(w http.ResponseWriter, r *http.Request) {
 		categoryList, _ := app.models.Categories.Latest()
 		v.Check(post.Title != "", "title", "Title must be provided")
 		v.Check(post.Content != "", "content", "Description must be provided")
-		v.Check(len(post.Category) != 0, "category", "Atleast 1 category must be provided")
+		v.Check(len(post.Category) != 0, "category", "At least 1 category must be provided")
+		v.Check(len(fileBytes) <= 20000000, "image", "Image can't be over 20 Megabytes")
 		if !v.Valid() {
 			app.render(w, r, "submitpost.page.tmpl", &templateData{Form: form, Categories: categoryList})
 			return
