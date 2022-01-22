@@ -437,6 +437,16 @@ border:1px solid #45ffdb;
 	max-height: 500px;
 }
 
+.admintools {
+    display: flex;
+    flex-grow: 1;
+}
+
+.adminbuttons {
+    z-index: 2;
+    flex-grow: 8;
+}
+
 
 /* INSIDE CATEGORY PAGE */
 
