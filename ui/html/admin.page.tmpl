@@ -1,0 +1,137 @@
+{{template "base" .}}
+{{define "body"}}
+<div class="createpostcontent">
+	<div class="profilebox">
+		<div class="createpostboxinside">
+			<div class="createpostheader">
+				<h1>Administration</h1>
+			</div>
+
+
+
+            <div class="accounth2">
+                <h2>Moderator list</h2>
+            </div>
+            <div class="mainboxinside">
+                <div class="categories">
+                    <div class="insidecategories">
+                        <div class="insidecatepadding">
+                            <div class="catecard">
+                                <div class="card-body">
+                                    <div class="postcard">
+                                        <div class="votingbuttons">
+                                        </div>
+                                        <div class="postdetails">
+                                            <div class="post-username">Moderator since: Hardcoded time ago</div>
+                                            <div class="post-title">HardcodedUSERNAME</div>
+                                            <div class="admintools">
+                                                <div class="adminbuttons d-flex justify-content-end align-self-start">
+                                                    <a class="btn cancelbtn" href="" data-method="delete"
+                                                    data-confirm="Are you sure?">Demote</a>
+                                                </div>
+                                            </div>
+                                        </div> 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accounth2">
+                <h2>Moderator applications</h2>
+            </div>
+            <div class="mainboxinside">
+                <div class="categories">
+                    <div class="insidecategories">
+                        <div class="insidecatepadding">
+                            <div class="catecard">
+                                <div class="card-body">
+                                    <div class="postcard">
+                                        <div class="votingbuttons">
+                                        </div>
+                                        <div class="postdetails">
+                                            <div class="post-username">Hardcoded time ago</div>
+                                            <div class="post-title"><a class="post-title stretched-link" href="#">Moderator application by HardcodedUser</a></div>
+                                            <div class="post-description-thread">Hardcoded reason description</div>
+                                            <div class="admintools">
+                                                <div class="adminbuttons d-flex justify-content-end align-self-start">
+                                                    <a class="btn cancelbtn" href="" data-method="delete"
+                                                    data-confirm="Are you sure?">Decline</a>
+                                                    <a class="btn submitbtn" href="">Accept</a>
+                                                </div>
+                                            </div>
+                                        </div> 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+				<div class="accounth2">
+					<h2>Reports</h2>
+				</div>
+				<div class="mainboxinside">
+					<div class="categories">
+						<div class="insidecategories">
+							<div class="insidecatepadding">
+								<div class="catecard">
+									<div class="card-body">
+										<div class="post-card" id="">
+                                            <div class="votingbuttons">
+												<div class="post-upvote">
+													<form id="" onsubmit="">
+														<input value="" hidden>
+														<button type="submit" class="btn up-button" onclick="">
+															<i class="bi upb bi-caret-up"></i>
+														</button>
+													</form>
+												</div>
+
+												<div class="votecounter">
+													<p name="votes" class="votes" value="0">0</p>
+												</div>
+
+												<div class="post-downvote">
+													<form id="" onsubmit="">
+														<input value="" hidden>
+														<button type="submit" class="btn down-button" onclick="">
+															<i class="bi downb bi-caret-down"></i>
+														</button>
+													</form>
+												</div>
+											</div>
+											<div class="postdetails">
+												<div class="post-username">Posted by HardcodedUser Hardcoded time ago</div>
+												<div class="post-title"><a class="post-title stretched-link" href="#">Hardcoded Title</a></div>
+												<div class="post-description">Hardcoded post-description</div>
+											</div>
+										</div>
+                                        <div class="moderatorcomment">
+                                            <div class="votingbuttons">
+                                            </div>
+                                            <div class="postdetails">
+                                                <div class="post-username">Reported by HardcodedModerator Hardcoded time ago</div>
+                                                <div class="post-description-thread">Reason: Hardcoded moderator reason</div>
+                                                
+                                            </div>
+                                            <div class="adminbuttons d-flex justify-content-end align-self-start">
+                                                <a class="btn cancelbtn" href="" data-method="delete"
+                                                data-confirm="Are you sure?">Decline</a>
+                                                <a class="btn submitbtn" href="">Accept</a>
+                                            </div>
+                                        </div>
+									</div>
+								</div>
+							</div>	
+						</div>
+					</div>
+				</div>
+		</div>
+	</div>
+</div>
+
+{{end}}

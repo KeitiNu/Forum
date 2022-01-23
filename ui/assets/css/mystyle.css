@@ -800,3 +800,10 @@ span.badge.me-2.bg-primary {
 .submitcatebuttons {
     padding-top: 20px;
 }
+
+/* ADMIN PAGE */
+
+.moderatorcomment {
+    display: flex;
+    position: relative;
+}
