@@ -67,7 +67,7 @@
 
 						{{if eq $.Post.User $.User.Name}}
 						<div>
-							<!-- EDIT BUTTON <a class="btn submitbtn" href="edit/{{.ID}}">Edit</a> -->
+							<a class="btn submitbtn" href="/edit/{{.ID}}">Edit</a>
 							<a class="btn cancelbtn" href="/delete/{{.ID}}" data-method="delete"
 								data-confirm="Are you sure?">Delete</a>
 
@@ -178,7 +178,7 @@
 										{{if eq .User $.User.Name}}
 										<div>
 											<div>
-												<!-- EDIT BUTTON <a class="btn submitbtn" href="" data-toggle="modal" data-target="#exampleModal">Edit</a> -->
+												<a class="btn submitbtn" href="" data-toggle="modal" data-target="#exampleModal">Edit</a>
 												<a class="btn cancelbtn" href="/deletecomment/{{.ID}}">Delete</a>
 											</div>
 										</div>
@@ -192,42 +192,41 @@
 											</div>
 										</div> -->
 									</div>
-									<!-- Modal -->
-									<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
-										aria-labelledby="exampleModalLabel" aria-hidden="true">
-										<div class="modal-dialog" role="document">
-											<div class="modal-content">
-												<div class="modal-header">
-													<h5 class="modal-title" id="exampleModalLabel">Edit comment</h5>
-													<button type="button" class="close" data-dismiss="modal"
-														aria-label="Close">
-														<span aria-hidden="true">&times;</span>
-													</button>
-												</div>
-												<div class="modal-body">
-													<form method="POST">
-														<label for="comment">Comment</label>
-														<textarea name="commentUpdate" id="" cols="30"
-															rows="10">{{.Content}}</textarea>
-														<textarea name="commentUpdateID" id="" cols="0" rows="0"
-															hidden>{{.ID}}</textarea>
-														<textarea name="commentUpdateUser" id="" cols="0" rows="0"
-															hidden>{{.User}}</textarea>
-														<div class="modal-footer">
-															<button type="button" class="btn btn-secondary"
-																data-dismiss="modal">Close</button>
-															<button type="submit" class="btn btn-primary"
-																name="submitPost">Save changes</button>
-														</div>
-													</form>
-												</div>
-
-											</div>
-										</div>
-									</div>
 								</div>
 							</div>
 						</div>
+						<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+							aria-labelledby="exampleModalLabel" aria-hidden="true">
+							<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="exampleModalLabel">Edit comment</h5>
+									<button type="button" class="close" data-dismiss="modal"
+										aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<div class="modal-body">
+									<form method="POST">
+										<label for="comment">Comment</label>
+										<textarea name="commentUpdate" id="" cols="30"
+											rows="10">{{.Content}}</textarea>
+										<textarea name="commentUpdateID" id="" cols="0" rows="0"
+											hidden>{{.ID}}</textarea>
+										<textarea name="commentUpdateUser" id="" cols="0" rows="0"
+											hidden>{{.User}}</textarea>
+										<div class="modal-footer">
+											<button type="button" class="btn btn-secondary"
+												data-dismiss="modal">Close</button>
+											<button type="submit" class="btn btn-primary"
+												name="submitPost">Save changes</button>
+										</div>
+									</form>
+								</div>
+
+							</div>
+						</div>
+					</div>							
 						{{end}}
 					</div>
 				</div>
