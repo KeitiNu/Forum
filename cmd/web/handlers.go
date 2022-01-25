@@ -1,7 +1,12 @@
 package main
 
 import (
+	"bytes"
+	"encoding/json"
 	"errors"
+	"fmt"
+	"io/ioutil"
+	"log"
 	"net/http"
 	"time"
 
@@ -199,4 +204,116 @@ func (app *application) profile(w http.ResponseWriter, r *http.Request) {
 		app.render(w, r, "profile.page.tmpl", &templateData{Posts: posts})
 	}
 
+}
+
+func (app *application) github(w http.ResponseWriter, r *http.Request) {
+	// Github returns code in url
+	keys, ok := r.URL.Query()["code"]
+
+	if !ok || len(keys[0]) < 1 {
+		app.serverError(w, errors.New("paramater 'code' not in url"))
+	}
+	// Preeparing a request to github to exhange code for user access_token
+	code := keys[0]
+	client_id := "52144f36461b8f17cc05"
+	client_secret := "3230a1d333760f60a8055bf07acd991c4f7882e6"
+
+	postBody, _ := json.Marshal(map[string]string{
+		"client_id":     client_id,
+		"client_secret": client_secret,
+		"code":          code,
+	})
+
+	req, err := http.NewRequest("POST", "https://github.com/login/oauth/access_token", bytes.NewBuffer(postBody))
+	if err != nil {
+		app.serverError(w, err)
+	}
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("Content-Type", "application/json")
+
+	// Ecexuting request
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		app.serverError(w, err)
+	}
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+	resp.Body.Close()
+	// Checking if request to github was successful
+	if resp.StatusCode != 200 {
+		app.serverError(w, errors.New("github API didn't return status 200"))
+	}
+
+	var githubResp githubResponse
+	err = json.Unmarshal(body, &githubResp)
+	if err != nil {
+		app.serverError(w, err)
+	}
+
+	// Preparing a request to github user API to recieve email address
+	req, err = http.NewRequest("GET", "https://api.github.com/user/emails", nil)
+	if err != nil {
+		app.serverError(w, err)
+	}
+	req.Header.Set("Accept", "application/vnd.github.v3+json")
+	req.Header.Set("Authorization", fmt.Sprintf("token %s", githubResp.Token))
+	resp, err = client.Do(req)
+	if err != nil {
+		app.serverError(w, err)
+	}
+	body, err = ioutil.ReadAll(resp.Body)
+	if err != nil {
+		app.serverError(w, err)
+	}
+	resp.Body.Close()
+
+	var emails []email
+	err = json.Unmarshal(body, &emails)
+	if err != nil {
+		app.serverError(w, err)
+	}
+
+	var githubEmail string
+	for _, email := range emails {
+		if email.Primary {
+			githubEmail = email.Email
+		}
+	}
+	
+	emailExists, username, err := app.models.Users.EmailExist(githubEmail)
+	if err != nil {
+		app.serverError(w, err)
+	}
+
+	if emailExists {
+		// Get the token for the current user who is attempting to log in.
+		a, err := r.Cookie("session")
+		if err != nil {
+			app.serverError(w, err)
+		}
+
+		// Add the current cookie (token) to the user's profile in database.
+		err = app.models.Users.UpdateByToken(a.Value, username)
+		if err != nil {
+			app.serverError(w, err)
+			return
+		}
+		// After login redirect the user to the homepage.
+		http.Redirect(w, r, back, http.StatusSeeOther)
+	}
+	// user := &data.User{Email: githubEmail}
+	// app.render(w, r, "github.page.tmpl", &templateData{Form: forms.New(nil), User: user})
+}
+
+type githubResponse struct {
+	Token string `json:"access_token"`
+}
+
+type email struct {
+	Email 		string	`json:"email"`
+	Primary 	bool	`json:"primary"`
+	Verified 	bool 	`json:"verified"`
 }

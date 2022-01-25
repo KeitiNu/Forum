@@ -58,7 +58,7 @@ func main() {
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 10 * time.Second,
 	}
-	fmt.Printf("Started server on http://localhost%s", srv.Addr)
+	fmt.Printf("Started server on http://localhost%s\n", srv.Addr)
 	err = srv.ListenAndServe()
 	if err != nil {
 		errorLog.Fatal(err)

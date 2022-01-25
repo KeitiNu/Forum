@@ -192,3 +192,16 @@ func (u *UserModel) UpdateByToken(token, username string) error {
 	}
 	return nil
 }
+
+func (u *UserModel) EmailExist(email string) (bool, string, error) {
+	row := u.DB.QueryRow("SELECT username, email FROM users WHERE email = ?", email)
+	user := &User{}
+	err := row.Scan(&user.Name, &user.Email)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return false, user.Name, nil
+		}
+		return false, user.Name, err
+	}
+	return true, user.Name, nil
+}
