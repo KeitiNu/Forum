@@ -29,6 +29,7 @@ func (app *application) routes() http.Handler {
 	mux.HandleFunc("/test", app.test)
 	mux.HandleFunc("/testcomment", app.testcomment)
 	mux.HandleFunc("/github", app.github)
+	mux.HandleFunc("/signuphub", app.registerGithub)
 
 	return app.recoverPanic(app.authenticate(app.session(mux)))
 }

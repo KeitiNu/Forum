@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 	"time"
 
 	"git.01.kood.tech/roosarula/forum/pkg/data"
@@ -282,7 +283,7 @@ func (app *application) github(w http.ResponseWriter, r *http.Request) {
 			githubEmail = email.Email
 		}
 	}
-	
+	// Check if email is already in database
 	emailExists, username, err := app.models.Users.EmailExist(githubEmail)
 	if err != nil {
 		app.serverError(w, err)
@@ -304,8 +305,13 @@ func (app *application) github(w http.ResponseWriter, r *http.Request) {
 		// After login redirect the user to the homepage.
 		http.Redirect(w, r, back, http.StatusSeeOther)
 	}
-	// user := &data.User{Email: githubEmail}
-	// app.render(w, r, "github.page.tmpl", &templateData{Form: forms.New(nil), User: user})
+
+	t := fmt.Sprintf("email=%s", githubEmail)
+	v, err := url.ParseQuery(t)
+	if err != nil {
+		panic(err)
+	}
+	app.render(w, r, "github.page.tmpl", &templateData{Form: forms.New(v)})
 }
 
 type githubResponse struct {
@@ -313,7 +319,71 @@ type githubResponse struct {
 }
 
 type email struct {
-	Email 		string	`json:"email"`
-	Primary 	bool	`json:"primary"`
-	Verified 	bool 	`json:"verified"`
+	Email    string `json:"email"`
+	Primary  bool   `json:"primary"`
+	Verified bool   `json:"verified"`
+}
+
+func (app *application) registerGithub(w http.ResponseWriter, r *http.Request) {
+	if r.Header.Get("referer") != "http://localhost:8090/login" && r.Header.Get("referer") != "http://localhost:8090/signup" && r.Header.Get("referer") != "http://localhost:8090/github" {
+		back = r.Header.Get("referer")
+	}
+	switch r.Method {
+	case "GET":
+		app.render(w, r, "github.page.tmpl", &templateData{Form: forms.New(nil)})
+		return
+	case "POST":
+		err := r.ParseForm()
+		if err != nil {
+			app.serverError(w, err)
+			return
+		}
+
+		form := forms.New(r.PostForm)
+		v := forms.NewValidator()
+		form.Errors = v
+
+		user := &data.User{
+			Name:  form.Get("username"),
+			Email: form.Get("email"),
+		}
+		err = user.Password.Set(form.Get("password"))
+		if err != nil {
+			app.serverError(w, err)
+			return
+		}
+		// Confirm password match
+		plainPass := form.Get("password")
+		confirmPass := form.Get("confirm_password")
+		v.Check(plainPass == confirmPass, "password", "Passwords don't match")
+
+		// Validate the user struct and return the error messages to the client if any of
+		// the checks fail.
+		data.ValidateUser(v, user)
+		if !v.Valid() {
+			app.render(w, r, "github.page.tmpl", &templateData{Form: form})
+			return
+		}
+
+		// Get the token for the current user who is attempting to register.
+		a, err := r.Cookie("session")
+		if err != nil {
+			app.serverError(w, err)
+		}
+
+		err = app.models.Users.Insert(user, a.Value)
+		if err != nil {
+			switch err {
+			case data.ErrDuplicateUsername:
+				form.Errors.AddError("username", "Username is already in use")
+				app.render(w, r, "github.page.tmpl", &templateData{Form: form})
+				return
+			default:
+				app.serverError(w, err)
+				return
+			}
+		}
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
 }
