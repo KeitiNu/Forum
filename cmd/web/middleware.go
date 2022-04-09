@@ -2,9 +2,13 @@ package main
 
 import (
 	"fmt"
+	// "log"
+	// "net"
 	"net/http"
+	// "sync"
 	"time"
 
+	// "git.01.kood.tech/roosarula/forum/pkg/rate"
 	uuid "github.com/satori/go.uuid"
 )
 
@@ -77,3 +81,67 @@ func (app *application) requireAuthenticatedUser(next http.HandlerFunc) http.Han
 		next.ServeHTTP(w, r)
 	})
 }
+
+/*
+// Rate limiter for forum security
+func rateLimit(next http.Handler) http.Handler {
+	// Information store about client (ip and activity)
+	type client struct {
+		limiter  *rate.RateLimiter
+		lastSeen time.Time
+	}
+	var (
+		mu      sync.Mutex
+		clients = make(map[string]*client)
+	)
+
+	// Goroutine to release inactive client information
+	go func() {
+		for {
+			time.Sleep(time.Minute)
+
+			mu.Lock()
+
+			// Get clients who have been inactive for over 3 minutes and delete them from clients map
+			for ip, client := range clients {
+				if time.Since(client.lastSeen) > 3*time.Minute {
+					delete(clients, ip)
+				}
+			}
+
+			mu.Unlock()
+		}
+	}()
+
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ip, _, err := net.SplitHostPort(r.RemoteAddr)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		mu.Lock()
+
+		// Check for records about IP in clients map and create a new limiter if no record is found.
+		// There is limit for 10 request without time limit and after that rate limit of half second pause between requests.
+		if _, found := clients[ip]; !found {
+			clients[ip] = &client{
+				limiter: rate.New(20, 500*time.Millisecond),
+			}
+		}
+
+		// Update acitivity record for client struct
+		clients[ip].lastSeen = time.Now()
+
+		// If client request is over rate limit we will print Rate Limit Exceeded and return
+		if ok, _ := clients[ip].limiter.Try(); !ok {
+			mu.Unlock()
+			log.Println("Rate Limit Exeeded", ip)
+			http.Error(w, http.StatusText(429), http.StatusTooManyRequests)
+			return
+		}
+		// If client request is under rate limit we will send them to the next handler.
+		mu.Unlock()
+		next.ServeHTTP(w, r)
+	})
+}
+*/
