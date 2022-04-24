@@ -8,6 +8,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 
 	"git.01.kood.tech/roosarula/forum/pkg/data"
@@ -33,10 +34,10 @@ type socketReader struct {
 var savedsocketreader []*socketReader
 
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
-fmt.Println("In home router")
+	fmt.Println("In home router")
 	switch r.Method {
 	case "GET":
-fmt.Println(r.URL.Path)
+		fmt.Println(r.URL.Path)
 		// If a user types in an address that doesn't exist, a 404 Error is displayed.
 		// if r.URL.Path != "/" {
 		// 	w.WriteHeader(404)
@@ -54,7 +55,6 @@ fmt.Println(r.URL.Path)
 		for _, v := range categories {
 			cats = append(cats, *v)
 		}
-
 
 		app.render(w, r, "index.html", cats)
 		// t, err := template.ParseFiles("ui/html/index.html")
@@ -80,6 +80,16 @@ func (app *application) data(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
 	case "POST":
+		path := r.URL.Path[6:]
+		paths := strings.Split(path, "/")
+		switch paths[0] {
+		case "category":
+
+			app.showCategory(w,r,paths[1])
+
+		default:
+
+
 		categories, _ := app.models.Categories.Latest()
 
 		j, err := json.Marshal(categories)
@@ -88,10 +98,12 @@ func (app *application) data(w http.ResponseWriter, r *http.Request) {
 		}
 
 		io.Copy(w, bytes.NewReader(j))
+	}
+
 	case "GET":
-		fmt.Println("Get?")
 		app.serverError(w, errors.New("POST METHOD NOT ALLOWED"))
 	}
+
 }
 
 func (app *application) socket(w http.ResponseWriter, r *http.Request) {

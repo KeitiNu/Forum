@@ -6,19 +6,8 @@ export default class extends AbstractView {
         this.setTitle("Kodify");
     }
     
-
-    async logData(){
-
-        for (let index = 0; index < this.params.length; index++) {
-            console.log("This params: ", this.params[index])
-        }
-            
-    }
-
-
     async getHtml() {
-
-        var strStart = `<div class="mainpagecontent">
+        return `<div class="mainpagecontent">
         <div class="mainpagebox">
             <div class="mainpageboxinside">
                     <div class="mainpageboxheader">
@@ -28,36 +17,27 @@ export default class extends AbstractView {
                         </div>
                     </div>
                     <div class="categories">
-                        <div class="insidecategories">`;
-
-        var strMiddle = ``;
-
-        for (let index = 0; index < this.params.length; index++) {
-            strMiddle+= `
+                        <div class="insidecategories">
             
-            <div>
-            <div class="insidecatepadding">
-                <div class="catecard">
-                    <div class="card-body">
-                               <a href="/category/${this.params[index].Title}" data-link class="catecardtitle stretched-link">${this.params[index].Title}</a> 
-                        
-                                <p class="card-text">${this.params[index].Description}</p>
+                            ${this.params.map(function(par){
+
+                            return `<div>
+                                        <div class="insidecatepadding">
+                                            <div class="catecard">
+                                                <div class="card-body">
+                                                    <a href="/category/`+ par.Title+ `" data-link class="catecardtitle stretched-link">`+ par.Title+ `</a> 
+                                                    <p class="card-text">`+par.Description+`</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>`
+                            })}
+
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-            
-            `
-        }
-
-        var strEnd = `   </div>
-        </div>
-        </div>
-        </div>
-        </div>`
-
-        return strStart+strMiddle+strEnd
-        ;
+        </div>`;
     }
 
 

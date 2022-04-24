@@ -63,23 +63,29 @@ const router = async () => {
     };
 
 
-    console.log("Route:")
-
-    console.log(match.route.path)
 
 
-    if (match.route.path == '/') {
-    var data = await fetchData("/data" + match.route.path);
+    const v = getParams(match);
+    var dataUrl = "/data/"
+
+    if (v.id != undefined && v.url != undefined) {
+
+        dataUrl += v.url + v.id ;
+    }
+    var data = await fetchData(dataUrl);
+console.log(data)
+
+    // if (match.route.path == '/') {
     const view = new match.route.view(data);
     document.querySelector("#app").innerHTML = await view.getHtml();
         
-    }else{
+    // }else{
 
-     const view = new match.route.view(getParams(match));
+    //  const view = new match.route.view(getParams(match));
 
-    document.querySelector("#app").innerHTML = await view.getHtml();
+    // document.querySelector("#app").innerHTML = await view.getHtml();
 
-    }
+    // }
 
 
 
@@ -121,7 +127,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    console.log("Starting router")
     /* Document has loaded -  run the router! */
     router();
 });
@@ -134,9 +139,18 @@ const getParams = match => {
     const values = match.result.slice(1);
     const keys = Array.from(match.route.path.matchAll(/:(\w+)/g)).map(result => result[1]);
 
-    return Object.fromEntries(keys.map((key, i) => {
+    var obj =  Object.fromEntries(keys.map((key, i) => {
         return [key, values[i]];
     }));
+
+    var url = match.route.path.match(/(?<=\/).+?(?=:)/g);
+console.log(url)
+
+    if (url != null) {
+    obj['url'] = url[0]       
+    }
+
+    return obj
 };
 
 

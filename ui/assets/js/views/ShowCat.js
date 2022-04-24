@@ -16,33 +16,33 @@ export default class extends AbstractView {
             <div class="mainpageboxinside">
                 <div class="insidecateboxheader">
                     <div class="headercard">
-                        {{range .Categories}}
-                            <h1 class="kodify">{{.Title}}</h1>
-                            <h2>{{.Description}}</h2>
-                        {{end}}
+                    ${this.params.Categories.map(function(cat){
+                        return "<h1 class='kodify'>"+cat.Title+"</h1><h2>"+cat.Description+"</h2>"
+                    })}
                     </div>
                 </div>
                 <div class="adderbuttons">
-                    <a class="btn adderbutton" href="/" data-link>Back</a>
-                    <a class="btn adderbutton" href="/submit" data-link>Submit Post</a>
+                    <a class="btn adderbutton" href="/submit" data-link>Create Post</a>
                 </div>
                 <div class="categories">
                     <div class="insidecategories">
-                        {{range .Posts}}
-                        <div class="insidecatepadding">
-                            <div class="catecard">
-                                <div class="card-body">
-                                    <div class="post-card" id="post{{.ID}}">
-                                        <div class="postdetails">
-                                            <div class="post-username">Posted by {{.User}} {{timeAgo .Created}}</div>
-                                            <div class="post-title"><a class="post-title stretched-link" href="/post/{{.ID}}" data-link>{{.Title}}</a></div>
-                                            <div class="post-description">{{.Content}}</div>
-                                        </div>
+
+                    ${this.params.Posts.map(function(post){
+                       var d = moment(post.Created).format("DD.MM.YYYY HH:mm"); 
+                        return `  <div class="insidecatepadding">
+                        <div class="catecard">
+                            <div class="card-body">
+                                <div class="post-card" id="post+`+post.ID+`">
+                                    <div class="postdetails">
+                                        <div class="post-username">Posted by `+post.User+` `+d+`</div>
+                                        <div class="post-title"><a class="post-title stretched-link" href="/post/`+post.ID+`" data-link>`+post.Title+`</a></div>
+                                        <div class="post-description">`+post.Content+`</div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        {{end}}
+                    </div>`
+                    })}
                     </div>
                 </div>
             </div>
@@ -51,3 +51,4 @@ export default class extends AbstractView {
         `;
     }
 }
+
