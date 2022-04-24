@@ -3,7 +3,6 @@ import AbstractView from "./AbstractView.js";
 export default class extends AbstractView {
     constructor(params) {
         super(params);
-        this.postId = params.id;
         this.setTitle("Kodify - Post");
     }
 
@@ -14,57 +13,14 @@ export default class extends AbstractView {
             <div class="mainpageboxinside">
                 <div class="insidecateboxheader">
                     <div class="mainbpageboxheaderthread">
-                        <div class="post-card" id="post{{.ID}}">
-                            <div class="votingbuttons">
-                                <div class="post-upvote">
-                                    <form id="form-up-{{.ID}}" onsubmit="return fetchpost('{{.ID}}', 'up')">
-                                        <input value="{{.ID}}" hidden>
-                                        <button type="submit" class="btn up-button"
-                                            onclick="vote('post{{.ID}}', 'up-button')">
-                                            <i class="bi upb bi-caret-up"></i>
-                                        </button>
-                                    </form>
-                                </div>
-    
-                                <div class="votecounter">
-                                    <a name="votes" class="votes" value="0">{{.Votes}}</a>
-                                </div>
-    
-                                <div class="post-downvote">
-                                    <form id="form-down-{{.ID}}" onsubmit="return fetchpost('{{.ID}}', 'down')">
-                                        <input value="{{.ID}}" hidden>
-                                        <button type="submit" class="btn down-button"
-                                            onclick="vote('post{{.ID}}', 'down-button')">
-                                            <i class="bi downb bi-caret-down"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
+                        <div class="post-card" id="post${this.params.Post.ID}">
     
                             <div class="postdetails">
-                                <div class="post-username-thread">Posted by {{.User}} {{timeAgo .Created}}</div>
+                                <div class="post-username-thread">Posted by ${this.params.Post.User} {{timeAgo .Created}}</div>
                                 <div class="post-title-thread"><a class="post-title-thread stretched-link"
-                                        href="/post/{{.ID}}" >{{.Title}}</a></div>
-                                <div class="post-description-thread">{{.Content}}</div>
+                                        href="/post/${this.params.Post.ID}" data-link>${this.params.Post.Title}</a></div>
+                                <div class="post-description-thread">${this.params.Post.Content}</div>
                             </div>
-    
-                           <!-- {{if eq $.Post.User $.User.Name}}
-                            <div>
-                                <a class="btn submitbtn" href="/edit/{{.ID}}">Edit</a>
-                                <a class="btn cancelbtn" href="/delete/{{.ID}}" data-method="delete"
-                                    data-confirm="Are you sure?">Delete</a>
-    
-                            </div>
-                            {{end}}-->
-    
-                        
-                        
-                        </div>
-    
-                        <div class="postimgdiv">
-                            {{with .ImageSrc}}
-                            <img class="postimg" src="/static/{{.}}" alt="">
-                            {{end}}
                         </div>
                     </div>
                     <div class="categories">
@@ -79,53 +35,21 @@ export default class extends AbstractView {
                         </div>
     
                         <div class="insidecategories">
-                            {{range .Comments}}
+
+                        ${this.params.Comments.map(function(comment){
+                            var d = moment(comment.Created).format("DD.MM.YYYY HH:mm"); 
+
+                            return ` 
                             <div class="insidecatepadding">
                                 <div class="catecard">
                                     <div class="card-body">
-                                        <div class="post-card" id="comment{{.ID}}">
-                                            <div class="votingbuttons">
-                                                </form>
-                                                <div class="post-upvote">
-                                                    <form id="comment-up-{{.ID}}"
-                                                        onsubmit="return fetchcomment('{{.ID}}', 'up')">
-                                                        <input value="{{.ID}}" hidden>
-                                                        <button type="submit" class="btn up-button"
-                                                            onclick="vote('comment{{.ID}}', 'up-button')">
-                                                            <i class="bi upb bi-caret-up"></i>
-                                                        </button>
-                                                    </form>
-                                                </div>
-    
-                                                <div class="votecounter">
-                                                    <a name="votes" class="votes" value="0">{{.Votes}}</a>
-                                                </div>
-    
-                                                <div class="post-downvote">
-                                                    <form id="comment-down-{{.ID}}"
-                                                        onsubmit="return fetchcomment('{{.ID}}', 'down')">
-                                                        <input value="{{.ID}}" hidden>
-                                                        <button class="btn down-button"
-                                                            onclick="vote('comment{{.ID}}', 'down-button')">
-                                                            <i class="bi downb bi-caret-down"></i>
-                                                        </button>
-                                                    </form>
-                                                </div>
-                                               
-                                            </div>
+                                        <div class="post-card" id="comment`+ comment.ID +`">
     
                                             <div class="postdetails">
-                                                <div class="post-username">Posted by {{.User}} {{timeAgo .Created}}</div>
-                                                <p class="post-description-comment card-text">{{.Content}}</p>
+                                                <div class="post-username">Posted by `+ comment.User +` `+ d +`</div>
+                                                <p class="post-description-comment card-text">`+ comment.Content +`</p>
                                             </div>
-                                         <!--   {{if eq .User $.User.Name}}
-                                            <div>
-                                                <div>
-                                                    <a class="btn submitbtn" href="" data-toggle="modal" data-target="#exampleModal">Edit</a>
-                                                    <a class="btn cancelbtn" href="/deletecomment/{{.ID}}">Delete</a>
-                                                </div>
-                                            </div>
-                                            {{end}}-->
+                                  
                                         </div>
                                     </div>
                                 </div>
@@ -161,8 +85,9 @@ export default class extends AbstractView {
     
                                 </div>
                             </div>
-                        </div>							
-                            {{end}}
+                        </div>	`						
+                    })}
+                        
                         </div>
                     </div>
     

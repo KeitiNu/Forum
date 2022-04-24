@@ -1,7 +1,10 @@
 package main
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -92,8 +95,8 @@ func (app *application) submitPost(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (app *application) showPost(w http.ResponseWriter, r *http.Request) {
-	id, err := strconv.Atoi(r.URL.Path[6:])
+func (app *application) showPost(w http.ResponseWriter, r *http.Request, idString string) {
+	id, err := strconv.Atoi(idString)
 	if err != nil {
 		app.serverError(w, err)
 		return
@@ -113,14 +116,31 @@ func (app *application) showPost(w http.ResponseWriter, r *http.Request) {
 	}
 	user := app.contextGetUser(r)
 	switch r.Method {
-	case "GET":
+	case "POST":
 
+
+
+
+		
 		if user == nil {
 			user = &data.User{}
 		}
-		app.render(w, r, "showpost.page.tmpl", &templateData{User: user, Post: post, Comments: comments})
+
+
+		data := &templateData{User: user, Post: post, Comments: comments}
+
+		j, err := json.Marshal(data)
+		if err != nil {
+			app.serverError(w, err)
+		}
+	
+		io.Copy(w, bytes.NewReader(j))
+
+
 		return
-	case "POST":
+
+
+	case "GET":
 		err := r.ParseForm()
 		if err != nil {
 			app.serverError(w, err)

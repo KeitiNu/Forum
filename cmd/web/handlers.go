@@ -87,6 +87,10 @@ func (app *application) data(w http.ResponseWriter, r *http.Request) {
 
 			app.showCategory(w,r,paths[1])
 
+		case "post":
+			
+			app.showPost(w,r, paths[1])
+
 		default:
 
 
