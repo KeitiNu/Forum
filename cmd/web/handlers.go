@@ -1,34 +1,129 @@
 package main
 
 import (
+	"bytes"
+	"encoding/json"
 	"errors"
+	"fmt"
+	"io"
+	"log"
 	"net/http"
 	"time"
 
 	"git.01.kood.tech/roosarula/forum/pkg/data"
 	"git.01.kood.tech/roosarula/forum/pkg/forms"
+	"github.com/gorilla/websocket"
 	uuid "github.com/satori/go.uuid"
 )
 
 // Create a variable to store the page where the client was before action (ex. logging in and returning directly to the post)
 var back string
 
+var upgrader = websocket.Upgrader{
+	ReadBufferSize:  1024,
+	WriteBufferSize: 1024,
+}
+
+type socketReader struct {
+	con  *websocket.Conn
+	mode int
+	name string
+}
+
+var savedsocketreader []*socketReader
+
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
+fmt.Println("In home router")
 	switch r.Method {
 	case "GET":
-
+fmt.Println(r.URL.Path)
 		// If a user types in an address that doesn't exist, a 404 Error is displayed.
-		if r.URL.Path != "/" {
-			w.WriteHeader(404)
-			app.render(w, r, "400.page.tmpl", nil)
-			return
-		}
+		// if r.URL.Path != "/" {
+		// 	w.WriteHeader(404)
+		// 	app.render(w, r, "400.page.tmpl", nil)
+		// 	return
+		// }
 		// If the user connects to the home address, the frontpage is displayed.
 		categories, err := app.models.Categories.Latest()
 		if err != nil {
 			app.serverError(w, err)
 		}
-		app.render(w, r, "home.page.tmpl", &templateData{Categories: categories})
+		// // app.render(w, r, "home.page.tmpl", &templateData{Categories: categories})
+
+		var cats []data.Category
+		for _, v := range categories {
+			cats = append(cats, *v)
+		}
+
+
+		app.render(w, r, "index.html", cats)
+		// t, err := template.ParseFiles("ui/html/index.html")
+		// if err != nil {
+		// 	http.Error(w, "500: internal server error", http.StatusInternalServerError)
+		// 	return
+		// }
+
+		// j, err := json.Marshal(categories)
+		// if err != nil {
+		// 	app.serverError(w, err)
+		// }
+
+		// t.Execute(w, j)
+
+	case "POST":
+		app.serverError(w, errors.New("POST METHOD NOT ALLOWED"))
+	}
+}
+
+func (app *application) data(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Getting Data")
+
+	switch r.Method {
+	case "POST":
+		categories, _ := app.models.Categories.Latest()
+
+		j, err := json.Marshal(categories)
+		if err != nil {
+			app.serverError(w, err)
+		}
+
+		io.Copy(w, bytes.NewReader(j))
+	case "GET":
+		fmt.Println("Get?")
+		app.serverError(w, errors.New("POST METHOD NOT ALLOWED"))
+	}
+}
+
+func (app *application) socket(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case "GET":
+
+		if savedsocketreader == nil {
+			savedsocketreader = make([]*socketReader, 0)
+		}
+
+		defer func() {
+			err := recover()
+			if err != nil {
+				log.Println(err)
+			}
+			r.Body.Close()
+
+		}()
+
+		con, _ := upgrader.Upgrade(w, r, nil)
+
+		ptrSocketReader := &socketReader{
+			con: con,
+		}
+
+		savedsocketreader = append(savedsocketreader, ptrSocketReader)
+
+		// ptrSocketReader.con.WriteMessage(websocket.TextMessage, []byte("Greetings from golang"));
+
+		_, message, _ := ptrSocketReader.con.ReadMessage()
+		fmt.Println("Message retrieved: ", string(message))
+
 	case "POST":
 		app.serverError(w, errors.New("POST METHOD NOT ALLOWED"))
 	}
@@ -98,6 +193,7 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 	// After login redirect the user to the homepage.
 	http.Redirect(w, r, back, http.StatusSeeOther)
 }
+
 func (app *application) register(w http.ResponseWriter, r *http.Request) {
 	if r.Header.Get("referer") != "http://localhost:8090/login" && r.Header.Get("referer") != "http://localhost:8090/signup" {
 		back = r.Header.Get("referer")
@@ -198,5 +294,4 @@ func (app *application) profile(w http.ResponseWriter, r *http.Request) {
 		}
 		app.render(w, r, "profile.page.tmpl", &templateData{Posts: posts})
 	}
-
 }

@@ -1,34 +1,36 @@
-let votes = document.querySelector('#uservotes').innerText;
-votes = votes.split(`]`).slice(0, 4);
-const upvotes = votes[0].slice(2).split(' ');
-const downvotes = votes[1].slice(2).split(' ');
-const commentUpvotes = votes[2].slice(2).split(' ');
-const commentDownvotes = votes[3].slice(2).split(' ');
-console.log('upvotes: ', upvotes, 'downvotes: ', downvotes,  'commentupvotes: ', commentUpvotes, 'commentdownvotes: ', commentDownvotes);
-for (const post of upvotes) {
-    let button = document.querySelector(`#form-up-${post} button`);
-    if (button) {
-        button.classList.add("active");
-    }
-}
-for (const post of downvotes) {
-    let button = document.querySelector(`#form-down-${post} button`);
-    if (button) {
-        button.classList.add("active");
-    }
-}
-for (const comment of commentUpvotes) {
-    let button = document.querySelector(`#comment-up-${comment} button`);
-    if (button) {
-        button.classList.add("active");
-    }
-}
-for (const comment of commentDownvotes) {
-    let button = document.querySelector(`#comment-down-${comment} button`);
-    if (button) {
-        button.classList.add("active");
-    }
-}
+// let votes = document.querySelector('#uservotes').innerText;
+// votes = votes.split(`]`).slice(0, 4);
+// const upvotes = votes[0].slice(2).split(' ');
+// const downvotes = votes[1].slice(2).split(' ');
+// const commentUpvotes = votes[2].slice(2).split(' ');
+// const commentDownvotes = votes[3].slice(2).split(' ');
+// console.log('upvotes: ', upvotes, 'downvotes: ', downvotes,  'commentupvotes: ', commentUpvotes, 'commentdownvotes: ', commentDownvotes);
+// for (const post of upvotes) {
+//     let button = document.querySelector(`#form-up-${post} button`);
+//     if (button) {
+//         button.classList.add("active");
+//     }
+// }
+// for (const post of downvotes) {
+//     let button = document.querySelector(`#form-down-${post} button`);
+//     if (button) {
+//         button.classList.add("active");
+//     }
+// }
+// for (const comment of commentUpvotes) {
+//     let button = document.querySelector(`#comment-up-${comment} button`);
+//     if (button) {
+//         button.classList.add("active");
+//     }
+// }
+// for (const comment of commentDownvotes) {
+//     let button = document.querySelector(`#comment-down-${comment} button`);
+//     if (button) {
+//         button.classList.add("active");
+//     }
+// }
+
+
 function vote(id, updown, postcom) {
     let post = document.getElementById(id);
     let button = post.getElementsByClassName(updown)[0];
@@ -96,3 +98,22 @@ function fetchcomment(id, updown) {
     // (C) PREVENT HTML FORM SUBMIT
     return false;
 }
+
+
+function charactercount() {
+    // const areatextarea = document.querySelector("#postcontent");
+    const areatext = document.querySelector("#postcontent").value.length;
+    const textcount = document.querySelector("#textcount");
+    // const wordcount = document.querySelector("#words_count");
+    textcount.innerHTML = areatext;
+};
+
+
+function myFunction() {
+    var x = document.getElementById("myDIV");
+    if (x.style.display === "none") {
+        x.style.display = "block";
+    } else {
+        x.style.display = "none";
+    }
+};

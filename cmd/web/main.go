@@ -31,6 +31,7 @@ func main() {
 		errorLog.Fatal(err)
 	}
 
+
 	db, err := openDB()
 	if err != nil {
 		errorLog.Fatal(err)

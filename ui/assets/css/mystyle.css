@@ -424,6 +424,11 @@ border:1px solid #45ffdb;
     text-decoration: none;
 }
 
+a.catecardtitle:hover{
+    color:#45ffdb;
+}
+
+
 .card-text {
 	overflow: hidden;
 	text-overflow: ellipsis;

@@ -1,15 +1,22 @@
-{{template "base" .}}
+import AbstractView from "./AbstractView.js";
 
-{{define "head"}}
-<script type="module">
-	import Tags from "https://cdn.jsdelivr.net/npm/bootstrap5-tags@1/tags.min.js";
-	Tags.init("select");
-</script>
-{{end}}
+export default class extends AbstractView {
+    constructor(params) {
+        super(params);
+        this.setTitle("Kodify - Post");
+    }
 
 
-{{define "body"}}
-<div class="createpostcontent">
+
+    async getHtml() {
+        return `
+        <script type="module">
+        import Tags from "https://cdn.jsdelivr.net/npm/bootstrap5-tags@1/tags.min.js";
+        Tags.init("select");
+    </script>
+
+
+    <div class="createpostcontent">
 	<div class="createpostbox">
 		<div class="createpostboxinside">
 			<div class="createpostheader">
@@ -81,22 +88,7 @@
 		</div>
 	</div>
 </div>
-{{end}}
 
-{{define "js"}}
-<script type="text/javascript">
-	function charactercount() {
-		// const areatextarea = document.querySelector("#postcontent");
-		const areatext = document.querySelector("#postcontent").value.length;
-		const textcount = document.querySelector("#textcount");
-		const wordcount = document.querySelector("#words_count");
-		textcount.innerHTML = areatext;
-	};
-
-	var checkboxes = document.querySelectorAll('input[type="checkbox"]');
-	var checkedOne = Array.prototype.slice.call(checkboxes).some(x => x.checked);
-
-	let input = document.getElementById(inputGroupFile01)
-	let span = document.getElementById("erroringimage")
-</script>
-{{end}}
+    `;
+    }
+}
