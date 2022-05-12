@@ -24,8 +24,8 @@ func (app *application) routes() http.Handler {
 	// mux.HandleFunc("/post/", app.showPost)
 	// mux.HandleFunc("/category/", app.showCategory)
 
-
 	// mux.HandleFunc("/login", app.login)
+
 	// mux.HandleFunc("/logout", app.logout)
 	// mux.HandleFunc("/signup", app.register)
 

@@ -1,9 +1,7 @@
 package main
 
 import (
-	"bytes"
-	"encoding/json"
-	"io"
+	
 	"net/http"
 )
 
@@ -42,13 +40,14 @@ func (app *application) showCategory(w http.ResponseWriter, r *http.Request, cat
 
 
 	data := &templateData{Posts: posts, Categories: categories}
+	app.serveAsJSON(w, data)
 
-	j, err := json.Marshal(data)
-	if err != nil {
-		app.serverError(w, err)
-	}
+	// j, err := json.Marshal(data)
+	// if err != nil {
+	// 	app.serverError(w, err)
+	// }
 
-	io.Copy(w, bytes.NewReader(j))
+	// io.Copy(w, bytes.NewReader(j))
 
 	// app.render(w, r, "showcat.page.tmpl", &templateData{Posts: posts, Categories: categories})
 }

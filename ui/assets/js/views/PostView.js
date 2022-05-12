@@ -16,7 +16,7 @@ export default class extends AbstractView {
                         <div class="post-card" id="post${this.params.Post.ID}">
     
                             <div class="postdetails">
-                                <div class="post-username-thread">Posted by ${this.params.Post.User} {{timeAgo .Created}}</div>
+                                <div class="post-username-thread">Posted by ${this.params.Post.User} ${moment(this.params.Post.Created).format("DD.MM.YYYY HH:mm")}</div>
                                 <div class="post-title-thread"><a class="post-title-thread stretched-link"
                                         href="/post/${this.params.Post.ID}" data-link>${this.params.Post.Title}</a></div>
                                 <div class="post-description-thread">${this.params.Post.Content}</div>

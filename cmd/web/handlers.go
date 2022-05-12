@@ -1,11 +1,9 @@
 package main
 
 import (
-	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io"
 	"log"
 	"net/http"
 	"strings"
@@ -51,12 +49,8 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		}
 		// // app.render(w, r, "home.page.tmpl", &templateData{Categories: categories})
 
-		var cats []data.Category
-		for _, v := range categories {
-			cats = append(cats, *v)
-		}
+		app.render(w, r, "index.html", &templateData{Categories: categories})
 
-		app.render(w, r, "index.html", cats)
 		// t, err := template.ParseFiles("ui/html/index.html")
 		// if err != nil {
 		// 	http.Error(w, "500: internal server error", http.StatusInternalServerError)
@@ -76,7 +70,7 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) data(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Getting Data")
+	fmt.Println("Getting Data, url: ", r.URL.Path)
 
 	switch r.Method {
 	case "POST":
@@ -85,24 +79,24 @@ func (app *application) data(w http.ResponseWriter, r *http.Request) {
 		switch paths[0] {
 		case "category":
 
-			app.showCategory(w,r,paths[1])
+			app.showCategory(w, r, paths[1])
 
 		case "post":
-			
-			app.showPost(w,r, paths[1])
+
+			app.showPost(w, r, paths[1])
+		case "login":
+
+			app.login(w, r)
+		case "submit":
+			app.submitPost(w, r)
 
 		default:
 
+			categories, _ := app.models.Categories.Latest()
 
-		categories, _ := app.models.Categories.Latest()
+			app.serveAsJSON(w, &templateData{Categories: categories})
 
-		j, err := json.Marshal(categories)
-		if err != nil {
-			app.serverError(w, err)
 		}
-
-		io.Copy(w, bytes.NewReader(j))
-	}
 
 	case "GET":
 		app.serverError(w, errors.New("POST METHOD NOT ALLOWED"))
@@ -148,28 +142,44 @@ func (app *application) socket(w http.ResponseWriter, r *http.Request) {
 func (app *application) login(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET": // When a person clicks the login link, the form appears.
-		app.render(w, r, "login.page.tmpl", &templateData{Form: forms.New(nil)})
-		if r.Header.Get("referer") != "http://localhost:8090/login" && r.Header.Get("referer") != "http://localhost:8090/signup" {
-			back = r.Header.Get("referer")
-		}
-		return
+		app.home(w, r)
+
+		// app.render(w, r, "login.page.tmpl", &templateData{Form: forms.New(nil)})
+		// if r.Header.Get("referer") != "http://localhost:8090/login" && r.Header.Get("referer") != "http://localhost:8090/signup" {
+		// 	back = r.Header.Get("referer")
+		// }
+		// return
 	case "POST": // If a user submits a form on the login page, we check the data and then run the database queries.
-		err := r.ParseForm()
+
+		var p forms.LoginForm
+
+		decoder := json.NewDecoder(r.Body)
+		err := decoder.Decode(&p)
 		if err != nil {
+
 			app.serverError(w, err)
 			return
 		}
 
+		// err := r.ParseForm()
+
+		// if err != nil {
+
+		// 	app.serverError(w, err)
+		// 	return
+		// }
+
 		// We make a form object with user input and error storage.
 		form := forms.New(r.PostForm)
+
 		v := forms.NewValidator()
 		form.Errors = v
 
 		// User object
 		user := &data.User{
-			Name: form.Get("username"),
+			Name: p.Username,
 		}
-		err = user.Password.Set(form.Get("password"))
+		err = user.Password.Set(p.Password)
 		if err != nil {
 			app.serverError(w, err)
 		}
@@ -177,7 +187,8 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 		// Validate the user struct and return the error messages to the client if any of
 		// the checks fail.
 		if data.ValidateLogin(v, user); !v.Valid() {
-			app.render(w, r, "login.page.tmpl", &templateData{Form: form})
+			// app.render(w, r, "index.html", &templateData{Form: form})
+			app.serveAsJSON(w, &templateData{Form: form})
 			return
 		}
 
@@ -186,7 +197,9 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 		err = app.models.Users.Authenticate(user.Name, form.Get("password"))
 		if err == data.ErrInvalidCredentials {
 			form.Errors.AddError("generic", "Username or Password is incorrect")
-			app.render(w, r, "login.page.tmpl", &templateData{Form: form})
+			// app.render(w, r, "index.html", &templateData{Form: form})
+			app.serveAsJSON(w, &templateData{Form: form})
+
 			return
 		} else if err != nil {
 			app.serverError(w, err)

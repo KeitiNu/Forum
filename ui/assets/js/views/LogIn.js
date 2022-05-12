@@ -14,28 +14,28 @@ export default class extends AbstractView {
                 <span class="iconboxspan">
                     <img src="/static/css/images/logo_white.png">
                 </span>
-                <form method="post" class="std auth loginform">
+                <form method="post" id="loginform" class="loginform" <!--onsubmit="signInButtonPressed(event)"-->>
                     <div>
                         <label class="form-label" for="username"></label>
-                        <input class="form-control" type="text" id="username" name="username" placeholder="Username"
-                            value="">
+                        <input class="form-control" type="text" id="username" name="username" placeholder="Email or username" autocomplete="username" <!--value="{{.Get "username"}}"-->>
+                        {{with .Errors.Get "username"}}
+                            <label class='error'>{{.}}</label>
+                        {{end}}
                     </div>
                     <div>
-                        <label class="form-label" for="email"></label>
-                        <input class="form-control" type="text" id="email" name="email" placeholder="Email" value="">
+                            <label class="form-label" for="password"></label>
+                            <input class="form-control" type="password" id="password" name="password" placeholder="Password" autocomplete="current-password">
+                            {{with .Errors.Get "password"}}
+                                <label class='error'>{{.}}</label>
+                            {{end}}
+                            {{with .Errors.Get "generic"}}
+                            <label class='error'>{{.}}</label>
+                            {{end}}
                     </div>
-                    <div>
-                        <label class="form-label" for="pass"></label>
-                        <input class="form-control" type="password" id="pass" name="password" placeholder="Password">
-                    </div>
-                    <div>
-                        <label class="form-label" for="pass"></label>
-                        <input class="form-control" type="password" id="password" placeholder="Confirm password"
-                            name="confirm_password">
-                    </div>
-                    <input class="btn loginbtn" type="submit" value="Sign Up" data-link>
+                    <input class="btn loginbtn" type="submit" value="Log In" data-login">
+
                     <div class="registerlink">
-                        <a href="/login" data-link>Already registered? Log In</a>
+                        <a href="/signup" data-link>New user? Register</a>
                     </div>
                 </form>
             </div>

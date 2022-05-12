@@ -2,7 +2,9 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"runtime/debug"
 )
@@ -62,7 +64,7 @@ func (app *application) render2(w http.ResponseWriter, r *http.Request, name str
 
 
 
-func (app *application) render(w http.ResponseWriter, r *http.Request, name string, data any) {
+func (app *application) render(w http.ResponseWriter, r *http.Request, name string, td *templateData) {
 	// Retrieve the appropriate template set from the cache based on the page name
 	// (like 'home.page.tmpl'). If no entry exists in the cache with the
 	// provided name, call the serverError.
@@ -80,8 +82,7 @@ func (app *application) render(w http.ResponseWriter, r *http.Request, name stri
 	// Add default data adds our user information to each template (if user is logged in)
 	// err := ts.Execute(buf, app.addDefaultData(td, r))
 
-	err := ts.Execute(buf, data)
-
+	err := ts.Execute(buf, app.addDefaultData(td, r))
 	if err != nil {
 		app.serverError(w, err)
 	}
@@ -104,4 +105,15 @@ func (app *application) addDefaultData(td *templateData, r *http.Request) *templ
 		td.UserVotes = app.models.Posts.GetUserVotes(td.AuthenticatedUser.Name)
 	}
 	return td
+}
+
+
+func (app *application) serveAsJSON(w http.ResponseWriter, data *templateData){
+
+	j, err := json.Marshal(data)
+	if err != nil {
+		app.serverError(w, err)
+	}
+
+	io.Copy(w, bytes.NewReader(j))
 }

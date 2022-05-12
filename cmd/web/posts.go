@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"strconv"
 
@@ -20,77 +19,96 @@ func (app *application) submitPost(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			fmt.Println(err)
 		}
-		app.render(w, r, "submitpost.page.tmpl", &templateData{Form: forms.New(nil), Categories: categories})
+		// app.render(w, r, "submitpost.page.tmpl", &templateData{Form: forms.New(nil), Categories: categories})
+		app.serveAsJSON(w, &templateData{Form: forms.New(nil), Categories: categories})
 		return
 	case "POST": // If a user submits a form on the login page, we check the data and then run the database queries.
-		var fileBytes []byte
-		err := r.ParseMultipartForm(20 << 20)
-		if err != nil {
-			app.serverError(w, err)
-			return
-		}
-		tempFilename := ""
-		file, _, err := r.FormFile("myFile")
+		// var fileBytes []byte
+		// err := r.ParseMultipartForm(20 << 20)
+		// if err != nil {
+		// 	app.serverError(w, err)
+		// 	return
+		// }
+		// tempFilename := ""
+		// file, _, err := r.FormFile("myFile")
 
-		// err.Error() asendus
-		if fmt.Sprintf("%s", err) != "http: no such file" {
-			if err != nil {
-				fmt.Println(err)
-				return
-			}
-			defer file.Close()
+		// // err.Error() asendus
+		// if fmt.Sprintf("%s", err) != "http: no such file" {
+		// 	if err != nil {
+		// 		fmt.Println(err)
+		// 		return
+		// 	}
+		// 	defer file.Close()
 
-			fileBytes, err = ioutil.ReadAll(file)
-			if err != nil {
-				fmt.Println(err)
-			}
-			
-			if len(fileBytes) <= 20000000 {
-				tempFile, err := ioutil.TempFile("./ui/assets/thread-images", "upload-*.png")
-				if err != nil {
-					fmt.Println(err)
-					return
-				}
+		// 	fileBytes, err = ioutil.ReadAll(file)
+		// 	if err != nil {
+		// 		fmt.Println(err)
+		// 	}
 
-				defer tempFile.Close()
+		// 	if len(fileBytes) <= 20000000 {
+		// 		tempFile, err := ioutil.TempFile("./ui/assets/thread-images", "upload-*.png")
+		// 		if err != nil {
+		// 			fmt.Println(err)
+		// 			return
+		// 		}
 
-				_, err = tempFile.Write(fileBytes)
-				if err != nil {
-					app.serverError(w, err)
-				}
-				tempFilename = tempFile.Name()
-			}
-		}
+		// 		defer tempFile.Close()
+
+		// 		_, err = tempFile.Write(fileBytes)
+		// 		if err != nil {
+		// 			app.serverError(w, err)
+		// 		}
+		// 		tempFilename = tempFile.Name()
+		// 	}
+		// }
+
+		decoder := json.NewDecoder(r.Body)
 
 		// We make a form object with user input and error storage.
 		form := forms.New(r.PostForm)
+
 		v := forms.NewValidator()
 		form.Errors = v
 
 		post := &data.Post{
-			Title:    form.Get("title"),
-			Content:  form.Get("content"),
-			Category: r.Form["category"],
-			ImageSrc: tempFilename,
+			// Title:    form.Get("title"),
+			// Content:  form.Get("content"),
+			// Category: r.Form["category"],
 		}
 
-		user := app.contextGetUser(r)
-		post.User = user.Name
+		
+		err := decoder.Decode(&post)
+
+		if err != nil {
+
+			app.serverError(w, err)
+			return
+		}
+
+		fmt.Println("HERE: ", post)
+
+		// user := app.contextGetUser(r)
+		// post.User = user.Name
 		categoryList, _ := app.models.Categories.Latest()
 		v.Check(post.Title != "", "title", "Title must be provided")
 		v.Check(post.Content != "", "content", "Description must be provided")
 		v.Check(len(post.Category) != 0, "category", "At least 1 category must be provided")
-		v.Check(len(fileBytes) <= 20000000, "image", "Image can't be over 20 MB")
-		if !v.Valid() {
-			app.render(w, r, "submitpost.page.tmpl", &templateData{Form: form, Categories: categoryList})
-			return
-		}
-		categories := r.Form["category"]
+		// v.Check(len(fileBytes) <= 20000000, "image", "Image can't be over 20 MB")
+		// if !v.Valid() {
+		// app.render(w, r, "submitpost.page.tmpl", &templateData{Form: form, Categories: categoryList})
+
+		// return
+		// }
+		categories := post.Category
 		id, err := app.models.Posts.Insert(post.Title, post.Content, post.User, post.ImageSrc, categories)
 		if err != nil {
 			fmt.Println("error happened", err)
 		}
-		http.Redirect(w, r, fmt.Sprintf("/post/%d", id), http.StatusSeeOther)
+
+		stringId := strconv.Itoa(id)
+		app.serveAsJSON(w, &templateData{Form: form, Categories: categoryList, Sort: stringId})
+
+
 		return
 	}
 }
@@ -118,14 +136,9 @@ func (app *application) showPost(w http.ResponseWriter, r *http.Request, idStrin
 	switch r.Method {
 	case "POST":
 
-
-
-
-		
 		if user == nil {
 			user = &data.User{}
 		}
-
 
 		data := &templateData{User: user, Post: post, Comments: comments}
 
@@ -133,12 +146,10 @@ func (app *application) showPost(w http.ResponseWriter, r *http.Request, idStrin
 		if err != nil {
 			app.serverError(w, err)
 		}
-	
+
 		io.Copy(w, bytes.NewReader(j))
 
-
 		return
-
 
 	case "GET":
 		err := r.ParseForm()
@@ -182,4 +193,3 @@ func (app *application) showPost(w http.ResponseWriter, r *http.Request, idStrin
 	}
 	http.Redirect(w, r, fmt.Sprintf("/post/%d", id), http.StatusFound)
 }
-

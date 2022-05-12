@@ -12,6 +12,11 @@ type Form struct {
 	Errors *Validator
 }
 
+type LoginForm struct {
+	Username string
+	Password string
+}
+
 func New(data url.Values) *Form {
 	return &Form{
 		data,

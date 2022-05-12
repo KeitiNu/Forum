@@ -10,13 +10,14 @@ import PostView from "./views/PostView.js";
 import NewPost from "./views/NewPost.js";
 
 
+export {Router}
+
 const pathToRegex = path => new RegExp("^" + path.replace(/\//g, "\\/").replace(/:\w+/g, "(.+)") + "$");
 var authenticated = true;
 
 
 
-const router = async () => {
-
+const Router = async () => {
 
     const routes = [
         { path: "/", view: Home },
@@ -63,6 +64,15 @@ const router = async () => {
     };
 
 
+    // if (match.route.path == '/submit') {
+    //     var form = document.querySelector('form')
+    //     var data = new FormData(form);
+    //     const cats = data.getAll('category');
+    //     console.log("Cats in router: ", cats)
+
+    // };
+
+
 
 
     const v = getParams(match);
@@ -70,15 +80,16 @@ const router = async () => {
 
     if (v.id != undefined && v.url != undefined) {
 
-        dataUrl += v.url + v.id ;
+        dataUrl += v.url + v.id;
     }
+    console.log(dataUrl)
+
     var data = await fetchData(dataUrl);
-console.log(data)
 
     // if (match.route.path == '/') {
     const view = new match.route.view(data);
     document.querySelector("#app").innerHTML = await view.getHtml();
-        
+
     // }else{
 
     //  const view = new match.route.view(getParams(match));
@@ -100,7 +111,7 @@ console.log(data)
         document.querySelector("#header").innerHTML = await headin.getHtml();
 
     } else {
-        
+
         const headout = new HeaderOut();
         document.querySelector("#header").innerHTML = await headout.getHtml();
 
@@ -113,7 +124,7 @@ console.log(data)
 
 const navigateTo = url => {
     history.pushState(null, null, url);
-    router();
+    Router();
 };
 
 
@@ -125,55 +136,108 @@ document.addEventListener("DOMContentLoaded", () => {
             e.preventDefault();
             navigateTo(e.target.href);
         }
+
     });
 
+
+    // $(document.body).on('submit', 'form', async function (e) {
+    //     e.preventDefault();
+    //     console.log(e.target)
+    //     var data = new FormData(e.target);
+    //     const cats = data.getAll('category');
+
+    //     var values = Object.fromEntries(data.entries());
+    //     values.category = cats
+
+    //     const location = window.location.pathname
+    //     var o = await fetchFormData(values, location)
+    //     console.log("Object sent from back: ", o)
+
+
+    // });
+
     /* Document has loaded -  run the router! */
-    router();
+    Router();
 });
 
 
-window.addEventListener("popstate", router);
+window.addEventListener("popstate", Router);
 
 
 const getParams = match => {
     const values = match.result.slice(1);
     const keys = Array.from(match.route.path.matchAll(/:(\w+)/g)).map(result => result[1]);
 
-    var obj =  Object.fromEntries(keys.map((key, i) => {
+
+
+    var obj = Object.fromEntries(keys.map((key, i) => {
         return [key, values[i]];
     }));
 
     var url = match.route.path.match(/(?<=\/).+?(?=:)/g);
-console.log(url)
 
     if (url != null) {
-    obj['url'] = url[0]       
+        obj['url'] = url[0]
+    } else {
+        obj['url'] = match.route.path
     }
+
 
     return obj
 };
 
 
 
-async function fetchData(url){
-    console.log(url)
-    var obj =  fetch(url, {
+
+async function fetchData(url) {
+
+    var obj = fetch(url, {
         method: 'POST'
     })
-    .then(response => {
+        .then(response => {
 
-        if (!response.ok) {
-            throw new Error(`HTTP error: ${response.status}`);
-        }
-        // Otherwise (if the response succeeded), our handler fetches the response
-        // as text by calling response.text(), and immediately returns the promise
-        // returned by `response.text()`.
-        return response.text()
+            if (!response.ok) {
+                throw new Error(`HTTP error: ${response.status}`);
+            }
+            // Otherwise (if the response succeeded), our handler fetches the response
+            // as text by calling response.text(), and immediately returns the promise
+            // returned by `response.text()`.
+            return response.text()
 
-    })
-    .then(json => JSON.parse(json))
-    .catch(err => console.error(`Fetch problem: ${err.message}`))
+        })
+        .then(json => JSON.parse(json))
+        .catch(err => console.error(`Fetch problem: ${err.message}`))
 
     return obj
 }
 
+
+
+
+async function fetchFormData(value, url) {
+
+    var obj = fetch('/data'+url, {
+        method: 'POST',
+        headers: {
+            'Content-type': 'application/json; charset=UTF-8'
+        },
+        body: JSON.stringify(value)
+    })
+        .then(response => {
+
+            if (!response.ok) {
+                throw new Error(`HTTP error: ${response.status}`);
+            }
+            // Otherwise (if the response succeeded), our handler fetches the response
+            // as text by calling response.text(), and immediately returns the promise
+            // returned by `response.text()`.
+            return response.text()
+
+        })
+        .then(json => JSON.parse(json))
+        .catch(err => console.error(`Fetch problem: ${err.message}`))
+
+
+
+    return obj
+}
