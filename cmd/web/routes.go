@@ -15,8 +15,6 @@ func (app *application) routes() http.Handler {
 	mux.Handle("/category/static/", http.StripPrefix("/category/static", fs))
 	mux.Handle("/post/static/", http.StripPrefix("/post/static", fs))
 
-
-
 	mux.HandleFunc("/", app.home)
 	mux.HandleFunc("/socket", app.socket)
 	mux.HandleFunc("/data/", app.data)
@@ -29,11 +27,9 @@ func (app *application) routes() http.Handler {
 	// mux.HandleFunc("/logout", app.logout)
 	// mux.HandleFunc("/signup", app.register)
 
-
 	// mux.HandleFunc("/profile/", app.requireAuthenticatedUser(app.profile))
 	// mux.HandleFunc("/newcategory", app.requireAuthenticatedUser(app.newCategory))
 	// mux.HandleFunc("/submit", app.requireAuthenticatedUser(app.submitPost))
-
 
 	return app.recoverPanic(app.authenticate(app.session(mux)))
 }

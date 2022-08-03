@@ -44,8 +44,6 @@ const Router = async () => {
 
     let match = potentialMatches.find(potentialMatch => potentialMatch.result !== null);
 
-
-
     /* Route not found - return first route OR a specific "not-found" route */
     if (!match) {
         match = {
@@ -64,17 +62,6 @@ const Router = async () => {
     };
 
 
-    // if (match.route.path == '/submit') {
-    //     var form = document.querySelector('form')
-    //     var data = new FormData(form);
-    //     const cats = data.getAll('category');
-    //     console.log("Cats in router: ", cats)
-
-    // };
-
-
-
-
     const v = getParams(match);
     var dataUrl = "/data/"
 
@@ -86,24 +73,10 @@ const Router = async () => {
 
     var data = await fetchData(dataUrl);
 
-    // if (match.route.path == '/') {
+    console.log(data)
     const view = new match.route.view(data);
     document.querySelector("#app").innerHTML = await view.getHtml();
 
-    // }else{
-
-    //  const view = new match.route.view(getParams(match));
-
-    // document.querySelector("#app").innerHTML = await view.getHtml();
-
-    // }
-
-
-
-    // if (match.route.path == '/') {
-    // view.logData()
-
-    // };
 
     if (authenticated) {
 
@@ -116,8 +89,6 @@ const Router = async () => {
         document.querySelector("#header").innerHTML = await headout.getHtml();
 
     }
-
-    // document.querySelector("#app").innerHTML = await view.getHtml();
 
 };
 
@@ -139,24 +110,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     });
 
-
-    // $(document.body).on('submit', 'form', async function (e) {
-    //     e.preventDefault();
-    //     console.log(e.target)
-    //     var data = new FormData(e.target);
-    //     const cats = data.getAll('category');
-
-    //     var values = Object.fromEntries(data.entries());
-    //     values.category = cats
-
-    //     const location = window.location.pathname
-    //     var o = await fetchFormData(values, location)
-    //     console.log("Object sent from back: ", o)
-
-
-    // });
-
-    /* Document has loaded -  run the router! */
     Router();
 });
 
@@ -185,8 +138,6 @@ const getParams = match => {
 
     return obj
 };
-
-
 
 
 async function fetchData(url) {

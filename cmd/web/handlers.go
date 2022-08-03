@@ -150,7 +150,7 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 		// }
 		// return
 	case "POST": // If a user submits a form on the login page, we check the data and then run the database queries.
-
+		fmt.Println("IN LOGIN POST")
 		var p forms.LoginForm
 
 		decoder := json.NewDecoder(r.Body)
@@ -180,6 +180,7 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 			Name: p.Username,
 		}
 		err = user.Password.Set(p.Password)
+
 		if err != nil {
 			app.serverError(w, err)
 		}
@@ -194,12 +195,11 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 
 		// Authenticate the user when the input is correct. If the credentials do not match, the user will receive a generic error message.
 		// A generic error prevents from checking to see if an email address exists in our user database and start hacking.
-		err = app.models.Users.Authenticate(user.Name, form.Get("password"))
+		err = app.models.Users.Authenticate(user.Name, p.Password)
 		if err == data.ErrInvalidCredentials {
 			form.Errors.AddError("generic", "Username or Password is incorrect")
 			// app.render(w, r, "index.html", &templateData{Form: form})
 			app.serveAsJSON(w, &templateData{Form: form})
-
 			return
 		} else if err != nil {
 			app.serverError(w, err)
@@ -208,6 +208,11 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 
 		// Get the token for the current user who is attempting to log in.
 		a, err := r.Cookie("session")
+
+		currentUser := app.contextGetUser(r)
+
+		fmt.Println("USER still nil?: ", currentUser)
+
 		if err != nil {
 			app.serverError(w, err)
 		}
@@ -218,9 +223,13 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 			app.serverError(w, err)
 			return
 		}
+
+		app.serveAsJSON(w, &templateData{Form: form, AuthenticatedUser: currentUser})
+
 	}
+
 	// After login redirect the user to the homepage.
-	http.Redirect(w, r, back, http.StatusSeeOther)
+	// http.Redirect(w, r, back, http.StatusSeeOther)
 }
 
 func (app *application) register(w http.ResponseWriter, r *http.Request) {
