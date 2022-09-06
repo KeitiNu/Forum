@@ -13,7 +13,7 @@ import NewPost from "./views/NewPost.js";
 export {Router}
 
 const pathToRegex = path => new RegExp("^" + path.replace(/\//g, "\\/").replace(/:\w+/g, "(.+)") + "$");
-var authenticated = true;
+var authenticated = stringToBool(getCookie('auth'));
 
 
 
@@ -52,23 +52,39 @@ const Router = async () => {
         };
     }
 
+    console.log(match.result)
+
+
+
     if (match.route.path == '/logout') {
-        authenticated = false;
+        document.cookie = "auth=false;"
     };
 
+    authenticated = stringToBool(getCookie('auth'));
 
-    if (match.route.path == '/login') {
-        authenticated = true;
-    };
+    if(!authenticated && match.route.path != '/signup' &&match.route.path!= '/login'){
+        location.assign('http://localhost:8090/login')
+    }
+
 
 
     const v = getParams(match);
     var dataUrl = "/data/"
 
     if (v.id != undefined && v.url != undefined) {
-
         dataUrl += v.url + v.id;
     }
+
+    
+    if (v.url == "/profile") {
+        dataUrl = "/data/profile"
+    }
+
+    if (v.url == "/comment") {
+        dataUrl = "/data/comment"
+    }
+
+
     console.log(dataUrl)
 
     var data = await fetchData(dataUrl);
@@ -191,4 +207,31 @@ async function fetchFormData(value, url) {
 
 
     return obj
+}
+
+
+
+function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for(let i = 0; i <ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+  }
+
+
+function stringToBool(str){
+    if  (str == 'true'){
+        return true
+    }
+        return false
+
 }

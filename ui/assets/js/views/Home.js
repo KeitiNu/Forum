@@ -11,7 +11,7 @@ export default class extends AbstractView {
         <div class="mainpagebox">
             <div class="mainpageboxinside">
                     <div class="mainpageboxheader">
-                        <h1>Hello, <a class="kodify" href="/profile" data-link>{{.AuthenticatedUser.Name}}</a>! Welcome to <a class="kodify" href="/" data-link>kodify</a>!</h1>
+                        <h1>Hello, <a class="kodify" href="/profile" data-link>${this.params.AuthenticatedUser?this.params.AuthenticatedUser.Name:""}</a>! Welcome to <a class="kodify" href="/" data-link>kodify</a>!</h1>
                         <div class="adderbuttons">
                             <a class="btn adderbutton" href="/submit" data-link>Create Post</a>
                         </div>

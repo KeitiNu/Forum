@@ -21,11 +21,11 @@ export default class extends AbstractView {
 			<div class="accountdetails">
 				<div class="profilename">
 					<h3>Username</h3>
-					<a>{{.AuthenticatedUser.Name}}</a>
+					<a>${this.params.AuthenticatedUser.Name}</a>
 				</div>
 				<div class="profileemail">
 					<h3>Email</h3>
-					<a>{{.AuthenticatedUser.Email}}</a>
+					<a>${this.params.AuthenticatedUser.Email}</a>
 				</div>		
 			</div>
 
@@ -48,7 +48,7 @@ export default class extends AbstractView {
 								<div class="catecard">
 									<div class="card-body">
 										<div class="post-card" id="post{{.ID}}">
-											<div class="postdetails">
+												<div class="postdetails">
 												<div class="post-username">Posted by {{.User}} {{timeAgo .Created}}</div>
 												<div class="post-title"><a class="post-title stretched-link" href="/post/{{.ID}}" data-link>{{.Title}}</a></div>
 												<div class="post-description">{{.Content}}</div>

@@ -6,7 +6,7 @@ export default class extends AbstractView {
         this.setTitle("Kodify - Login");
     }
 
-    
+
     get login(){
         $(document.body).on('submit', 'form', async function (e) {
             e.preventDefault();
@@ -18,8 +18,8 @@ export default class extends AbstractView {
             var o = await fetchFormData(values, location)
     
             this.params = o
-            console.log(o)
-    
+            // console.log(o)
+
                 const errors = this.params.Form.Errors.Errors
                 const keys = Object.keys(errors)
     
@@ -27,7 +27,10 @@ export default class extends AbstractView {
                     const tempLink = document.createElement('a')
                     const tempLocation = document.querySelector('.registerlink')
 
-                    document.cookie = "auth=true; "
+                    if(o.AuthenticatedUser != null){
+                     document.cookie = "auth=true;"
+                    }
+
                     tempLink.href = '/'
                     tempLink.dataset.link
     
@@ -94,7 +97,7 @@ export default class extends AbstractView {
                     <div>
                         <label class="form-label" for="username"></label>
                         <input class="form-control" type="text" id="username" name="username" placeholder="Email or username" autocomplete="username"
-                            <label class='error' id="errorusername"></label>
+                        <label class='error' id="errorusername"></label>
                     </div>
                     <div>
                             <label class="form-label" for="password"></label>
@@ -103,11 +106,12 @@ export default class extends AbstractView {
                             
                             <label class='error' id='errorgeneric'></label>
                     </div>
-                    <input class="btn loginbtn" type="submit" value="Log In" data-login">
+                    <input class="btn loginbtn" type="submit" value="Log In">
 
                     <div class="registerlink">
                         <a href="/signup" data-link>New user? Register</a>
                     </div>
+                    
                 </form>
             </div>
         </div>

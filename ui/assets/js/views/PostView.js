@@ -6,8 +6,88 @@ export default class extends AbstractView {
         this.setTitle("Kodify - Post");
     }
 
+    get submitComment(){
+
+        $(document.body).on('submit', 'form', async function (e) {
+            e.preventDefault();
+    
+            var data = new FormData(e.target);
+            var values = Object.fromEntries(data.entries());
+    
+            const location = window.location.pathname
+            var o = await fetchFormData(values, "/comment")
+    
+            this.params = o
+            console.log(o)
+
+                const errors = this.params.Form.Errors.Errors
+                const keys = Object.keys(errors)
+    
+                if (keys.length == 0) {
+                //     const tempLink = document.createElement('a')
+                //     const tempLocation = document.querySelector('.registerlink')
+
+                //     if(o.AuthenticatedUser != null){
+                //      document.cookie = "auth=true;"
+                //     }
+
+                //     tempLink.href = '/'
+                //     tempLink.dataset.link
+    
+                //     tempLocation.appendChild(tempLink)
+                //     tempLink.click()
+    
+                }else{
+                //     var errorSpots = document.querySelectorAll('.error')
+    
+                //     errorSpots.forEach(err => {
+                //         err.innerHTML = ""
+                //     });
+    
+                //     keys.map(function(key){
+                //         var spot = $('#error'+key)
+                //         spot.text(errors[key])
+                //     })
+                }
+    
+        });
+    
+    
+        async function fetchFormData(value, url) {
+    
+            var obj = fetch('/data'+url, {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8'
+                },
+                body: JSON.stringify(value)
+            })
+                .then(response => {
+                    console.log("RESPONSE:", response)
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error: ${response.status}`);
+                    }
+                    // Otherwise (if the response succeeded), our handler fetches the response
+                    // as text by calling response.text(), and immediately returns the promise
+                    // returned by `response.text()`.
+                    return response.text()
+    
+                })
+                .then(json => JSON.parse(json))
+                .catch(err => console.error(`Fetch problem: ${err.message}`))
+    
+    
+    
+            return obj
+        }
+    
+    };
+
+
     async getHtml() {
         return `
+        ${this.submitComment}
         <div class="mainpagecontent">
         <div class="mainpagebox">
             <div class="mainpageboxinside">
@@ -26,12 +106,12 @@ export default class extends AbstractView {
                     <div class="categories">
                         <div class="commentingbox">
                             <form class="comment" method="POST">
+                                <input type="hidden" id="postId" name="postId" value="${this.params.Post.ID}">
                                 <textarea class="commentbox " name="comment" id="" placeholder="Write your comment here"
                                     maxlength="2050"></textarea>
                                 <div class="com">
                                     <button type="submit" class="btn submitbtn" name="submitPost">Submit comment</button>
                                 </div>
-                             
                         </div>
     
                         <div class="insidecategories">

@@ -14,7 +14,7 @@ export default class extends AbstractView {
                 <form class="d-flex">
                     <div class="dropdown header">
                         <button class="btn inheader btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
-USERNAME
+LOGGED IN
                         </button>
                         <ul class="dropdown-menu header dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
                           <li><a class="dropdown-item header bi-person-circle" href="/profile" data-link>   Profile</a></li>

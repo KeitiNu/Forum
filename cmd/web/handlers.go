@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
@@ -32,37 +33,16 @@ type socketReader struct {
 var savedsocketreader []*socketReader
 
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("In home router")
 	switch r.Method {
 	case "GET":
-		fmt.Println(r.URL.Path)
-		// If a user types in an address that doesn't exist, a 404 Error is displayed.
-		// if r.URL.Path != "/" {
-		// 	w.WriteHeader(404)
-		// 	app.render(w, r, "400.page.tmpl", nil)
-		// 	return
-		// }
-		// If the user connects to the home address, the frontpage is displayed.
 		categories, err := app.models.Categories.Latest()
 		if err != nil {
 			app.serverError(w, err)
 		}
-		// // app.render(w, r, "home.page.tmpl", &templateData{Categories: categories})
 
-		app.render(w, r, "index.html", &templateData{Categories: categories})
+		currentUser := app.contextGetUser(r)
 
-		// t, err := template.ParseFiles("ui/html/index.html")
-		// if err != nil {
-		// 	http.Error(w, "500: internal server error", http.StatusInternalServerError)
-		// 	return
-		// }
-
-		// j, err := json.Marshal(categories)
-		// if err != nil {
-		// 	app.serverError(w, err)
-		// }
-
-		// t.Execute(w, j)
+		app.render(w, r, "index.html", &templateData{Categories: categories, AuthenticatedUser: currentUser})
 
 	case "POST":
 		app.serverError(w, errors.New("POST METHOD NOT ALLOWED"))
@@ -70,36 +50,38 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) data(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Getting Data, url: ", r.URL.Path)
-
 	switch r.Method {
 	case "POST":
 		path := r.URL.Path[6:]
 		paths := strings.Split(path, "/")
+
 		switch paths[0] {
 		case "category":
-
 			app.showCategory(w, r, paths[1])
-
 		case "post":
-
 			app.showPost(w, r, paths[1])
 		case "login":
 
 			app.login(w, r)
 		case "submit":
 			app.submitPost(w, r)
+		case "signup":
+			app.register(w, r)
 
+		case "profile":
+			app.profile(w, r)
+		case "comment":
+			app.comment(w, r)
 		default:
 
 			categories, _ := app.models.Categories.Latest()
+			currentUser := app.contextGetUser(r)
 
-			app.serveAsJSON(w, &templateData{Categories: categories})
-
+			app.serveAsJSON(w, &templateData{Categories: categories, AuthenticatedUser: currentUser})
 		}
 
 	case "GET":
-		app.serverError(w, errors.New("POST METHOD NOT ALLOWED"))
+		app.serverError(w, errors.New("GET METHOD NOT ALLOWED"))
 	}
 
 }
@@ -143,14 +125,7 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET": // When a person clicks the login link, the form appears.
 		app.home(w, r)
-
-		// app.render(w, r, "login.page.tmpl", &templateData{Form: forms.New(nil)})
-		// if r.Header.Get("referer") != "http://localhost:8090/login" && r.Header.Get("referer") != "http://localhost:8090/signup" {
-		// 	back = r.Header.Get("referer")
-		// }
-		// return
 	case "POST": // If a user submits a form on the login page, we check the data and then run the database queries.
-		fmt.Println("IN LOGIN POST")
 		var p forms.LoginForm
 
 		decoder := json.NewDecoder(r.Body)
@@ -196,6 +171,7 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 		// Authenticate the user when the input is correct. If the credentials do not match, the user will receive a generic error message.
 		// A generic error prevents from checking to see if an email address exists in our user database and start hacking.
 		err = app.models.Users.Authenticate(user.Name, p.Password)
+
 		if err == data.ErrInvalidCredentials {
 			form.Errors.AddError("generic", "Username or Password is incorrect")
 			// app.render(w, r, "index.html", &templateData{Form: form})
@@ -211,8 +187,6 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 
 		currentUser := app.contextGetUser(r)
 
-		fmt.Println("USER still nil?: ", currentUser)
-
 		if err != nil {
 			app.serverError(w, err)
 		}
@@ -224,7 +198,7 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		app.serveAsJSON(w, &templateData{Form: form, AuthenticatedUser: currentUser})
+		app.serveAsJSON(w, &templateData{Form: form, AuthenticatedUser: currentUser, User: currentUser})
 
 	}
 
@@ -233,69 +207,98 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) register(w http.ResponseWriter, r *http.Request) {
-	if r.Header.Get("referer") != "http://localhost:8090/login" && r.Header.Get("referer") != "http://localhost:8090/signup" {
-		back = r.Header.Get("referer")
-	}
+
+	// if r.Header.Get("referer") != "http://localhost:8090/login" && r.Header.Get("referer") != "http://localhost:8090/signup" {
+	// 	back = r.Header.Get("referer")
+	// }
+
 	switch r.Method {
 	case "GET":
-		app.render(w, r, "register.page.tmpl", &templateData{Form: forms.New(nil)})
+		app.home(w, r)
+		// app.render(w, r, "register.page.tmpl", &templateData{Form: forms.New(nil)})
 		return
 	case "POST":
-		err := r.ParseForm()
+
+		var regForm forms.RegisterForm
+
+		decoder := json.NewDecoder(r.Body)
+		err := decoder.Decode(&regForm)
 		if err != nil {
+
 			app.serverError(w, err)
 			return
 		}
+
+		// err := r.ParseForm()
+		// if err != nil {
+		// 	app.serverError(w, err)
+		// 	return
+		// }
 
 		form := forms.New(r.PostForm)
 		v := forms.NewValidator()
 		form.Errors = v
 
+		age, err := strconv.Atoi(regForm.Age)
+		gender := CheckGender(regForm.Gender)
+
 		user := &data.User{
-			Name:  form.Get("username"),
-			Email: form.Get("email"),
+			Name:    regForm.Username,
+			Email:   regForm.Email,
+			Forname: regForm.Forname,
+			Surname: regForm.Surname,
+			Age:     age,
+			Gender:  gender,
 		}
-		err = user.Password.Set(form.Get("password"))
+
+		err = user.Password.Set(regForm.Password)
+
 		if err != nil {
 			app.serverError(w, err)
 			return
 		}
-		// Confirm password match
-		plainPass := form.Get("password")
-		confirmPass := form.Get("confirm_password")
-		v.Check(plainPass == confirmPass, "password", "Passwords don't match")
 
-		// Validate the user struct and return the error messages to the client if any of
-		// the checks fail.
+		// Confirm password match
+		v.Check(regForm.Password == regForm.ConfirmPassword, "password", "Passwords don't match")
+
+		// // Validate the user struct and return the error messages to the client if any of
+		// // the checks fail.
 		data.ValidateUser(v, user)
+
 		if !v.Valid() {
-			app.render(w, r, "register.page.tmpl", &templateData{Form: form})
+			app.serveAsJSON(w, &templateData{Form: form})
 			return
 		}
 
-		// Get the token for the current user who is attempting to register.
+		// // Get the token for the current user who is attempting to register.
 		a, err := r.Cookie("session")
 		if err != nil {
 			app.serverError(w, err)
 		}
 
+		//NEW DB FIELDS TO DB
 		err = app.models.Users.Insert(user, a.Value)
+
 		if err != nil {
 			switch err {
 			case data.ErrDuplicateUsername:
 				form.Errors.AddError("username", "Username is already in use")
-				app.render(w, r, "register.page.tmpl", &templateData{Form: form})
+				app.serveAsJSON(w, &templateData{Form: form})
 				return
 			case data.ErrDuplicateEmail:
 				form.Errors.AddError("email", "Email is already in use")
-				app.render(w, r, "register.page.tmpl", &templateData{Form: form})
+				app.serveAsJSON(w, &templateData{Form: form})
 				return
 			default:
 				app.serverError(w, err)
 				return
 			}
 		}
-		http.Redirect(w, r, back, http.StatusSeeOther)
+
+		// http.Redirect(w, r, back, http.StatusSeeOther)
+		authUser := app.contextGetUser(r)
+
+		app.serveAsJSON(w, &templateData{Form: form, AuthenticatedUser: authUser})
 		return
 	}
 }
@@ -308,28 +311,57 @@ func (app *application) logout(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) profile(w http.ResponseWriter, r *http.Request) {
-	url := r.URL.Path[9:]
-	switch url {
-	case "likes":
-		user := app.contextGetUser(r)
-		posts, err := app.models.Posts.GetUserLiked(user.Name)
-		if err != nil {
-			app.serverError(w, err)
-		}
-		app.render(w, r, "profile.page.tmpl", &templateData{Posts: posts})
-	case "comments":
-		user := app.contextGetUser(r)
-		comments, err := app.models.Comments.GetUserComments(user.Name)
-		if err != nil {
-			app.serverError(w, err)
-		}
-		app.render(w, r, "profile.page.tmpl", &templateData{Comments: comments})
+	// url := r.URL.Path[9:]
+
+	user := app.contextGetUser(r)
+	posts, err := app.models.Posts.GetUserPosts(user.Name)
+
+	if err != nil {
+		app.serverError(w, err)
+	}
+
+	comments, err := app.models.Comments.GetUserComments(user.Name)
+	if err != nil {
+		app.serverError(w, err)
+	}
+
+	app.serveAsJSON(w, &templateData{AuthenticatedUser: user, Posts: posts, Comments: comments})
+
+	// switch url {
+	// case "likes":
+	// 	user := app.contextGetUser(r)
+	// 	posts, err := app.models.Posts.GetUserLiked(user.Name)
+	// 	if err != nil {
+	// 		app.serverError(w, err)
+	// 	}
+	// 	app.render(w, r, "profile.page.tmpl", &templateData{Posts: posts})
+	// case "comments":
+	// 	user := app.contextGetUser(r)
+	// 	comments, err := app.models.Comments.GetUserComments(user.Name)
+	// 	if err != nil {
+	// 		app.serverError(w, err)
+	// 	}
+	// 	app.render(w, r, "profile.page.tmpl", &templateData{Comments: comments})
+	// default:
+	// 	user := app.contextGetUser(r)
+	// 	posts, err := app.models.Posts.GetUserPosts(user.Name)
+	// 	if err != nil {
+	// 		app.serverError(w, err)
+	// 	}
+	// 	app.render(w, r, "profile.page.tmpl", &templateData{Posts: posts})
+	// }
+}
+
+func CheckGender(gender string) data.Gender {
+
+	switch gender {
+	case "0":
+		return data.Male
+	case "1":
+		return data.Female
+	case "2":
+		return data.NonBinary
 	default:
-		user := app.contextGetUser(r)
-		posts, err := app.models.Posts.GetUserPosts(user.Name)
-		if err != nil {
-			app.serverError(w, err)
-		}
-		app.render(w, r, "profile.page.tmpl", &templateData{Posts: posts})
+		return data.Undefined
 	}
 }

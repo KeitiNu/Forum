@@ -16,6 +16,16 @@ type LoginForm struct {
 	Username string
 	Password string
 }
+type RegisterForm struct {
+	Username        string
+	Email           string
+	Forname         string
+	Surname         string
+	Age             string
+	Gender          string
+	Password        string
+	ConfirmPassword string
+}
 
 func New(data url.Values) *Form {
 	return &Form{

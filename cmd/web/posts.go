@@ -12,6 +12,11 @@ import (
 	"git.01.kood.tech/roosarula/forum/pkg/forms"
 )
 
+type CommentForm struct {
+	Comment string
+	PostID  string
+}
+
 func (app *application) submitPost(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET": // When a person clicks the make a post link, the form appears.
@@ -76,7 +81,6 @@ func (app *application) submitPost(w http.ResponseWriter, r *http.Request) {
 			// Category: r.Form["category"],
 		}
 
-		
 		err := decoder.Decode(&post)
 
 		if err != nil {
@@ -85,10 +89,8 @@ func (app *application) submitPost(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		fmt.Println("HERE: ", post)
-
-		// user := app.contextGetUser(r)
-		// post.User = user.Name
+		user := app.contextGetUser(r)
+		post.User = user.Name
 		categoryList, _ := app.models.Categories.Latest()
 		v.Check(post.Title != "", "title", "Title must be provided")
 		v.Check(post.Content != "", "content", "Description must be provided")
@@ -107,7 +109,6 @@ func (app *application) submitPost(w http.ResponseWriter, r *http.Request) {
 
 		stringId := strconv.Itoa(id)
 		app.serveAsJSON(w, &templateData{Form: form, Categories: categoryList, Sort: stringId})
-
 
 		return
 	}
@@ -192,4 +193,106 @@ func (app *application) showPost(w http.ResponseWriter, r *http.Request, idStrin
 		}
 	}
 	http.Redirect(w, r, fmt.Sprintf("/post/%d", id), http.StatusFound)
+}
+
+func (app *application) comment(w http.ResponseWriter, r *http.Request) {
+
+	err := r.ParseForm()
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	var c CommentForm
+
+	decoder := json.NewDecoder(r.Body)
+	err = decoder.Decode(&c)
+	if err != nil {
+
+		app.serverError(w, err)
+		return
+	}
+
+	fmt.Println("C", c)
+
+	user := app.contextGetUser(r)
+	form := forms.New(r.PostForm)
+
+	fmt.Println("FORM", form)
+
+	v := forms.NewValidator()
+	form.Errors = v
+
+	id, err := strconv.Atoi(c.PostID)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	post, err := app.models.Posts.Get(id)
+	if err != nil {
+		app.notFound(w)
+		return
+	}
+	if post.Title == "" {
+		app.notFound(w)
+		return
+	}
+
+	comments, err := app.models.Comments.Latest(id)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	switch r.Method {
+	case "GET":
+
+		if user == nil {
+			user = &data.User{}
+		}
+
+		data := &templateData{User: user, Post: post, Comments: comments}
+
+		j, err := json.Marshal(data)
+		if err != nil {
+			app.serverError(w, err)
+		}
+
+		io.Copy(w, bytes.NewReader(j))
+
+		return
+
+	case "POST":
+		fmt.Println(c.Comment)
+
+		v.Check(c.Comment != "", "comment", "Cannot add empty comment")
+		if !v.Valid() {
+			app.serveAsJSON(w, &templateData{Form: form, User: user, Post: post, Comments: comments})
+			return
+		}
+		if a := form.Get("commentUpdate"); a != "" {
+			cid, _ := strconv.Atoi(form.Get("commentUpdateID"))
+			if user.Name != form.Get("commentUpdateUser") {
+				http.Error(w, http.StatusText(http.StatusForbidden), http.StatusForbidden)
+				return
+			}
+			err = app.models.Comments.Update(a, cid)
+			if err != nil {
+				app.serverError(w, err)
+			}
+		} else {
+			comment := &data.Comment{
+				PostID:  id,
+				Content: c.Comment,
+			}
+			user := app.contextGetUser(r)
+			comment.User = user.Name
+
+			_, err = app.models.Comments.Insert(comment)
+			if err != nil {
+				app.serverError(w, err)
+			}
+		}
+	}
+	app.serveAsJSON(w, &templateData{Form: form, User: user, Post: post, Comments: comments})
+	// http.Redirect(w, r, fmt.Sprintf("/post/%d", id), http.StatusFound)
 }
