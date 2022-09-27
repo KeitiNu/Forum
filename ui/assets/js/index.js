@@ -8,6 +8,7 @@ import Profile from "./views/Profile.js";
 import ShowCat from "./views/ShowCat.js";
 import PostView from "./views/PostView.js";
 import NewPost from "./views/NewPost.js";
+import Chat from "./views/Chat.js";
 
 
 export {Router}
@@ -60,7 +61,9 @@ const Router = async () => {
         document.cookie = "auth=false;"
     };
 
+
     authenticated = stringToBool(getCookie('auth'));
+    console.log(authenticated)
 
     if(!authenticated && match.route.path != '/signup' &&match.route.path!= '/login'){
         location.assign('http://localhost:8090/login')
@@ -95,15 +98,13 @@ const Router = async () => {
 
 
     if (authenticated) {
-
         const headin = new HeaderIn();
         document.querySelector("#header").innerHTML = await headin.getHtml();
-
+        let chat = new Chat();
+        document.querySelector("#app").innerHTML += await chat.getHtml();
     } else {
-
         const headout = new HeaderOut();
         document.querySelector("#header").innerHTML = await headout.getHtml();
-
     }
 
 };

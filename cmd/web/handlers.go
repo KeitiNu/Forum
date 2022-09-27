@@ -61,25 +61,20 @@ func (app *application) data(w http.ResponseWriter, r *http.Request) {
 		case "post":
 			app.showPost(w, r, paths[1])
 		case "login":
-
 			app.login(w, r)
 		case "submit":
 			app.submitPost(w, r)
 		case "signup":
 			app.register(w, r)
-
 		case "profile":
 			app.profile(w, r)
 		case "comment":
 			app.comment(w, r)
 		default:
-
 			categories, _ := app.models.Categories.Latest()
 			currentUser := app.contextGetUser(r)
-
 			app.serveAsJSON(w, &templateData{Categories: categories, AuthenticatedUser: currentUser})
 		}
-
 	case "GET":
 		app.serverError(w, errors.New("GET METHOD NOT ALLOWED"))
 	}
@@ -111,7 +106,10 @@ func (app *application) socket(w http.ResponseWriter, r *http.Request) {
 
 		savedsocketreader = append(savedsocketreader, ptrSocketReader)
 
-		// ptrSocketReader.con.WriteMessage(websocket.TextMessage, []byte("Greetings from golang"));
+		// a, _ := r.Cookie("newsession")
+		// fmt.Println(a.Expires)
+
+		ptrSocketReader.con.WriteMessage(websocket.TextMessage, []byte("Greetings from golang"))
 
 		_, message, _ := ptrSocketReader.con.ReadMessage()
 		fmt.Println("Message retrieved: ", string(message))
@@ -184,6 +182,10 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 
 		// Get the token for the current user who is attempting to log in.
 		a, err := r.Cookie("session")
+
+		expiration := time.Now().Add(5 * time.Minute)
+		cookie := http.Cookie{Name: "newsession", Value: "abcd", Expires: expiration}
+		http.SetCookie(w, &cookie)
 
 		currentUser := app.contextGetUser(r)
 
@@ -271,7 +273,12 @@ func (app *application) register(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// // Get the token for the current user who is attempting to register.
+		expiration := time.Now().Add(5 * time.Minute)
+		cookie := http.Cookie{Name: "newsession", Value: "abcd", Expires: expiration}
+		http.SetCookie(w, &cookie)
+
 		a, err := r.Cookie("session")
+
 		if err != nil {
 			app.serverError(w, err)
 		}

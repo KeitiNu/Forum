@@ -89,7 +89,6 @@ func ValidateUser(v *forms.Validator, user *User) {
 	v.Check(user.Name != "", "username", "Please enter your username!")
 	v.Check(len(user.Name) >= 5, "username", "Username must be atleast 5 characters long!")
 	v.Check(len(user.Name) <= 30, "username", "Username must not be over 30 characters long!")
-	v.Check(len(user.Name) <= 30, "username", "Username must not be over 30 characters long!")
 
 	//AGE
 	v.Check(user.Age >= 5, "age", "User cannot be younger than 5 years!")
@@ -142,7 +141,6 @@ func ValidateLogin(v *forms.Validator, user *User) {
 	}
 }
 
-// Insert user into database
 // Insert user into database
 func (u UserModel) Insert(user *User, token string) error {
 	query := `INSERT INTO users (username, forname, surname, email, age, gender_id, hashed_password, token, created)
@@ -218,6 +216,12 @@ func (u *UserModel) GetByToken(token string) (*User, error) {
 
 func (u *UserModel) UpdateByToken(token, username string) error {
 	_, err := u.DB.Exec("UPDATE users SET token = ? WHERE username = ?", token, username)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	_, err = u.DB.Exec("UPDATE users SET online = ? WHERE username = ?", 1, username)
 	if err != nil {
 		fmt.Println(err)
 		return err

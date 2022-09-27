@@ -9,6 +9,10 @@ label {
     margin-top: 1rem;
 }
 
+.flex {
+    display: flex;
+}
+
 /*---------------------HEADERS % FOOTER---------------------*/
 
 
@@ -811,4 +815,207 @@ span.badge.me-2.bg-primary {
 .moderatorcomment {
     display: flex;
     position: relative;
+}
+
+/* CHAT SECTION */
+
+.extended {
+    transition: 1s linear;
+    height: 0px;
+    flex-grow: 1;
+}
+.large {
+    transition: 1s linear;
+    height: 0px;
+    flex-grow: 1;
+}
+.minimized {
+    transition: 1s linear;
+    height: 250px;
+}
+.none {
+    transition: 1s linear;
+    height: 0px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+.remove {
+    transition: 1s linear;
+    display: none !important;
+}
+.quick{
+    transition: 1s linear !important;
+}
+
+.box {
+    border-radius: 10px;
+    border: 1px solid #676869;
+    background-color: #1A1A1B;
+}
+
+
+.chat {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin: 40px 0 0 20px;
+    overflow: hidden;
+    width: 380px;
+}
+
+.scroll {
+    padding: 20px;
+}
+
+.activity {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    overflow-y: auto;
+    width: 100%;
+    min-width: 125px;
+    padding: 10px;
+    height: 100%;
+}
+
+.activity .user {    
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 8px;
+    border: 1px solid #676869;
+    transition: 0.25s;
+
+    background-color: #1A1A1B;
+    padding: 8px 10px;
+    width: auto;
+    min-width: 124px;
+    height: 30px;
+}
+
+.activity .user .status {
+    border-radius: 10px;
+    border: 1px solid #676869;
+    color: #676869;
+
+    width: 10px;
+    height: 10px;
+}
+
+.activity .user .name {
+    margin-bottom: 0;
+    color: #757575;
+}
+
+.status.active {
+    background-color: #45ffdb;
+    border-color: #45ffdb !important;
+}
+.status.away {
+    background-color: none;
+}
+
+.activity .user:hover {
+    transition: 0.25s;
+    transform: scale(1.05);
+    border-color: whitesmoke;
+    cursor: pointer;
+    color: whitesmoke;
+}
+
+
+.dialog {
+    display: flex;
+    flex-direction: column;
+    transition: 1s linear;
+    margin-top: 20px;
+    padding: 20px;
+}
+
+.dialog .container {
+    flex-grow: 1;
+    overflow-y: scroll;
+    padding: 0 5px 0 0;
+    max-width: 300px;
+    min-width: 200px;
+    height: 0px;
+}
+
+.dialog .bubble {
+    display: inline-block;
+    transition: 1s linear;
+    display: block;
+    border-radius: 10px;
+    border-width: 1px;
+    border-style: solid;
+    word-wrap: break-word;
+
+    margin-bottom: 5px;
+    max-width: 80%;
+    padding: 10px;
+}
+
+.dialog .user, .dialog .recipient {
+    display: flex;
+    flex-direction: column;
+}
+.dialog .user {
+    align-items: flex-end;
+}
+
+.dialog .info {
+    display: flex;
+    gap: 5px;
+    padding: 0 5px;
+}
+.dialog .user .info{
+    justify-content: end;
+}
+.dialog .info p {
+    margin-bottom: 0 ;
+}
+
+.dialog .user .info p {
+    color: #45ffdb;
+}
+.dialog .recipient .info p {
+    color: whitesmoke;
+}
+
+.container .user .bubble {
+    margin-left: auto;
+    text-align: right;
+    background-color: #45ffdb;
+}
+
+.container .recipient .bubble {
+    color: whitesmoke;
+    border-color: #676869;
+    background-color: #1A1A1B;
+}
+
+.dialog .input {
+    margin-top: 10px;
+    height: 40px;
+}
+
+.dialog .input input{
+    color: whitesmoke;
+    border-radius: 10px 0 0 10px;
+    border: 1px solid #676869;
+    background-color: #1A1A1B;
+    padding: 5px 10px;
+    height: inherit;
+    width: 75%;
+}
+
+.dialog .input button {
+    border-radius: 0 10px 10px 0;
+    border: 1px solid #676869;
+    background-color: #45ffdb;
+    padding: 5px 10px;
+    height: inherit;
+    float: right;
+    width: 25%;
 }

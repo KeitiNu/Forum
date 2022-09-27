@@ -24,18 +24,14 @@ export default class extends AbstractView {
                 const keys = Object.keys(errors)
     
                 if (keys.length == 0) {
-                //     const tempLink = document.createElement('a')
-                //     const tempLocation = document.querySelector('.registerlink')
+                    const tempLink = document.createElement('a')
+                    const tempLocation = document.querySelector('.mainpagecontent')
 
-                //     if(o.AuthenticatedUser != null){
-                //      document.cookie = "auth=true;"
-                //     }
-
-                //     tempLink.href = '/'
-                //     tempLink.dataset.link
+                    tempLink.href = location
+                    tempLink.dataset.link
     
-                //     tempLocation.appendChild(tempLink)
-                //     tempLink.click()
+                    tempLocation.appendChild(tempLink)
+                    tempLink.click()
     
                 }else{
                 //     var errorSpots = document.querySelectorAll('.error')
