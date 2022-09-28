@@ -25,7 +25,9 @@ func (app *application) contextSetUser(r *http.Request, user *data.User) *http.R
 
 // The contextSetUser() retrieves the User struct from the request context.
 func (app *application) contextGetUser(r *http.Request) *data.User {
+
 	user, ok := r.Context().Value(userContextKey).(*data.User)
+
 	if !ok {
 		return nil
 	}

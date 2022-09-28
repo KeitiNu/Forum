@@ -188,7 +188,7 @@ CREATE TABLE IF NOT EXISTS users (
 	gender_id integer NOT NULL DEFAULT 4,	
 	email TEXT NOT NULL UNIQUE,
 	hashed_password BLOB NOT NULL,
-	online integer NOT NULL DEFAULT 0,
+	online integer DEFAULT 0,
 	token BLOB NOT NULL,
 	created DATETIME,
 	updated DATETIME,

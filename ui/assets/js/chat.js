@@ -26,6 +26,8 @@ const changeClass = (elem, value) => {changeClass
     arr[arr.length-1] = value
     elem.className = arr.join(' ')
 }
+
+
 const addClass = (elem, value) => {
     let arr = elem.className.split(' ')
     arr.push(value)

@@ -189,6 +189,7 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 
 		currentUser := app.contextGetUser(r)
 
+
 		if err != nil {
 			app.serverError(w, err)
 		}

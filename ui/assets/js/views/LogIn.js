@@ -9,6 +9,7 @@ export default class extends AbstractView {
 
     get login(){
         $(document.body).on('submit', 'form', async function (e) {
+            debugger
             e.preventDefault();
     
             var data = new FormData(e.target);
@@ -26,7 +27,7 @@ export default class extends AbstractView {
                 if (keys.length == 0) {
                     const tempLink = document.createElement('a')
                     const tempLocation = document.querySelector('.registerlink')
-
+debugger
                     if(o.AuthenticatedUser != null){
                      document.cookie = "auth=true;"
                     }
@@ -54,7 +55,24 @@ export default class extends AbstractView {
     
     
         async function fetchFormData(value, url) {
-    
+    debugger
+            // $.ajax({
+
+            //     'url' : '/data'+url,
+            //     'type' : 'GET',
+            // //     'data' : {
+            // //         'numberOfWords' : 10
+            // //     },
+            // //     'success' : function(data) {              
+            // //         alert('Data: '+data);
+            // //     },
+            // //     'error' : function(request,error)
+            // //     {
+            // //         alert("Request: "+JSON.stringify(request));
+            // //     }
+            // });
+
+
             var obj = fetch('/data'+url, {
                 method: 'POST',
                 headers: {

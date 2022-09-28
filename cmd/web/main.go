@@ -94,7 +94,7 @@ func openDB() (*sql.DB, error) {
 	return db, nil
 }
 
-//Run migrate scripts to create database if not created before.
+// Run migrate scripts to create database if not created before.
 func RunMigrateScripts(db *sql.DB) error {
 	driver, err := sqlite3.WithInstance(db, &sqlite3.Config{})
 	if err != nil {
