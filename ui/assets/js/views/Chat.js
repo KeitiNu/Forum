@@ -35,7 +35,7 @@ export default class extends AbstractView {
             </div>
 
             <div id="dialog" class="dialog box remove">
-                <div class="container">
+                <div class="container" id="chatArea">
                     <div class="user">
                         <div class="info">
                             <p>Laura-Eliise</p>
@@ -51,11 +51,11 @@ export default class extends AbstractView {
                         <p class="bubble">Hey! Working hard or hardly working!</p>
                     </div>
                 </div>
-            </div>
 
-            <div id="input" class="input remove">
-                <input id="input_text" class="quick remove" type="text"></input>
-                <button id="input_button" class="quick remove" type="submit">Send!</button>
+                <div id="input" class="input remove">
+                    <input id="input_text" class="quick remove" type="text"></input>
+                    <button id="input_button" class="quick remove" onClick="send()">Send!</button>
+                </div>
             </div>
         </div>
         `
