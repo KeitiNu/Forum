@@ -30,6 +30,9 @@ export default class extends AbstractView {
                     if (o.AuthenticatedUser != null) {
                         document.cookie = "auth=true;"
 
+debugger
+                        var mysocket = new MySocket()
+                        mysocket.connectSocket(o.AuthenticatedUser.Name);
                         // var mysocket = new MySocket()
                         // mysocket.connectSocket();
                         // mysocket.sendMessage(o.AuthenticatedUser)

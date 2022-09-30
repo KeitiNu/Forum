@@ -112,10 +112,6 @@ const Router = async () => {
 
 const navigateTo = url => {
     history.pushState(null, null, url);
-
-    debugger
-    var mysocket = new MySocket()
-    mysocket.connectSocket();
     Router();
 };
 

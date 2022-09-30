@@ -104,15 +104,34 @@ func (app *application) socket(w http.ResponseWriter, r *http.Request) {
 			con: con,
 		}
 
-		savedsocketreader = append(savedsocketreader, ptrSocketReader)
-
 		// a, _ := r.Cookie("newsession")
 		// fmt.Println(a.Expires)
 
-		ptrSocketReader.con.WriteMessage(websocket.TextMessage, []byte("Greetings from golang"))
+		// ptrSocketReader.con.WriteMessage(websocket.TextMessage, []byte("Greetings from golang"))
 
 		_, message, _ := ptrSocketReader.con.ReadMessage()
 		fmt.Println("Message retrieved: ", string(message))
+		ptrSocketReader.name = string(message)
+		savedsocketreader = append(savedsocketreader, ptrSocketReader)
+
+		var onlineArr []string
+
+		for _, socket := range savedsocketreader {
+
+			if !contains(onlineArr, string(socket.name)) {
+				onlineArr = append(onlineArr, socket.name)
+			}
+		}
+
+		var names = strings.Join(onlineArr, ", ")
+
+		// var len = len(onlineArr)
+		// s1 := strconv.Itoa(len)
+
+		for _, socket := range savedsocketreader {
+
+			socket.con.WriteMessage(websocket.TextMessage, []byte(names))
+		}
 
 	case "POST":
 		app.serverError(w, errors.New("POST METHOD NOT ALLOWED"))
@@ -183,7 +202,6 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 		// Get the token for the current user who is attempting to log in.
 		a, err := r.Cookie("session")
 
-		
 		// expiration := time.Now().Add(5 * time.Minute)
 		// cookie := http.Cookie{Name: "newsession", Value: "abcd", Expires: expiration}
 		// http.SetCookie(w, &cookie)
@@ -311,9 +329,11 @@ func (app *application) register(w http.ResponseWriter, r *http.Request) {
 func (app *application) logout(w http.ResponseWriter, r *http.Request) {
 	c := &http.Cookie{Name: "session", Value: uuid.NewV4().String(), Expires: time.Now(), MaxAge: -1}
 	http.SetCookie(w, c)
-
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
+
+
+
 
 func (app *application) profile(w http.ResponseWriter, r *http.Request) {
 	// url := r.URL.Path[9:]
