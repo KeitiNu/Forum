@@ -18,8 +18,7 @@ export default class extends AbstractView {
             const location = window.location.pathname
             var o = await fetchFormData(values, location)
     
-            this.params = o
-            // console.log(o)
+            this.params = o;
 
                 const errors = this.params.Form.Errors.Errors
                 const keys = Object.keys(errors)
@@ -27,16 +26,23 @@ export default class extends AbstractView {
                 if (keys.length == 0) {
                     const tempLink = document.createElement('a')
                     const tempLocation = document.querySelector('.registerlink')
-debugger
-                    if(o.AuthenticatedUser != null){
-                     document.cookie = "auth=true;"
-                    }
 
-                    tempLink.href = '/'
-                    tempLink.dataset.link
-    
-                    tempLocation.appendChild(tempLink)
-                    tempLink.click()
+                    if (o.AuthenticatedUser != null) {
+                        document.cookie = "auth=true;"
+
+                        // var mysocket = new MySocket()
+                        // mysocket.connectSocket();
+                        // mysocket.sendMessage(o.AuthenticatedUser)
+                        // mysocket.send(o.AuthenticatedUser);
+
+                        tempLink.href = '/'
+                        tempLink.dataset.link
+
+                        tempLocation.appendChild(tempLink)
+                        tempLink.click()
+                    }else{
+                        $('#errorgeneral').text("Unable to login")
+                    }
     
                 }else{
                     var errorSpots = document.querySelectorAll('.error')
@@ -55,24 +61,6 @@ debugger
     
     
         async function fetchFormData(value, url) {
-    debugger
-            // $.ajax({
-
-            //     'url' : '/data'+url,
-            //     'type' : 'GET',
-            // //     'data' : {
-            // //         'numberOfWords' : 10
-            // //     },
-            // //     'success' : function(data) {              
-            // //         alert('Data: '+data);
-            // //     },
-            // //     'error' : function(request,error)
-            // //     {
-            // //         alert("Request: "+JSON.stringify(request));
-            // //     }
-            // });
-
-
             var obj = fetch('/data'+url, {
                 method: 'POST',
                 headers: {
@@ -81,7 +69,6 @@ debugger
                 body: JSON.stringify(value)
             })
                 .then(response => {
-                    console.log("RESPONSE:", response)
 
                     if (!response.ok) {
                         throw new Error(`HTTP error: ${response.status}`);
@@ -89,14 +76,25 @@ debugger
                     // Otherwise (if the response succeeded), our handler fetches the response
                     // as text by calling response.text(), and immediately returns the promise
                     // returned by `response.text()`.
+
+                    // console.log("RESPONSEtext:", response.text())
+
                     return response.text()
     
                 })
-                .then(json => JSON.parse(json))
+                .then(json => {
+                    // console.log("RESPONSEtext:", json)
+                    
+                    
+                    return JSON.parse(json)})
                 .catch(err => console.error(`Fetch problem: ${err.message}`))
     
-    
-    
+
+                
+            var ans = obj.then(function (result) {
+                return result; // "Some User token"
+            })
+
             return obj
         }
     

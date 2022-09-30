@@ -183,12 +183,12 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 		// Get the token for the current user who is attempting to log in.
 		a, err := r.Cookie("session")
 
-		expiration := time.Now().Add(5 * time.Minute)
-		cookie := http.Cookie{Name: "newsession", Value: "abcd", Expires: expiration}
-		http.SetCookie(w, &cookie)
+		
+		// expiration := time.Now().Add(5 * time.Minute)
+		// cookie := http.Cookie{Name: "newsession", Value: "abcd", Expires: expiration}
+		// http.SetCookie(w, &cookie)
 
 		currentUser := app.contextGetUser(r)
-
 
 		if err != nil {
 			app.serverError(w, err)
@@ -218,6 +218,7 @@ func (app *application) register(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
 		app.home(w, r)
+		fmt.Println("HERE")
 		// app.render(w, r, "register.page.tmpl", &templateData{Form: forms.New(nil)})
 		return
 	case "POST":
@@ -227,7 +228,6 @@ func (app *application) register(w http.ResponseWriter, r *http.Request) {
 		decoder := json.NewDecoder(r.Body)
 		err := decoder.Decode(&regForm)
 		if err != nil {
-
 			app.serverError(w, err)
 			return
 		}
@@ -274,9 +274,6 @@ func (app *application) register(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// // Get the token for the current user who is attempting to register.
-		expiration := time.Now().Add(5 * time.Minute)
-		cookie := http.Cookie{Name: "newsession", Value: "abcd", Expires: expiration}
-		http.SetCookie(w, &cookie)
 
 		a, err := r.Cookie("session")
 

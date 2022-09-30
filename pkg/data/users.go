@@ -22,6 +22,7 @@ type User struct {
 	Gender          Gender
 	Hashed_password string
 	CreatedAt       time.Time
+	Online          int
 }
 
 type password struct {
@@ -221,11 +222,11 @@ func (u *UserModel) UpdateByToken(token, username string) error {
 		return err
 	}
 
-	_, err = u.DB.Exec("UPDATE users SET online = ? WHERE username = ?", 1, username)
-	if err != nil {
-		fmt.Println(err)
-		return err
-	}
+	// _, err = u.DB.Exec("UPDATE users SET online = ? WHERE username = ?", 1, username)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return err
+	// }
 	return nil
 }
 

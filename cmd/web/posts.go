@@ -134,6 +134,10 @@ func (app *application) showPost(w http.ResponseWriter, r *http.Request, idStrin
 		fmt.Println(err)
 	}
 	user := app.contextGetUser(r)
+
+
+
+
 	switch r.Method {
 	case "POST":
 
