@@ -10,32 +10,25 @@ export default class extends AbstractView {
 
         <div class="chat">
             <div id="activity" class="scroll box extended">
-                <div class="activity">
+
+                <div id="activity" class="activity">
+
                     <div id="Laura-Eliise" class="user" onclick="openChat(event)">
                         <span class="status active"></span>
                         <p class="name">Laura-Eliise</p>
                     </div>
-                    <div id="Keiti" class="user" onclick="openChat(event)">
-                        <span class="status away"></span>
+
+                    <div id="Keiti" class="user away" onclick="openChat(event)">
+                        <span class="status"></span>
                         <p class="name">Keiti</p>
                     </div>
-                    <div id="Keiti" class="user" onclick="openChat(event)">
-                        <span class="status away"></span>
-                        <p class="name">Keiti</p>
-                    </div>
-                    <div id="Keiti" class="user" onclick="openChat(event)">
-                        <span class="status away"></span>
-                        <p class="name">Keiti</p>
-                    </div>
-                    <div id="Keiti" class="user" onclick="openChat(event)">
-                        <span class="status away"></span>
-                        <p class="name">Keiti</p>
-                    </div>
+                    
                 </div>
+
             </div>
 
             <div id="dialog" class="dialog box remove">
-                <div class="container">
+                <div class="container" id="chat_area">
                     <div class="user">
                         <div class="info">
                             <p>Laura-Eliise</p>
@@ -51,11 +44,11 @@ export default class extends AbstractView {
                         <p class="bubble">Hey! Working hard or hardly working!</p>
                     </div>
                 </div>
-            </div>
 
-            <div id="input" class="input remove">
-                <input id="input_text" class="quick remove" type="text"></input>
-                <button id="input_button" class="quick remove" type="submit">Send!</button>
+                <div id="input" class="input remove">
+                    <input id="input_text" class="quick remove" type="text"></input>
+                    <button id="input_button" class="quick remove" onClick="send()">Send!</button>
+                </div>
             </div>
         </div>
         `

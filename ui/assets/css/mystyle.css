@@ -13,6 +13,23 @@ label {
     display: flex;
 }
 
+*::-webkit-scrollbar {
+    width: 5px;
+}
+body::-webkit-scrollbar {
+    width: 10px;
+}
+
+*::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: #3e3e3e;
+    border-radius: 10px;
+    outline: 1px solid #3e3e3e;
+}
+
 /*---------------------HEADERS % FOOTER---------------------*/
 
 
@@ -896,24 +913,27 @@ span.badge.me-2.bg-primary {
 
 .activity .user .status {
     border-radius: 10px;
-    border: 1px solid #676869;
-    color: #676869;
+    border: 1px solid #45ffdb;
+    background-color: #45ffdb;
+    /* color: #676869; */
 
     width: 10px;
     height: 10px;
 }
 
-.activity .user .name {
-    margin-bottom: 0;
-    color: #757575;
+.activity .user.away .status {
+    background-color: transparent;
+    border: 1px solid #676869;
 }
 
-.status.active {
-    background-color: #45ffdb;
-    border-color: #45ffdb !important;
+.activity .user .name {
+    margin-bottom: 0;
+    color: whitesmoke;
 }
-.status.away {
-    background-color: none;
+
+.activity .user.away .name {
+    margin-bottom: 0;
+    color: #757575;
 }
 
 .activity .user:hover {

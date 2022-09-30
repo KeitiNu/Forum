@@ -97,11 +97,11 @@ const Router = async () => {
     document.querySelector("#app").innerHTML = await view.getHtml();
 
 
+    let chat = new Chat();
+    document.querySelector("#app").innerHTML += await chat.getHtml();
     if (authenticated) {
         const headin = new HeaderIn();
         document.querySelector("#header").innerHTML = await headin.getHtml();
-        let chat = new Chat();
-        document.querySelector("#app").innerHTML += await chat.getHtml();
     } else {
         const headout = new HeaderOut();
         document.querySelector("#header").innerHTML = await headout.getHtml();
