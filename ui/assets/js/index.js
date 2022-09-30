@@ -53,7 +53,7 @@ const Router = async () => {
         };
     }
 
-    console.log(match.result)
+    // console.log(match.result)
 
 
 
@@ -63,7 +63,7 @@ const Router = async () => {
 
 
     authenticated = stringToBool(getCookie('auth'));
-    console.log(authenticated)
+    // console.log(authenticated)
 
     if(!authenticated && match.route.path != '/signup' &&match.route.path!= '/login'){
         location.assign('http://localhost:8090/login')
@@ -112,6 +112,10 @@ const Router = async () => {
 
 const navigateTo = url => {
     history.pushState(null, null, url);
+
+    debugger
+    var mysocket = new MySocket()
+    mysocket.connectSocket();
     Router();
 };
 
