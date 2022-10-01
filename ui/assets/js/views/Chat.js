@@ -18,6 +18,8 @@ export default class extends AbstractView {
                         <p class="name">Laura-Eliise</p>
                     </div>
 
+                    <span id="separator" class="separator"></span>
+
                     <div id="Keiti" class="user away" onclick="openChat(event)">
                         <span class="status"></span>
                         <p class="name">Keiti</p>

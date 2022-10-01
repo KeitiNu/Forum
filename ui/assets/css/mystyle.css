@@ -944,6 +944,10 @@ span.badge.me-2.bg-primary {
     color: whitesmoke;
 }
 
+.activity .separator {
+    border: 1px solid #676869;
+}
+
 
 .dialog {
     display: flex;

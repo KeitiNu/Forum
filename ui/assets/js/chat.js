@@ -1,17 +1,54 @@
-
 // const sqlite3 = require('sqlite3').verbose();
-// const db = new sqlite3.Database('database.db');
+let user = undefined
+var socket = new MySocket()
+socket.connectSocket("message");
 
-/* FUNCTIONS WE MAY NEED IN THE FUTURE */
+/* DB query */
 
-// const changeStatus = (username) => {
-//     let user = document.getElementById(`status-${username}`)
-//     if (div.classList.length == 1) {
-//         addClass(div, "away")
-//     } else {
-//         removeClass(div)
-//     }
+const fillInfo = (recipient, offset) => {
+    // const db = new sqlite3.Database('database.db');
+    let sql = `
+    SELECT
+        sender_id, 
+        recipient_id, 
+        content, 
+        sent_at
+    FROM messages
+    WHERE
+        sender_id = ${recipient} AND recipient_id = ${user} OR
+        recipient_id = ${recipient} AND sender_id = ${user}
+    ORDER BY sent_at ASC
+    LIMIT 10
+    OFFSET ${offset}
+    `
+    // db.all(sql, (err, rows) => {
+    //     console.log(rows)
+    //     if (err) {throw err}
+    // })
+}
+
+// cost fillStatusList = () => {
+//     const db = new sqlite3.Database('database.db');
+//     let activity = document.getElementById("activity")
+//     let sql =  `
+//     SELECT Username username 
+//            Online online 
+//     FROM users
+//     `
+
+//     db.all(sql, (err, rows) => {
+//         if (err) {throw err}
+
+//         let sortedRows = sortRows(rows)
+
+//         sortedRows.forEach((row) => {
+//             activity.appendChild(createUserStatus(row))
+//         })
+//     })
+
+//     db.close()
 // }
+
 
 /* Filling the status list with names */
 
@@ -24,27 +61,6 @@
 //         fillStatusList()
 //     }
 // }, 100)
-
-// const fillStatusList = () => {
-//     let activity = document.getElementById("activity")
-//     let sql =  `
-//     SELECT Username username 
-//            Online online 
-//     FROM users
-//     `
-
-//     db.all(sql, [], (err, rows) => {
-//         if (err) {throw err}
-
-//         let sortedRows = sortRows(rows)
-
-//         sortedRows.forEach((row) => {
-//             activity.appendChild(createUserStatus(row))
-//         })
-//     })
-
-//     db.close()
-// }
 
 // const createUserStatus = ({username, online}) => {
 //     let div = document.createElement('div')
@@ -63,9 +79,9 @@
 //     }
 // }
 
-// const sortedRows = (rows) => {
-//     return rows
-// }
+const sortedRows = (rows) => {
+    return rows
+}
 
 /* Opening and loading old messages */
 
@@ -90,11 +106,11 @@ const openChat = async (e) => {
     if (!disable) {
         disable = true
         if (input.container.classList.length === 1) {
-            collapse(activity, dialog, input)
-            setTimeout(() => {
-                disable = true
-                extend(activity, dialog, input) 
-            }, 1001)
+            await collapse(activity, dialog, input)
+
+            await fillInfo(e.target.id)
+
+            extend(activity, dialog, input) 
         } else {
             extend(activity, dialog, input)
         }
@@ -136,38 +152,36 @@ const collapse = async (activity, dialog, input) => {
     changeClass(activity, "extended")
     changeClass(dialog, "none")
 
-    setTimeout(() => {
-        changeClass(input.container, "remove")
-        changeClass(dialog, "remove")
-    }, 1000)
-    setTimeout(() => {
-        changeClass(input.input, "remove")
-        changeClass(input.button, "remove")
-    }, 700)
-
-    setTimeout(() => {
-        document.getElementById("chat_area").innerHTML = ""
-    }, 1001)
+    await delay(400)   
+    changeClass(input.input, "remove")
+    changeClass(input.button, "remove")
+    
+    await delay(600)
+    changeClass(input.container, "remove")
+    changeClass(dialog, "remove")
+    document.getElementById("chat_area").innerHTML = ""
 }
 
 const extend = async (activity, dialog, input) => {
-    // await fillInfo("Laura-Eliise")
-
     changeClass(activity, 'minimized')
     changeClass(dialog, 'none')
     removeClass(input.container)
 
-    setTimeout(() => {
-        changeClass(dialog, 'large')
-    }, 10)
-    setTimeout(() => {
-        removeClass(input.button)
-        removeClass(input.input)
-    }, 500)
+    await delay(10)
+    changeClass(dialog, 'large')
 
-    setTimeout(() => {
-        disable = false
-    }, 1001)
+    await delay(490)
+    removeClass(input.button)
+    removeClass(input.input)
+    
+    await delay(500)
+    disable = false
+}
+
+function delay(milliseconds){
+    return new Promise(resolve => {
+        setTimeout(resolve, milliseconds);
+    });
 }
 
 const changeClass = (elem, value) => {
@@ -186,7 +200,6 @@ const removeClass = elem => {
     elem.className = arr.join(' ')
 }
 
-
 /* Sending messages to the chat */
 const send = () => {
     let input = document.getElementById('input_text')
@@ -196,7 +209,6 @@ const send = () => {
         document.getElementById("chat_area").appendChild(bubble)
     }
 }
-
 const createBubble = (text, name, style, time) => {
     let container = document.createElement('div')
     let info = document.createElement('div')
@@ -217,4 +229,17 @@ const createBubble = (text, name, style, time) => {
     container.appendChild(bubble)
 
     return container
+}
+
+
+
+/* FUNCTIONS WE MAY NEED IN THE FUTURE */
+
+const changeStatus = (username) => {
+    let user = document.getElementById(`status-${username}`)
+    if (div.classList.length == 1) {
+        addClass(div, "away")
+    } else {
+        removeClass(div)
+    }
 }

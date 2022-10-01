@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -12,25 +11,25 @@ import (
 
 	"git.01.kood.tech/roosarula/forum/pkg/data"
 	"git.01.kood.tech/roosarula/forum/pkg/forms"
-	"github.com/gorilla/websocket"
 	uuid "github.com/satori/go.uuid"
 )
 
-// Create a variable to store the page where the client was before action (ex. logging in and returning directly to the post)
-var back string
+//! SOCKET
+// // Create a variable to store the page where the client was before action (ex. logging in and returning directly to the post)
+// var back string
 
-var upgrader = websocket.Upgrader{
-	ReadBufferSize:  1024,
-	WriteBufferSize: 1024,
-}
+// var upgrader = websocket.Upgrader{
+// 	ReadBufferSize:  1024,
+// 	WriteBufferSize: 1024,
+// }
 
-type socketReader struct {
-	con  *websocket.Conn
-	mode int
-	name string
-}
+// type socketReader struct {
+// 	con  *websocket.Conn
+// 	mode int
+// 	name string
+// }
 
-var savedsocketreader []*socketReader
+// var savedsocketreader []*socketReader
 
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
@@ -81,62 +80,63 @@ func (app *application) data(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func (app *application) socket(w http.ResponseWriter, r *http.Request) {
-	switch r.Method {
-	case "GET":
+//! SOCKET
+// func (app *application) socket(w http.ResponseWriter, r *http.Request) {
+// 	switch r.Method {
+// 	case "GET":
 
-		if savedsocketreader == nil {
-			savedsocketreader = make([]*socketReader, 0)
-		}
+// 		if savedsocketreader == nil {
+// 			savedsocketreader = make([]*socketReader, 0)
+// 		}
 
-		defer func() {
-			err := recover()
-			if err != nil {
-				log.Println(err)
-			}
-			r.Body.Close()
+// 		defer func() {
+// 			err := recover()
+// 			if err != nil {
+// 				log.Println(err)
+// 			}
+// 			r.Body.Close()
 
-		}()
+// 		}()
 
-		con, _ := upgrader.Upgrade(w, r, nil)
+// 		con, _ := upgrader.Upgrade(w, r, nil)
 
-		ptrSocketReader := &socketReader{
-			con: con,
-		}
+// 		ptrSocketReader := &socketReader{
+// 			con: con,
+// 		}
 
-		// a, _ := r.Cookie("newsession")
-		// fmt.Println(a.Expires)
+// 		// a, _ := r.Cookie("newsession")
+// 		// fmt.Println(a.Expires)
 
-		// ptrSocketReader.con.WriteMessage(websocket.TextMessage, []byte("Greetings from golang"))
+// 		// ptrSocketReader.con.WriteMessage(websocket.TextMessage, []byte("Greetings from golang"))
 
-		_, message, _ := ptrSocketReader.con.ReadMessage()
-		fmt.Println("Message retrieved: ", string(message))
-		ptrSocketReader.name = string(message)
-		savedsocketreader = append(savedsocketreader, ptrSocketReader)
+// 		_, message, _ := ptrSocketReader.con.ReadMessage()
+// 		fmt.Println("Message retrieved: ", string(message))
+// 		ptrSocketReader.name = string(message)
+// 		savedsocketreader = append(savedsocketreader, ptrSocketReader)
 
-		var onlineArr []string
+// 		var onlineArr []string
 
-		for _, socket := range savedsocketreader {
+// 		for _, socket := range savedsocketreader {
 
-			if !contains(onlineArr, string(socket.name)) {
-				onlineArr = append(onlineArr, socket.name)
-			}
-		}
+// 			if !contains(onlineArr, string(socket.name)) {
+// 				onlineArr = append(onlineArr, socket.name)
+// 			}
+// 		}
 
-		var names = strings.Join(onlineArr, ", ")
+// 		var names = strings.Join(onlineArr, ", ")
 
-		// var len = len(onlineArr)
-		// s1 := strconv.Itoa(len)
+// 		// var len = len(onlineArr)
+// 		// s1 := strconv.Itoa(len)
 
-		for _, socket := range savedsocketreader {
+// 		for _, socket := range savedsocketreader {
 
-			socket.con.WriteMessage(websocket.TextMessage, []byte(names))
-		}
+// 			socket.con.WriteMessage(websocket.TextMessage, []byte(names))
+// 		}
 
-	case "POST":
-		app.serverError(w, errors.New("POST METHOD NOT ALLOWED"))
-	}
-}
+// 	case "POST":
+// 		app.serverError(w, errors.New("POST METHOD NOT ALLOWED"))
+// 	}
+// }
 
 func (app *application) login(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
@@ -331,9 +331,6 @@ func (app *application) logout(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, c)
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
-
-
-
 
 func (app *application) profile(w http.ResponseWriter, r *http.Request) {
 	// url := r.URL.Path[9:]
