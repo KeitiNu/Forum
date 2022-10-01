@@ -53,22 +53,23 @@ const Router = async () => {
         };
     }
 
-    // console.log(match.result)
-
-
 
     if (match.route.path == '/logout') {
         document.cookie = "auth=false;"
+
+        fetch("/logout", {
+            method: "POST"
+        });
     };
 
 
-    authenticated = stringToBool(getCookie('auth'));
-    // console.log(authenticated)
 
-    if(!authenticated && match.route.path != '/signup' &&match.route.path!= '/login'){
+    authenticated = stringToBool(getCookie('auth'));
+    console.log("USER AUTHENTICATED: ", authenticated)
+
+    if(!authenticated && match.route.path != '/signup' && match.route.path != '/login'){
         location.assign('http://localhost:8090/login')
     }
-
 
 
     const v = getParams(match);

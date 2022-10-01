@@ -8,7 +8,7 @@ export default class extends AbstractView {
 
 
     get login(){
-        $(document.body).on('submit', 'form', async function (e) {
+        $(document.body).on('submit', 'form#loginform', async function (e) {
             debugger
             e.preventDefault();
     

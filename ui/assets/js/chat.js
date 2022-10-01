@@ -1,7 +1,7 @@
 // const sqlite3 = require('sqlite3').verbose();
-let user = undefined
-var socket = new MySocket()
-socket.connectSocket("message");
+let user2 = undefined
+// var socket = new MySocket()
+// socket.connectSocket("message");
 
 /* DB query */
 
@@ -15,8 +15,8 @@ const fillInfo = (recipient, offset) => {
         sent_at
     FROM messages
     WHERE
-        sender_id = ${recipient} AND recipient_id = ${user} OR
-        recipient_id = ${recipient} AND sender_id = ${user}
+        sender_id = ${recipient} AND recipient_id = ${user2} OR
+        recipient_id = ${recipient} AND sender_id = ${user2}
     ORDER BY sent_at ASC
     LIMIT 10
     OFFSET ${offset}

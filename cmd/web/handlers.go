@@ -54,6 +54,8 @@ func (app *application) data(w http.ResponseWriter, r *http.Request) {
 		path := r.URL.Path[6:]
 		paths := strings.Split(path, "/")
 
+		fmt.Println(path)
+
 		switch paths[0] {
 		case "category":
 			app.showCategory(w, r, paths[1])
@@ -144,7 +146,6 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 		app.home(w, r)
 	case "POST": // If a user submits a form on the login page, we check the data and then run the database queries.
 		var p forms.LoginForm
-
 		decoder := json.NewDecoder(r.Body)
 		err := decoder.Decode(&p)
 		if err != nil {
@@ -198,15 +199,24 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 			app.serverError(w, err)
 			return
 		}
+		authUser, err := app.models.Users.GetByUserCredentials(user.Name)
 
+		if err != nil {
+			app.serverError(w, err)
+			return
+		}
 		// Get the token for the current user who is attempting to log in.
 		a, err := r.Cookie("session")
+
+		// fmt.Println("Cookie: ", a)
 
 		// expiration := time.Now().Add(5 * time.Minute)
 		// cookie := http.Cookie{Name: "newsession", Value: "abcd", Expires: expiration}
 		// http.SetCookie(w, &cookie)
 
 		currentUser := app.contextGetUser(r)
+
+		fmt.Println("Current user: ", currentUser)
 
 		if err != nil {
 			app.serverError(w, err)
@@ -219,7 +229,7 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		app.serveAsJSON(w, &templateData{Form: form, AuthenticatedUser: currentUser, User: currentUser})
+		app.serveAsJSON(w, &templateData{Form: form, AuthenticatedUser: authUser, User: authUser})
 
 	}
 
@@ -236,7 +246,6 @@ func (app *application) register(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
 		app.home(w, r)
-		fmt.Println("HERE")
 		// app.render(w, r, "register.page.tmpl", &templateData{Form: forms.New(nil)})
 		return
 	case "POST":

@@ -24,8 +24,8 @@ func (app *application) routes() http.Handler {
 
 	// mux.HandleFunc("/login", app.login)
 
-	// mux.HandleFunc("/logout", app.logout)
-	mux.HandleFunc("/signup", app.register)
+	mux.HandleFunc("/logout", app.logout)
+	// mux.HandleFunc("/signup", app.register)
 
 	// mux.HandleFunc("/profile/", app.requireAuthenticatedUser(app.profile))
 	// mux.HandleFunc("/newcategory", app.requireAuthenticatedUser(app.newCategory))

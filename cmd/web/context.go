@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	"git.01.kood.tech/roosarula/forum/pkg/data"
@@ -13,7 +14,7 @@ type contextKey string
 // Convert the string "user" to a contextKey type and assign it to the userContextKey
 // constant. We'll use this constant as the key for getting and setting user information
 // in the request context.
-const userContextKey = contextKey("user")
+const userContextKey = contextKey("users")
 
 // The contextSetUser() method returns a new copy of the request with the provided
 // User struct added to the context. Note that we use our userContextKey constant as the
@@ -25,6 +26,9 @@ func (app *application) contextSetUser(r *http.Request, user *data.User) *http.R
 
 // The contextSetUser() retrieves the User struct from the request context.
 func (app *application) contextGetUser(r *http.Request) *data.User {
+
+	var ctx = r.Context()
+	fmt.Println(ctx)
 
 	user, ok := r.Context().Value(userContextKey).(*data.User)
 
