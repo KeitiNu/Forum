@@ -1,31 +1,21 @@
 // const sqlite3 = require('sqlite3').verbose();
-let user2 = undefined
-// var socket = new MySocket()
-// socket.connectSocket("message");
+let user = undefined
+let recipient = undefined
 
 /* DB query */
 
-const fillInfo = (recipient, offset) => {
-    // const db = new sqlite3.Database('database.db');
-    let sql = `
-    SELECT
-        sender_id, 
-        recipient_id, 
-        content, 
-        sent_at
-    FROM messages
-    WHERE
-        sender_id = ${recipient} AND recipient_id = ${user2} OR
-        recipient_id = ${recipient} AND sender_id = ${user2}
-    ORDER BY sent_at ASC
-    LIMIT 10
-    OFFSET ${offset}
-    `
-    // db.all(sql, (err, rows) => {
-    //     console.log(rows)
-    //     if (err) {throw err}
-    // })
-}
+// const fillInfo = (recipient, offset) => {
+//     // give me list of all users plus
+//     // give me list of the most recent message between the current user and
+//     // all the other users
+//     let arr = ["Laura", "Laura-Eliise", "Keiti"]
+//     let onlinearr = ["Laura", "Keiti"]
+
+//     arr.forEach( (user) => {
+//         createUserStatus(user)
+//     })
+
+// }
 
 // cost fillStatusList = () => {
 //     const db = new sqlite3.Database('database.db');
@@ -62,22 +52,18 @@ const fillInfo = (recipient, offset) => {
 //     }
 // }, 100)
 
-// const createUserStatus = ({username, online}) => {
-//     let div = document.createElement('div')
-//     let status = document.createElement('span')
-//     let name = document.createElement('p')
+const createUserStatus = (username) => {
+    let div = document.createElement('div')
+    let status = document.createElement('span')
+    let name = document.createElement('p')
 
-//     div.id = `status-${username}`
-//     div.className = "user"
-//     div.addEventListener('click', openChat(username))
-//     status.className = "status"
-//     name.className = "name"
-//     name.textContent = `${username}`
-
-//     if (online == 0) {
-//         div.classList.push("away")
-//     }
-// }
+    div.id = `status-${username}`
+    div.className = "user"
+    div.addEventListener('click', openChat(username))
+    status.className = "status away"
+    name.className = "name"
+    name.textContent = `${username}`
+}
 
 const sortedRows = (rows) => {
     return rows
@@ -108,7 +94,7 @@ const openChat = async (e) => {
         if (input.container.classList.length === 1) {
             await collapse(activity, dialog, input)
 
-            await fillInfo(e.target.id)
+            // await fillInfo(e.target.id)
 
             extend(activity, dialog, input) 
         } else {

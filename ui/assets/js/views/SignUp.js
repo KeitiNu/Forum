@@ -92,8 +92,7 @@ export default class extends AbstractView {
     };
     async getHtml() {
         return `
-        ${this.signup}
-
+        <div style="display: none">${this.signup}</div>
         <div class="loginboxcontent">
         <div class=loginbox>
             <div class="iconbox">

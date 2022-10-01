@@ -105,7 +105,7 @@ debugger
 
     async getHtml() {
         return `
-        ${this.login}
+        <div style="display: none">${this.login}</div>
         <div class="loginboxcontent">
         <div class=loginbox>
             <div class="iconbox">

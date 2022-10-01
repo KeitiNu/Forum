@@ -96,12 +96,11 @@ const Router = async () => {
     if (authenticated) {
         const chat = new Chat(data);
         const headin = new HeaderIn();
+        
         document.querySelector("#header").innerHTML = await headin.getHtml();
-
         if (document.querySelector("#messageDiv").innerHTML == "") {
-        document.querySelector("#messageDiv").innerHTML = await chat.getHtml();
+            document.querySelector("#messageDiv").innerHTML = await chat.getHtml();
         }
-
     } else {
         const headout = new HeaderOut();
         document.querySelector("#header").innerHTML = await headout.getHtml();

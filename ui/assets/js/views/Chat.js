@@ -16,22 +16,26 @@ export default class extends AbstractView {
 
 
     async getHtml() {
+        let users = this.params.Users
+        if (!users) {users = []}
+
         return`
 
-        
-
+        <div style="display:none">${this.sendMessage}</div>
         <div class="chat">
             <div id="activity" class="scroll box extended">
+                ${
+                    users.map((user) => {
+                    console.log(user)
+                    return `
+                    <div id="status-${user.Name}" class="user away" onclick="openChat(event)">
+                        <span class="status"></span>
+                        <p class="name">${user.Name}</p>
+                    </div>
+                    `
+                })}
 
                 <div id="activity" class="activity">
-
-                    <div id="Laura-Eliise" class="user" onclick="openChat(event)">
-                        <span class="status active"></span>
-                        <p class="name">Laura-Eliise</p>
-                    </div>
-
-                    <span id="separator" class="separator"></span>
-
                     <div id="Keiti" class="user away" onclick="openChat(event)">
                         <span class="status"></span>
                         <p class="name">Keiti</p>
