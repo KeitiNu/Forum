@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 
 	"git.01.kood.tech/roosarula/forum/pkg/data"
@@ -26,9 +25,6 @@ func (app *application) contextSetUser(r *http.Request, user *data.User) *http.R
 
 // The contextSetUser() retrieves the User struct from the request context.
 func (app *application) contextGetUser(r *http.Request) *data.User {
-
-	var ctx = r.Context()
-	fmt.Println(ctx)
 
 	user, ok := r.Context().Value(userContextKey).(*data.User)
 

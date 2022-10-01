@@ -30,8 +30,9 @@
 
 <body class="base-layout-body">
     <div id="header"></div>
-    <div class="container content">
-        <div id="app" class="flex"></div>
+    <div class="container content flex">
+        <div id="app"></div>
+        <div id="messageDiv" class="chat"></div>
     </div>
     <div class="footercontent">
         <nav class="navbar footer">
@@ -67,8 +68,10 @@
 
 
     <script>
-        var mysocket = new MySocket()
-        mysocket.connectSocket("message");
+        // var mysocket = new MySocket()
+        // const d = new Date();
+        // let text = d.toString();
+        // mysocket.connectSocket(text);
     </script>
 
 

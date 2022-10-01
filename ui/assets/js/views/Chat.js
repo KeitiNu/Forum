@@ -4,9 +4,21 @@ export default class extends AbstractView {
     constructor(params) {
         super(params);
     }
+    
+    get connectSocket() {
+        var mysocket = new MySocket()
+        // const d = new Date();
+        // let text = d.toString();
+        let text = this.params.AuthenticatedUser.Name;
+        mysocket.connectSocket(text);
+    }
+
+
 
     async getHtml() {
         return`
+
+        
 
         <div class="chat">
             <div id="activity" class="scroll box extended">
