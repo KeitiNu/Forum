@@ -11,76 +11,35 @@ export default class extends AbstractView {
 
 	get doSubmit(){
 
-		$(document.body).on('submit', 'form', async function (e) {
-        e.preventDefault();
+	
 
-        var data = new FormData(e.target);
-        const cats = data.getAll('category');
+	// async function fetchFormData(value, url) {
 
-        var values = Object.fromEntries(data.entries());
-        values.category = cats
+	// 	var obj = fetch('/data'+url, {
+	// 		method: 'POST',
+	// 		headers: {
+	// 			'Content-type': 'application/json; charset=UTF-8'
+	// 		},
+	// 		body: JSON.stringify(value)
+	// 	})
+	// 		.then(response => {
 
-        const location = window.location.pathname
-        var o = await fetchFormData(values, location)
+	// 			if (!response.ok) {
+	// 				throw new Error(`HTTP error: ${response.status}`);
+	// 			}
+	// 			// Otherwise (if the response succeeded), our handler fetches the response
+	// 			// as text by calling response.text(), and immediately returns the promise
+	// 			// returned by `response.text()`.
+	// 			return response.text()
 
-		this.params = o
-
-			const errors = this.params.Form.Errors.Errors
-			const keys = Object.keys(errors)
-
-			if (keys.length == 0) {
-				const tempLink = document.createElement('a')
-				const tempLocation = document.querySelector('.submitpostbuttons')
-
-				tempLink.href = '/post/'+this.params.Sort
-				tempLink.dataset.link
-
-				tempLocation.appendChild(tempLink)
-				tempLink.click()
-
-			}else{
-				var errorSpots = document.querySelectorAll('.error')
-
-				errorSpots.forEach(err => {
-					err.innerHTML = ""
-				});
-
-				keys.map(function(key){
-					var spot = $('#error'+key)
-					spot.text(errors[key])
-				})
-			}
-
-    });
-
-
-	async function fetchFormData(value, url) {
-
-		var obj = fetch('/data'+url, {
-			method: 'POST',
-			headers: {
-				'Content-type': 'application/json; charset=UTF-8'
-			},
-			body: JSON.stringify(value)
-		})
-			.then(response => {
-
-				if (!response.ok) {
-					throw new Error(`HTTP error: ${response.status}`);
-				}
-				// Otherwise (if the response succeeded), our handler fetches the response
-				// as text by calling response.text(), and immediately returns the promise
-				// returned by `response.text()`.
-				return response.text()
-
-			})
-			.then(json => JSON.parse(json))
-			.catch(err => console.error(`Fetch problem: ${err.message}`))
+	// 		})
+	// 		.then(json => JSON.parse(json))
+	// 		.catch(err => console.error(`Fetch problem: ${err.message}`))
 
 
 
-		return obj
-	}
+	// 	return obj
+	// }
 
 	}
 

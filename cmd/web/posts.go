@@ -107,8 +107,14 @@ func (app *application) submitPost(w http.ResponseWriter, r *http.Request) {
 			fmt.Println("error happened", err)
 		}
 
+		users, err := app.models.Users.GetAllUsers()
+
+		if err != nil {
+			app.serverError(w, err)
+		}
+
 		stringId := strconv.Itoa(id)
-		app.serveAsJSON(w, &templateData{Form: form, Categories: categoryList, Sort: stringId})
+		app.serveAsJSON(w, &templateData{Form: form, Categories: categoryList, Sort: stringId, Users: users})
 
 		return
 	}
@@ -135,6 +141,11 @@ func (app *application) showPost(w http.ResponseWriter, r *http.Request, idStrin
 	}
 	user := app.contextGetUser(r)
 
+	users, err := app.models.Users.GetAllUsers()
+
+	if err != nil {
+		app.serverError(w, err)
+	}
 
 
 
@@ -145,7 +156,7 @@ func (app *application) showPost(w http.ResponseWriter, r *http.Request, idStrin
 			user = &data.User{}
 		}
 
-		data := &templateData{User: user, Post: post, Comments: comments}
+		data := &templateData{User: user, Post: post, Comments: comments, Users: users}
 
 		j, err := json.Marshal(data)
 		if err != nil {
@@ -296,7 +307,16 @@ func (app *application) comment(w http.ResponseWriter, r *http.Request) {
 				app.serverError(w, err)
 			}
 		}
+
+		
 	}
-	app.serveAsJSON(w, &templateData{Form: form, User: user, Post: post, Comments: comments})
+
+	
+	users, err := app.models.Users.GetAllUsers()
+
+	if err != nil {
+		app.serverError(w, err)
+	}
+	app.serveAsJSON(w, &templateData{Form: form, User: user, Post: post, Comments: comments, Users: users})
 	// http.Redirect(w, r, fmt.Sprintf("/post/%d", id), http.StatusFound)
 }

@@ -32,7 +32,7 @@
     <div id="header"></div>
     <div class="container content flex">
         <div id="app" class="flex"></div>
-        <div id="messageDiv"></div> 
+        <div id="messageDiv"></div>
     </div>
     <div class="footercontent">
         <nav class="navbar footer">
@@ -61,17 +61,204 @@
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
 
-        <script type="module">
-            import Tags from "https://cdn.jsdelivr.net/npm/bootstrap5-tags@1/tags.min.js";
-            Tags.init("select");
-        </script>
+    <script type="module">
+        import Tags from "https://cdn.jsdelivr.net/npm/bootstrap5-tags@1/tags.min.js";
+        Tags.init("select");
+    </script>
 
 
     <script>
-        // var mysocket = new MySocket()
-        // const d = new Date();
-        // let text = d.toString();
-        // mysocket.connectSocket(text);
+        $('#app').on('submit', 'form#commentPost', async function (e) {
+            debugger
+
+            e.preventDefault();
+
+            var data = new FormData(e.target);
+            var values = Object.fromEntries(data.entries());
+
+            const location = window.location.pathname
+            var o = await fetchFormData(values, "/comment")
+
+            this.params = o
+            console.log(o)
+
+            const errors = this.params.Form.Errors.Errors
+            const keys = Object.keys(errors)
+
+            if (keys.length == 0) {
+                const tempLink = document.createElement('a')
+                const tempLocation = document.querySelector('.mainpagecontent')
+
+                tempLink.href = location
+                tempLink.dataset.link = true;
+
+                console.log(tempLink.dataset)
+                tempLocation.appendChild(tempLink)
+
+                debugger
+                tempLink.click()
+
+            } else {
+                //     var errorSpots = document.querySelectorAll('.error')
+
+                //     errorSpots.forEach(err => {
+                //         err.innerHTML = ""
+                //     });
+
+                //     keys.map(function(key){
+                //         var spot = $('#error'+key)
+                //         spot.text(errors[key])
+                //     })
+            }
+
+        });
+       
+        $('#app').on('submit', 'form#loginform', async function (e) {
+            debugger
+            e.preventDefault();
+    
+            var data = new FormData(e.target);
+            var values = Object.fromEntries(data.entries());
+    
+            const location = window.location.pathname
+            var o = await fetchFormData(values, location)
+    
+            this.params = o;
+
+                const errors = this.params.Form.Errors.Errors
+                const keys = Object.keys(errors)
+    
+                if (keys.length == 0) {
+                    const tempLink = document.createElement('a')
+                    const tempLocation = document.querySelector('.registerlink')
+
+                    if (o.AuthenticatedUser != null) {
+                        document.cookie = "auth=true;"
+
+                        tempLink.href = '/'
+                        tempLink.dataset.link = true;
+
+                        tempLocation.appendChild(tempLink)
+                        tempLink.click()
+                    }else{
+                        $('#errorgeneral').text("Unable to login")
+                    }
+    
+                }else{
+                    var errorSpots = document.querySelectorAll('.error')
+    
+                    errorSpots.forEach(err => {
+                        err.innerHTML = ""
+                    });
+    
+                    keys.map(function(key){
+                        var spot = $('#error'+key)
+                        spot.text(errors[key])
+                    })
+                }
+    
+        });
+    
+        $('#messageDiv').on('submit', 'form', async function (e) {
+            e.preventDefault()
+
+            var data = new FormData(e.target)
+            var values = Object.fromEntries(data.entries())
+
+            const location = window.location.pathname
+            var o = await fetchFormData(values, "/chat")
+
+            this.params = o
+            console.log(o)
+
+            const errors = this.params.Form.Errors.Errors
+            const keys = Object.keys(errors)
+
+            if (keys.length == 0) {
+                // const tempLink = document.createElement('a')
+                // const tempLocation = document.querySelector('.mainpagecontent')
+
+                // tempLink.href = location
+                // tempLink.dataset.link = true
+
+                // tempLocation.appendChild(tempLink)
+                // tempLink.click()
+
+            }
+        })
+   
+        $('#app').on('submit', 'form', async function (e) {
+        e.preventDefault();
+
+        var data = new FormData(e.target);
+        const cats = data.getAll('category');
+
+        var values = Object.fromEntries(data.entries());
+        values.category = cats
+
+        const location = window.location.pathname
+        var o = await fetchFormData(values, location)
+
+		this.params = o
+
+			const errors = this.params.Form.Errors.Errors
+			const keys = Object.keys(errors)
+
+			if (keys.length == 0) {
+				const tempLink = document.createElement('a')
+				const tempLocation = document.querySelector('.submitpostbuttons')
+
+				tempLink.href = '/post/'+this.params.Sort
+				tempLink.dataset.link = true;
+
+				tempLocation.appendChild(tempLink)
+				tempLink.click()
+
+			}else{
+				var errorSpots = document.querySelectorAll('.error')
+
+				errorSpots.forEach(err => {
+					err.innerHTML = ""
+				});
+
+				keys.map(function(key){
+					var spot = $('#error'+key)
+					spot.text(errors[key])
+				})
+			}
+
+    });
+
+
+
+        async function fetchFormData(value, url) {
+
+            var obj = fetch('/data' + url, {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8'
+                },
+                body: JSON.stringify(value)
+            })
+                .then(response => {
+                    console.log("RESPONSE:", response)
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error: ${response.status}`);
+                    }
+                    // Otherwise (if the response succeeded), our handler fetches the response
+                    // as text by calling response.text(), and immediately returns the promise
+                    // returned by `response.text()`.
+                    return response.text()
+
+                })
+                .then(json => JSON.parse(json))
+                .catch(err => console.error(`Fetch problem: ${err.message}`))
+
+
+
+            return obj
+        }
     </script>
 
 

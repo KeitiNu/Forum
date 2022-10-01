@@ -5,42 +5,33 @@ export default class extends AbstractView {
         super(params);
     }
     
-    get connectSocket() {
-        var mysocket = new MySocket()
-        // const d = new Date();
-        // let text = d.toString();
-        let text = this.params.AuthenticatedUser.Name;
-        mysocket.connectSocket(text);
-    }
 
-
+  
 
     async getHtml() {
         let users = this.params.Users
         if (!users) {users = []}
 
         return`
-
         <div style="display:none">${this.sendMessage}</div>
         <div class="chat">
             <div id="activity" class="scroll box extended">
-                ${
-                    users.map((user) => {
-                    console.log(user)
-                    return `
-                    <div id="status-${user.Name}" class="user away" onclick="openChat(event)">
-                        <span class="status"></span>
-                        <p class="name">${user.Name}</p>
-                    </div>
-                    `
-                })}
-
                 <div id="activity" class="activity">
                     <div id="Keiti" class="user away" onclick="openChat(event)">
                         <span class="status"></span>
                         <p class="name">Keiti</p>
                     </div>
                     
+                    ${
+                        users.map(function(user) {
+                        return `
+                        <div id="status-${user.Name}" class="user away" onclick="openChat(event)">
+                            <span class="status"></span>
+                            <p class="name">${user.Name}</p>
+                        </div>
+                        `
+                    }).join("")
+                }
                 </div>
 
             </div>
@@ -63,9 +54,11 @@ export default class extends AbstractView {
                     </div>
                 </div>
 
-                <div id="input" class="input remove">
-                    <input id="input_text" class="quick remove" type="text"></input>
-                    <button id="input_button" class="quick remove" onClick="send()">Send!</button>
+                <div id="input" class="input remove" method="POST">
+                    <input id="input_text" class="quick remove" name="message" type="text" name="Message"></input>
+                    <input id="RecipientId" style="display: none"></input>
+                    <input style="display: none" name="UserId">${this.params.AuthenticatedUser.Name}</input>
+                    <button id="input_button" data-userId="" class="quick remove" onClick="send()">Send!</button>
                 </div>
             </div>
         </div>

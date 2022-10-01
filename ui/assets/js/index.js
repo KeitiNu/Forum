@@ -9,6 +9,8 @@ import ShowCat from "./views/ShowCat.js";
 import PostView from "./views/PostView.js";
 import NewPost from "./views/NewPost.js";
 import Chat from "./views/Chat.js";
+import connectSocket from "./views/Chat.js";
+
 
 
 export {Router}
@@ -93,12 +95,25 @@ const Router = async () => {
     document.querySelector("#app").innerHTML = await view.getHtml();
 
 
+
+
     if (authenticated) {
         const chat = new Chat(data);
         const headin = new HeaderIn();
+
+
+
         
         document.querySelector("#header").innerHTML = await headin.getHtml();
         if (document.querySelector("#messageDiv").innerHTML == "") {
+
+            var text = data.AuthenticatedUser != null? data.AuthenticatedUser.Name:  "unauthenticated";
+            let message = {messageType:"online", context: text};
+            let msg = JSON.stringify(message);
+
+            var mysocket = new MySocket()
+            mysocket.connectSocket(msg);
+
             document.querySelector("#messageDiv").innerHTML = await chat.getHtml();
         }
     } else {

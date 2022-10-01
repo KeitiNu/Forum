@@ -2,73 +2,6 @@
 let user = undefined
 let recipient = undefined
 
-/* DB query */
-
-// const fillInfo = (recipient, offset) => {
-//     // give me list of all users plus
-//     // give me list of the most recent message between the current user and
-//     // all the other users
-//     let arr = ["Laura", "Laura-Eliise", "Keiti"]
-//     let onlinearr = ["Laura", "Keiti"]
-
-//     arr.forEach( (user) => {
-//         createUserStatus(user)
-//     })
-
-// }
-
-// cost fillStatusList = () => {
-//     const db = new sqlite3.Database('database.db');
-//     let activity = document.getElementById("activity")
-//     let sql =  `
-//     SELECT Username username 
-//            Online online 
-//     FROM users
-//     `
-
-//     db.all(sql, (err, rows) => {
-//         if (err) {throw err}
-
-//         let sortedRows = sortRows(rows)
-
-//         sortedRows.forEach((row) => {
-//             activity.appendChild(createUserStatus(row))
-//         })
-//     })
-
-//     db.close()
-// }
-
-
-/* Filling the status list with names */
-
-// when the chat has been inserted into the html
-// then we call the functions to fill them with info
-
-// const CHECK_IF_LOADED = setInterval(function() {
-//     if (document.getElementById("activity")) {
-//         clearInterval(CHECK_IF_LOADED)
-//         fillStatusList()
-//     }
-// }, 100)
-
-const createUserStatus = (username) => {
-    let div = document.createElement('div')
-    let status = document.createElement('span')
-    let name = document.createElement('p')
-
-    div.id = `status-${username}`
-    div.className = "user"
-    div.addEventListener('click', openChat(username))
-    status.className = "status away"
-    name.className = "name"
-    name.textContent = `${username}`
-}
-
-const sortedRows = (rows) => {
-    return rows
-}
-
 /* Opening and loading old messages */
 
 let disable = false;
@@ -88,14 +21,16 @@ const openChat = async (e) => {
 
     // from the event we can get the id of the element
     // that was just clicked. Based on that we will open the chat
-    console.log("id", e.target.id)
+    console.log("id:\n", e)
     if (!disable) {
         disable = true
+        recipient = e.target.id != "" ? e.target.id : recipient
+
+        document.getElementById("input_text").textContent = recipient
+
         if (input.container.classList.length === 1) {
             await collapse(activity, dialog, input)
-
-            // await fillInfo(e.target.id)
-
+            await fillLog(recipient, 0)
             extend(activity, dialog, input) 
         } else {
             extend(activity, dialog, input)
@@ -195,6 +130,15 @@ const send = () => {
         document.getElementById("chat_area").appendChild(bubble)
     }
 }
+
+const fillLog = async (recipient, offset) => {
+    let arr = ["Laura", "Laura-Eliise", "Keiti"]
+
+    arr.forEach( (user) => {
+        createBubble("test", user, recipient, "23:00")
+    })
+}
+
 const createBubble = (text, name, style, time) => {
     let container = document.createElement('div')
     let info = document.createElement('div')
@@ -222,7 +166,8 @@ const createBubble = (text, name, style, time) => {
 /* FUNCTIONS WE MAY NEED IN THE FUTURE */
 
 const changeStatus = (username) => {
-    let user = document.getElementById(`status-${username}`)
+    let div = document.getElementById(`status-${username}`)
+    
     if (div.classList.length == 1) {
         addClass(div, "away")
     } else {

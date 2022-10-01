@@ -3,6 +3,7 @@ class MySocket{
     this.mysocket =  null;
     // this.counter = 0;
   }
+  
 
 
   connectSocket(msg){
@@ -13,11 +14,23 @@ class MySocket{
     this.mysocket = socket;
 
     socket.onmessage = (e)=>{  
+      var json = JSON.parse(e.data);
+      var onlineUsers = json.OnlineUsers;
+
+
       console.log("onmessage:",  e.data)
+
+      onlineUsers.forEach(user => {
+        changeStatus(user);
+      });
+
     }
+
 
     socket.onopen =  ()=> {
       console.log("socket opend")
+      console.log("MSG:",  msg)
+
 
       socket.send(msg);
       // this.counter++;

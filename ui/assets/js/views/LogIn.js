@@ -8,60 +8,7 @@ export default class extends AbstractView {
 
 
     get login(){
-        $(document.body).on('submit', 'form#loginform', async function (e) {
-            debugger
-            e.preventDefault();
-    
-            var data = new FormData(e.target);
-            var values = Object.fromEntries(data.entries());
-    
-            const location = window.location.pathname
-            var o = await fetchFormData(values, location)
-    
-            this.params = o;
-
-                const errors = this.params.Form.Errors.Errors
-                const keys = Object.keys(errors)
-    
-                if (keys.length == 0) {
-                    const tempLink = document.createElement('a')
-                    const tempLocation = document.querySelector('.registerlink')
-
-                    if (o.AuthenticatedUser != null) {
-                        document.cookie = "auth=true;"
-
-debugger
-                        var mysocket = new MySocket()
-                        mysocket.connectSocket(o.AuthenticatedUser.Name);
-                        // var mysocket = new MySocket()
-                        // mysocket.connectSocket();
-                        // mysocket.sendMessage(o.AuthenticatedUser)
-                        // mysocket.send(o.AuthenticatedUser);
-
-                        tempLink.href = '/'
-                        tempLink.dataset.link
-
-                        tempLocation.appendChild(tempLink)
-                        tempLink.click()
-                    }else{
-                        $('#errorgeneral').text("Unable to login")
-                    }
-    
-                }else{
-                    var errorSpots = document.querySelectorAll('.error')
-    
-                    errorSpots.forEach(err => {
-                        err.innerHTML = ""
-                    });
-    
-                    keys.map(function(key){
-                        var spot = $('#error'+key)
-                        spot.text(errors[key])
-                    })
-                }
-    
-        });
-    
+ 
     
         async function fetchFormData(value, url) {
             var obj = fetch('/data'+url, {

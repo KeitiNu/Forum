@@ -5,8 +5,6 @@ import (
 	"net/http"
 )
 
-
-
 func (app *application) showCategory(w http.ResponseWriter, r *http.Request, category string) {
 
 	cookie, _ := r.Cookie("session")
@@ -14,8 +12,6 @@ func (app *application) showCategory(w http.ResponseWriter, r *http.Request, cat
 	fmt.Println("cookie")
 	fmt.Println(cookie.Expires)
 
-
-	
 	sortColumn := "created"
 	time := "9999"
 	// category := r.URL.Path[10:]
@@ -28,6 +24,12 @@ func (app *application) showCategory(w http.ResponseWriter, r *http.Request, cat
 	// }
 
 	categories, err := app.models.Categories.GetOne(category)
+
+	if err != nil {
+		app.serverError(w, err)
+	}
+
+	users, err := app.models.Users.GetAllUsers()
 
 	if err != nil {
 		app.serverError(w, err)
@@ -46,8 +48,7 @@ func (app *application) showCategory(w http.ResponseWriter, r *http.Request, cat
 		app.serverError(w, err)
 	}
 
-
-	data := &templateData{Posts: posts, Categories: categories}
+	data := &templateData{Posts: posts, Categories: categories, Users: users}
 	app.serveAsJSON(w, data)
 
 	// j, err := json.Marshal(data)

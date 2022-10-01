@@ -31,6 +31,12 @@ import (
 
 // var savedsocketreader []*socketReader
 
+type ChatForm struct {
+	Message string
+	RecipientId string
+	UserId string
+}
+
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
@@ -39,9 +45,15 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 			app.serverError(w, err)
 		}
 
+		users, err := app.models.Users.GetAllUsers()
+
+		if err != nil {
+			app.serverError(w, err)
+		}
+
 		currentUser := app.contextGetUser(r)
 
-		app.render(w, r, "index.html", &templateData{Categories: categories, AuthenticatedUser: currentUser})
+		app.render(w, r, "index.html", &templateData{Categories: categories, AuthenticatedUser: currentUser, Users: users})
 
 	case "POST":
 		app.serverError(w, errors.New("POST METHOD NOT ALLOWED"))
@@ -71,15 +83,41 @@ func (app *application) data(w http.ResponseWriter, r *http.Request) {
 			app.profile(w, r)
 		case "comment":
 			app.comment(w, r)
+		case "chat":
+			app.chat(w, r)
 		default:
 			categories, _ := app.models.Categories.Latest()
 			currentUser := app.contextGetUser(r)
-			app.serveAsJSON(w, &templateData{Categories: categories, AuthenticatedUser: currentUser})
+
+			users, _ := app.models.Users.GetAllUsers()
+
+			app.serveAsJSON(w, &templateData{Categories: categories, AuthenticatedUser: currentUser, Users: users})
 		}
 	case "GET":
 		app.serverError(w, errors.New("GET METHOD NOT ALLOWED"))
 	}
 
+}
+
+func (app *application) chat(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	var c ChatForm
+
+	decoder := json.NewDecoder(r.Body)
+	err = decoder.Decode(&c)
+	if err != nil {
+
+		app.serverError(w, err)
+		return
+	}
+
+	fmt.Println(decoder);
+	fmt.Println(c);
 }
 
 //! SOCKET
@@ -229,7 +267,13 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		app.serveAsJSON(w, &templateData{Form: form, AuthenticatedUser: authUser, User: authUser})
+		users, err := app.models.Users.GetAllUsers()
+
+		if err != nil {
+			app.serverError(w, err)
+		}
+
+		app.serveAsJSON(w, &templateData{Form: form, AuthenticatedUser: authUser, User: authUser, Users: users})
 
 	}
 
@@ -356,7 +400,13 @@ func (app *application) profile(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 	}
 
-	app.serveAsJSON(w, &templateData{AuthenticatedUser: user, Posts: posts, Comments: comments})
+	users, err := app.models.Users.GetAllUsers()
+
+	if err != nil {
+		app.serverError(w, err)
+	}
+
+	app.serveAsJSON(w, &templateData{AuthenticatedUser: user, Posts: posts, Comments: comments, Users: users})
 
 	// switch url {
 	// case "likes":

@@ -198,7 +198,6 @@ func (u *UserModel) Authenticate(username, password string) error {
 		return err
 	}
 
-	
 	// Otherwise, the password is correct..
 	return nil
 }
@@ -218,7 +217,7 @@ func (u *UserModel) GetByToken(token string) (*User, error) {
 
 func (u *UserModel) GetByUserCredentials(credentials string) (*User, error) {
 	row := u.DB.QueryRow("SELECT username, forname, surname, email, age FROM users WHERE username = ? or email = ?", credentials, credentials)
-	
+
 	user := &User{}
 	err := row.Scan(&user.Name, &user.Forname, &user.Surname, &user.Email, &user.Age)
 	if err != nil {
@@ -256,4 +255,33 @@ func (u *UserModel) EmailExist(email string) (bool, string, error) {
 		return false, user.Name, err
 	}
 	return true, user.Name, nil
+}
+
+func (u *UserModel) GetAllUsers() ([]*User, error) {
+	stmt := `SELECT username, forname, surname, email FROM users ORDER BY username`
+
+	rows, err := u.DB.Query(stmt)
+	fmt.Println(rows)
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	users := []*User{}
+
+	for rows.Next() {
+		s := &User{}
+
+		err := rows.Scan(&s.Name, &s.Forname, &s.Surname, &s.Email)
+		if err != nil {
+			return nil, err
+		}
+		users = append(users, s)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+	return users, nil
 }
