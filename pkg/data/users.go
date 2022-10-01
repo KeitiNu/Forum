@@ -23,6 +23,7 @@ type User struct {
 	Hashed_password string
 	CreatedAt       time.Time
 	Online          int
+	Messages    	[]Message
 }
 
 type password struct {

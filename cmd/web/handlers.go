@@ -1,9 +1,11 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"net/http"
 	"strconv"
 	"strings"
@@ -32,9 +34,15 @@ import (
 // var savedsocketreader []*socketReader
 
 type ChatForm struct {
-	Message string
+	Message     string
 	RecipientId string
-	UserId string
+	UserId      string
+}
+
+type ChatBoxForm struct {
+	User      string
+	Recipient string
+	Offset    int
 }
 
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
@@ -56,6 +64,57 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		app.render(w, r, "index.html", &templateData{Categories: categories, AuthenticatedUser: currentUser, Users: users})
 
 	case "POST":
+		app.serverError(w, errors.New("POST METHOD NOT ALLOWED"))
+	}
+}
+
+func (app *application) message(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case "POST":
+		err := r.ParseForm()
+		if err != nil {
+			app.serverError(w, err)
+			return
+		}
+
+		var c ChatBoxForm
+
+		decoder := json.NewDecoder(r.Body)
+		err = decoder.Decode(&c)
+		if err != nil {
+
+			app.serverError(w, err)
+			return
+		}
+
+
+		fmt.Println(c)
+
+		messages, err := app.models.Messages.GetMessages(c.User, c.Recipient, c.Offset)
+
+		if err != nil {
+
+			app.serverError(w, err)
+			return
+		}
+
+		for _, v := range messages {
+			fmt.Println(v.Content)
+
+		}
+
+		// app.render(w, r, "index.html", messages)
+
+		// app.serveAsJSON(w, messages)
+
+		j, err := json.Marshal(messages)
+		if err != nil {
+			app.serverError(w, err)
+		}
+
+		io.Copy(w, bytes.NewReader(j))
+
+	case "GET":
 		app.serverError(w, errors.New("POST METHOD NOT ALLOWED"))
 	}
 }
@@ -116,8 +175,23 @@ func (app *application) chat(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println(decoder);
-	fmt.Println(c);
+	var msg = &data.Message{
+		Recipient: c.RecipientId,
+		Sender:    c.UserId,
+		Content:   c.Message,
+	}
+
+	err = app.models.Messages.Insert(msg)
+
+	models, err := app.models.Messages.GetMessages(msg.Sender, msg.Recipient, 0)
+
+	fmt.Println(c)
+
+	for _, v := range models {
+		fmt.Println(v.Content)
+
+	}
+
 }
 
 //! SOCKET

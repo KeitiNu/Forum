@@ -21,7 +21,7 @@ class MySocket{
       console.log("onmessage:",  e.data)
 
       onlineUsers.forEach(user => {
-        changeStatus(user);
+        changeStatus(user, 1);
       });
 
     }

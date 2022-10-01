@@ -10,23 +10,20 @@ export default class extends AbstractView {
 
     async getHtml() {
         let users = this.params.Users
+        let currentUser = this.params.AuthenticatedUser.Name
         if (!users) {users = []}
 
         return`
         <div style="display:none">${this.sendMessage}</div>
         <div class="chat">
             <div id="activity" class="scroll box extended">
-                <div id="activity" class="activity">
-                    <div id="Keiti" class="user away" onclick="openChat(event)">
-                        <span class="status"></span>
-                        <p class="name">Keiti</p>
-                    </div>
-                    
+                <div id="activity" class="activity">                
                     ${
                         users.map(function(user) {
                         return `
-                        <div id="status-${user.Name}" class="user away" onclick="openChat(event)">
-                            <span class="status"></span>
+                        <div id="status-${user.Name}"  data-username="${user.Name}" data-currentuser="${currentUser}" class="user away" onclick="openChat(event)">
+                                <span class="status"></span>
+                                <iconify-icon class="bell" icon="bi:bell-fill"></iconify-icon>
                             <p class="name">${user.Name}</p>
                         </div>
                         `
@@ -38,6 +35,24 @@ export default class extends AbstractView {
 
             <div id="dialog" class="dialog box remove">
                 <div class="container" id="chat_area">
+                </div>
+
+                <div id="input" class="input remove" method="POST">
+                <form>
+                    <input id="input_text" class="quick remove" name="Message" value="" ></input>
+                    <input type="hidden" name="RecipientId" id="recipientId"></input>
+                    <input type="hidden" name="UserId" value="${currentUser}"></input>
+                    <button id="input_button" data-userId="" class="quick remove" type="submit">Send!</button>
+
+                </form>
+                </div>
+            </div>
+        </div>
+        `
+    }
+}
+
+/*
                     <div class="user">
                         <div class="info">
                             <p>Laura-Eliise</p>
@@ -52,16 +67,4 @@ export default class extends AbstractView {
                         </div>
                         <p class="bubble">Hey! Working hard or hardly working!</p>
                     </div>
-                </div>
-
-                <div id="input" class="input remove" method="POST">
-                    <input id="input_text" class="quick remove" name="message" type="text" name="Message"></input>
-                    <input id="RecipientId" style="display: none"></input>
-                    <input style="display: none" name="UserId">${this.params.AuthenticatedUser.Name}</input>
-                    <button id="input_button" data-userId="" class="quick remove" onClick="send()">Send!</button>
-                </div>
-            </div>
-        </div>
-        `
-    }
-}
+*/

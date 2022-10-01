@@ -939,16 +939,23 @@ span.badge.me-2.bg-primary {
     color: #757575;
 }
 
+.activity .user .bell {
+    display: none;
+}
+
+.activity .user .bell.notif {
+    display: inline-block;
+    color: #45ffdb;
+    margin-right: auto;
+    margin-left: 3px;
+}
+
 .activity .user:hover {
     transition: 0.25s;
     transform: scale(1.05);
     border-color: whitesmoke;
     cursor: pointer;
     color: whitesmoke;
-}
-
-.activity .separator {
-    border: 1px solid #676869;
 }
 
 
