@@ -7,8 +7,9 @@ export default class extends AbstractView {
     }
 
 
-    get signup() {
-        $(document.body).on('submit', 'form', async function (e) {
+     get signup() {
+        $(document.body).on('submit', 'form#signupform', async function (e) {
+            debugger
             e.preventDefault();
 
             var data = new FormData(e.target);
@@ -32,9 +33,9 @@ export default class extends AbstractView {
                 const tempLink = document.createElement('a')
                 const tempLocation = document.querySelector('.registerlink')
 
-                if (o.AuthenticatedUser != null) {
+                // if (o.AuthenticatedUser != null) {
                     document.cookie = "auth=true;"
-                }
+                // }
 
                 tempLink.href = '/'
                 tempLink.dataset.link
@@ -91,15 +92,14 @@ export default class extends AbstractView {
     };
     async getHtml() {
         return `
-        ${this.signup}
-
+        <div style="display: none">${this.signup}</div>
         <div class="loginboxcontent">
         <div class=loginbox>
             <div class="iconbox">
                 <span class="iconboxspan">
                     <img src="/static/css/images/logo_white.png">
                 </span>
-                <form method="post" class="std auth loginform">
+                <form method="post" id="signupform" class="std auth loginform">
                     <div>
                         <label class="form-label" for="username"></label>
                         <input class="form-control" type="text" id="username" name="username" placeholder="Username" value="">

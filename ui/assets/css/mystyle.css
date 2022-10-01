@@ -11,6 +11,7 @@ label {
 
 .flex {
     display: flex;
+    justify-content: center;
 }
 
 *::-webkit-scrollbar {
@@ -195,7 +196,8 @@ html {
 /*LOG IN PAGE*/
 
 .loginboxcontent {
-    padding: 140px;
+    padding: 40px;
+    align-self: center;
 }
 
 .loginbox {
@@ -682,7 +684,7 @@ a.catecardtitle:hover{
   .profilebox {
     max-width: 750px;
     min-width: 750px;
-    min-height: 355px;
+    min-height: 80.3vh;
     margin: auto;
     background-color: #1A1A1B;
     border:1px solid #676869;
@@ -728,7 +730,7 @@ a.catecardtitle:hover{
 /* CREATE POST PAGE */
 
 .createpostcontent {
-    padding-top: 110px;
+    padding-top: 40px;
 }
 
 .createpostbox {
@@ -875,9 +877,10 @@ span.badge.me-2.bg-primary {
     position: relative;
     display: flex;
     flex-direction: column;
-    margin: 40px 0 0 20px;
-    overflow: hidden;
-    width: 380px;
+    padding: 40px 0 0 40px;
+    /* overflow: hidden; */
+    width: 280px;
+    height: 84.4vh;
 }
 
 .scroll {

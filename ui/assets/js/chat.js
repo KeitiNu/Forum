@@ -4,17 +4,18 @@ let recipient = undefined
 
 /* DB query */
 
-const fillInfo = (recipient, offset) => {
-    // give me list of all users pluss
-    // give me list of the most recent message between the current user and
-    // all the other users
-    let arr = [{}]
+// const fillInfo = (recipient, offset) => {
+//     // give me list of all users plus
+//     // give me list of the most recent message between the current user and
+//     // all the other users
+//     let arr = ["Laura", "Laura-Eliise", "Keiti"]
+//     let onlinearr = ["Laura", "Keiti"]
 
-    arr.forEach(
-        createUserStatus()
-    )
+//     arr.forEach( (user) => {
+//         createUserStatus(user)
+//     })
 
-}
+// }
 
 // cost fillStatusList = () => {
 //     const db = new sqlite3.Database('database.db');
@@ -93,7 +94,7 @@ const openChat = async (e) => {
         if (input.container.classList.length === 1) {
             await collapse(activity, dialog, input)
 
-            await fillInfo(e.target.id)
+            // await fillInfo(e.target.id)
 
             extend(activity, dialog, input) 
         } else {

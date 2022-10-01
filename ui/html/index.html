@@ -19,8 +19,6 @@
     <script type="module" src="static/js/index.js"></script>
     <script src="static/js/websocket.js"></script>
     <script src="static/js/moment/moment.js"></script>
-
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="static/js/chat.js"></script>
     <link rel="stylesheet" href="static/css/mystyle.css">
@@ -32,8 +30,9 @@
 
 <body class="base-layout-body">
     <div id="header"></div>
-    <div class="container content">
+    <div class="container content flex">
         <div id="app" class="flex"></div>
+        <div id="messageDiv"></div> 
     </div>
     <div class="footercontent">
         <nav class="navbar footer">
@@ -43,6 +42,7 @@
     </div>
 
     <script src="/static/js/chat.js"></script>
+
     <!-- Bootstrap Buncle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"

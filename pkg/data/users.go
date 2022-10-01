@@ -198,6 +198,7 @@ func (u *UserModel) Authenticate(username, password string) error {
 		return err
 	}
 
+	
 	// Otherwise, the password is correct..
 	return nil
 }
@@ -206,6 +207,20 @@ func (u *UserModel) GetByToken(token string) (*User, error) {
 	row := u.DB.QueryRow("SELECT username, email FROM users WHERE token = ?", token)
 	user := &User{}
 	err := row.Scan(&user.Name, &user.Email)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, ErrNoRecord
+		}
+		return nil, err
+	}
+	return user, nil
+}
+
+func (u *UserModel) GetByUserCredentials(credentials string) (*User, error) {
+	row := u.DB.QueryRow("SELECT username, forname, surname, email, age FROM users WHERE username = ? or email = ?", credentials, credentials)
+	
+	user := &User{}
+	err := row.Scan(&user.Name, &user.Forname, &user.Surname, &user.Email, &user.Age)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, ErrNoRecord

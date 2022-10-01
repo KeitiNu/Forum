@@ -89,7 +89,7 @@ export default class extends AbstractView {
 
     async getHtml() {
         return `
-		${this.doSubmit}
+	<div style="display:none">${this.doSubmit}</div>
     <div class="createpostcontent">
 	<div class="createpostbox">
 		<div class="createpostboxinside">

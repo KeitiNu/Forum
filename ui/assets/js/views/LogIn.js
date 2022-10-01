@@ -8,7 +8,7 @@ export default class extends AbstractView {
 
 
     get login(){
-        $(document.body).on('submit', 'form', async function (e) {
+        $(document.body).on('submit', 'form#loginform', async function (e) {
             debugger
             e.preventDefault();
     
@@ -105,7 +105,7 @@ debugger
 
     async getHtml() {
         return `
-        ${this.login}
+        <div style="display: none">${this.login}</div>
         <div class="loginboxcontent">
         <div class=loginbox>
             <div class="iconbox">

@@ -83,7 +83,7 @@ export default class extends AbstractView {
 
     async getHtml() {
         return `
-        ${this.submitComment}
+        <div style="display: none">${this.submitComment}</div>
         <div class="mainpagecontent">
         <div class="mainpagebox">
             <div class="mainpageboxinside">

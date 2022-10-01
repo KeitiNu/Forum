@@ -53,22 +53,23 @@ const Router = async () => {
         };
     }
 
-    // console.log(match.result)
-
-
 
     if (match.route.path == '/logout') {
         document.cookie = "auth=false;"
+
+        fetch("/logout", {
+            method: "POST"
+        });
     };
 
 
-    authenticated = stringToBool(getCookie('auth'));
-    // console.log(authenticated)
 
-    if(!authenticated && match.route.path != '/signup' &&match.route.path!= '/login'){
+    authenticated = stringToBool(getCookie('auth'));
+    console.log("USER AUTHENTICATED: ", authenticated)
+
+    if(!authenticated && match.route.path != '/signup' && match.route.path != '/login'){
         location.assign('http://localhost:8090/login')
     }
-
 
 
     const v = getParams(match);
@@ -97,11 +98,14 @@ const Router = async () => {
     document.querySelector("#app").innerHTML = await view.getHtml();
 
 
-    let chat = new Chat();
-    document.querySelector("#app").innerHTML += await chat.getHtml();
     if (authenticated) {
+        let chat = new Chat(data);
         const headin = new HeaderIn();
+        
         document.querySelector("#header").innerHTML = await headin.getHtml();
+        if (document.querySelector("#messageDiv").innerHTML == "") {
+            document.querySelector("#messageDiv").innerHTML = await chat.getHtml();
+        }
     } else {
         const headout = new HeaderOut();
         document.querySelector("#header").innerHTML = await headout.getHtml();
