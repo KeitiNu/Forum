@@ -1,30 +1,19 @@
 // const sqlite3 = require('sqlite3').verbose();
 let user = undefined
-var socket = new MySocket()
-socket.connectSocket("message");
+let recipient = undefined
 
 /* DB query */
 
 const fillInfo = (recipient, offset) => {
-    // const db = new sqlite3.Database('database.db');
-    let sql = `
-    SELECT
-        sender_id, 
-        recipient_id, 
-        content, 
-        sent_at
-    FROM messages
-    WHERE
-        sender_id = ${recipient} AND recipient_id = ${user} OR
-        recipient_id = ${recipient} AND sender_id = ${user}
-    ORDER BY sent_at ASC
-    LIMIT 10
-    OFFSET ${offset}
-    `
-    // db.all(sql, (err, rows) => {
-    //     console.log(rows)
-    //     if (err) {throw err}
-    // })
+    // give me list of all users pluss
+    // give me list of the most recent message between the current user and
+    // all the other users
+    let arr = [{}]
+
+    arr.forEach(
+        createUserStatus()
+    )
+
 }
 
 // cost fillStatusList = () => {
@@ -62,22 +51,18 @@ const fillInfo = (recipient, offset) => {
 //     }
 // }, 100)
 
-// const createUserStatus = ({username, online}) => {
-//     let div = document.createElement('div')
-//     let status = document.createElement('span')
-//     let name = document.createElement('p')
+const createUserStatus = (username) => {
+    let div = document.createElement('div')
+    let status = document.createElement('span')
+    let name = document.createElement('p')
 
-//     div.id = `status-${username}`
-//     div.className = "user"
-//     div.addEventListener('click', openChat(username))
-//     status.className = "status"
-//     name.className = "name"
-//     name.textContent = `${username}`
-
-//     if (online == 0) {
-//         div.classList.push("away")
-//     }
-// }
+    div.id = `status-${username}`
+    div.className = "user"
+    div.addEventListener('click', openChat(username))
+    status.className = "status away"
+    name.className = "name"
+    name.textContent = `${username}`
+}
 
 const sortedRows = (rows) => {
     return rows

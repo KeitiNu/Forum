@@ -20,22 +20,16 @@ var upgrader = websocket.Upgrader{
 }
 
 type socketReader struct {
-	con  *websocket.Conn 	// pointer to the socket
-	name string 			// name of our current user
+	con  	*websocket.Conn // pointer to the socket
+	name 	string 			// name of our current user
 	request string 			// what info is being send (ex: message request)
 	context Context 		// info being sent
-
-	// mode int 			// we are not using this at the moment
 }
-
 type Context struct {
-	chat Chat
-}
-type Chat struct {
-	content string
-	recipient string
-	onlineUsers []string
-	offlineUsers []string
+	// recipient 		string
+	// content 		[]string
+	onlineUsers 	[]string
+	offlineUsers 	[]string
 }
 
 var savedSocketReader []*socketReader = make([]*socketReader, 0)
