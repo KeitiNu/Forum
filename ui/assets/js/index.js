@@ -77,7 +77,7 @@ const Router = async () => {
 
 
     authenticated = stringToBool(getCookie('auth'));
-    console.log("USER AUTHENTICATED: ", authenticated)
+    // console.log("USER AUTHENTICATED: ", authenticated)
 
     if(!authenticated && match.route.path != '/signup' && match.route.path != '/login'){
         location.assign('http://localhost:8090/login')

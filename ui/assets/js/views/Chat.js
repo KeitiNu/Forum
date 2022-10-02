@@ -14,7 +14,7 @@ export default class extends AbstractView {
         <div style="display:none">${this.sendMessage}</div>
         <div class="chat">
             <div id="activity" class="scroll box extended">
-                <div id="activity" class="activity">                
+                <div id="inner_activity" class="activity">                
                     ${
                         users.map(function(user) {
                         return `

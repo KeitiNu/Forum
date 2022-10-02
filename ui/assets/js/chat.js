@@ -39,7 +39,7 @@ const openChat = async (e) => {
         if (input.container.classList.length === 1) {
             await collapse(activity, dialog, input)
         }
-        if (bell.classList == 2) {
+        if (bell.classList.length == 2) {
             removeClass(bell)
         }
 
@@ -182,7 +182,9 @@ const getDateformat = (date) => {
     if (today.getFullYear() == date.getFullYear() &&
         today.getMonth() == date.getMonth() &&
         today.getDate() == date.getDate()) {
-        return `${date.getHours()}:${date.getMinutes()}`
+        let hours = date.getHours() < 10 ? `0${date.getHours()}` : date.getHours()
+        let minutes = date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes()
+        return `${hours}:${minutes}`
     } else {
         return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`
     } 
@@ -190,21 +192,10 @@ const getDateformat = (date) => {
 
 /* Sending messages to the chat */
 const addMessage = (message) => {
-    console.log("date from database:", message.SentAt)
     let date = getDateformat(new Date(message.SentAt))
-    console.log("date from conversion:", date)
-
     let receiver = message.Recipient == recipient ? "user" : "recipient";
     let username= message.Recipient == recipient ? user : recipient;
     return createBubble(message.Content, username, receiver, date);
-
-    // let input = document.getElementById('input_text')
-    // let date = new Date()
-    // let sentBy = username == user ? "user" : "receiver"
-    // let sender = username == user ? user   : username
-
-    // let bubble = createBubble(input.value, sender, sentBy, `${date.getHours()}:${date.getMinutes()}`)
-    // document.getElementById("chat_area").appendChild(bubble)
 }
 
 const createBubble = (text, name, style, time) => {
@@ -247,7 +238,10 @@ const changeStatus = (username, status) => {
 
 const notify = (sender, message) => {
     if (sender == recipient) {
-        createBubble(message, sender, "reciever", new Date())
+        let chat = document.getElementById("chat_area")
+        let bubble = createBubble(message, sender, "recipient", getDateformat(new Date()))
+        chat.appendChild(bubble)
+        chat.scrollTop = chat.scrollHeight
     } else {
         let div = document.getAnimations(`status-${sender}`)
         let bell = document.getElementById(`bell-${sender}`)

@@ -25,8 +25,7 @@ type User struct {
 	Online          int
 	Messages        []Message
 	LastMessage     sql.NullString
-	LastReceived     sql.NullString
-
+	LastReceived    sql.NullString
 }
 
 type password struct {
@@ -180,7 +179,6 @@ func (u *UserModel) Authenticate(username, password string) error {
 	// Retrieve the id and hashed password associated with the given email. If no
 	// matching email exists, we return the ErrInvalidCredentials error.
 
-	fmt.Println(username)
 	var hashedPassword []byte
 	row := u.DB.QueryRow("SELECT hashed_password FROM users WHERE email = ? OR username = ?", username, username)
 
@@ -262,27 +260,27 @@ func (u *UserModel) EmailExist(email string) (bool, string, error) {
 }
 
 func (u *UserModel) GetAllUsers(myId string) ([]*User, error) {
-	myId = "Keiti"
+	// myId = "Keiti"
 	// stmt := `SELECT username, forname, surname, email FROM users ORDER BY username`
 
 	// stmt1 := `
 	// SELECT sender_id, receiver_id, MAX(sent_at)
-	// FROM messages 
+	// FROM messages
 	// WHERE sender_id = ? OR receiver_id = ?
 	// `
 
 	// stmt2 := `
 	// SELECT MAX(sent_at)
-	// FROM messages 
+	// FROM messages
 	// WHERE sender_id = ? OR receiver_id = ?
 	// `
 
-	//MAX(mt.sent_at), MAX(m.sent_at) 
-	
-	stmt := `SELECT users.username, users.forname, users.surname, users.email, MAX(mt.sent_at), MAX(m.sent_at)  FROM users                                                                                                                                                             
+	//MAX(mt.sent_at), MAX(m.sent_at)
+
+	stmt := `SELECT users.username, users.forname, users.surname, users.email, MAX (CASE WHEN mt.sent_at is NULL THEN 0 else mt.sent_at END, CASE WHEN m.sent_at is NULL THEN 0 else m.sent_at END ) as maxdate FROM users                                                                                                                                                             
         LEFT OUTER JOIN messages m on m.sender_id = users.username AND m.receiver_id = ?
         LEFT OUTER JOIN messages mt on mt.receiver_id = users.username AND mt.sender_id = ?
-        GROUP BY users.username ORDER BY MAX(mt.sent_at, m.sent_at), users.username COLLATE NOCASE ASC`
+        GROUP BY users.username ORDER BY MAX(maxdate) DESC, users.username COLLATE NOCASE ASC`
 
 	// stmt := `SELECT DISTINCT username, forname, surname, email, MAX(m.sent_at), MAX(mt.sent_at) FROM users
 	// LEFT OUTER JOIN messages m on m.sender_id = users.username
@@ -298,30 +296,25 @@ func (u *UserModel) GetAllUsers(myId string) ([]*User, error) {
 
 	rows, err := u.DB.Query(stmt, myId, myId)
 
-
 	if err != nil {
 		return nil, err
 	}
 
-	
 	defer rows.Close()
-	
+
 	users := []*User{}
-	
+
 	for rows.Next() {
 
 		s := &User{}
 
-		err := rows.Scan(&s.Name, &s.Forname, &s.Surname, &s.Email, &s.LastReceived, &s.LastMessage)
+		err := rows.Scan(&s.Name, &s.Forname, &s.Surname, &s.Email, &s.LastMessage)
 		if err != nil {
-			fmt.Println("ERROR")
 			return nil, err
 		}
-		fmt.Println("ROW SCANNED: ", s)
 		users = append(users, s)
 	}
 
-	fmt.Println("USERS: ", users)
 
 	if err = rows.Err(); err != nil {
 		return nil, err

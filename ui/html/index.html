@@ -70,7 +70,6 @@
 
     <script>
         $('#app').on('submit', 'form#commentPost', async function (e) {
-            debugger
 
             e.preventDefault();
 
@@ -81,7 +80,6 @@
             var o = await fetchFormData(values, "/comment")
 
             this.params = o
-            console.log(o)
 
             const errors = this.params.Form.Errors.Errors
             const keys = Object.keys(errors)
@@ -93,10 +91,8 @@
                 tempLink.href = location
                 tempLink.dataset.link = true;
 
-                console.log(tempLink.dataset)
                 tempLocation.appendChild(tempLink)
 
-                debugger
                 tempLink.click()
 
             } else {
@@ -115,7 +111,6 @@
         });
 
         $('#app').on('submit', 'form#loginform', async function (e) {
-            debugger
             e.preventDefault();
 
             var data = new FormData(e.target);
@@ -173,7 +168,6 @@
 
             var data = new FormData(e.target)
             var values = Object.fromEntries(data.entries())
-            debugger
 
             if (values["Message"] != "") {
 
@@ -186,29 +180,36 @@
 
             let input = document.getElementById('input_text')
             let date = new Date()
-            let bubble = createBubble(input.value, user, "user", `${date.getHours()}:${date.getMinutes()}`)
-            document.getElementById("chat_area").appendChild(bubble)
-            input.value = ""
+            if (input.value != "") {
+                let bubble = createBubble(input.value, user, "user", `${date.getHours()}:${date.getMinutes()}`)
+                document.getElementById("chat_area").appendChild(bubble)
+                input.value = ""
+            }
             
             let chat = document.getElementById("chat_area")
             chat.scrollTop = chat.scrollHeight
 
             // moves the person you send a message to to the top of activities
 
-            let activity = document.getElementById("activity")
+            let activity = document.getElementById("inner_activity")
             let username = document.getElementById("recipientId").value
 
-            let divs = activity.childNodes
+            let divs = Array.from(activity.children)
             let index = 0
 
-            div.forEach((elem, i) => {
-                if (elem.id == `status-${username}`) {
+            for (let i in divs) {
+                if (divs[i].id == `status-${username}`) {
                     index = i
+                    break
                 }
-            })
+            }
 
-            divs.unshift(data.splice(index, 1)[0]);
-            activity.childNodes = divs
+            divs.unshift(divs.splice(index, 1)[0]);
+            activity.innerHTML = ""
+
+            divs.forEach((elem) => {
+                activity.appendChild(elem)
+            })
         })
 
         $('#app').on('submit', 'form', async function (e) {
@@ -265,8 +266,6 @@
                 body: JSON.stringify(value)
             })
                 .then(response => {
-                    console.log("RESPONSE:", response)
-
                     if (!response.ok) {
                         throw new Error(`HTTP error: ${response.status}`);
                     }
@@ -287,7 +286,6 @@
 
 
         function getCookieExpDate(cname) {
-            debugger
     let name = cname + "=";
     let decodedCookie = decodeURIComponent(document.cookie);
     let ca = decodedCookie.split(';');

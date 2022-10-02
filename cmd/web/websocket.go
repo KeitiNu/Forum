@@ -1,12 +1,9 @@
 package main
 
 import (
-	_ "encoding/json"
 	"errors"
-	"fmt"
 	"log"
 	"net/http"
-	_ "strings"
 
 	"github.com/gorilla/websocket"
 )
@@ -37,8 +34,8 @@ type Context struct {
 	// recipient   string
 	OnlineUsers []string
 	OfflineUser string
-	Sender string
-	Message string
+	Sender      string
+	Message     string
 	// offlineUsers []string
 }
 
@@ -87,7 +84,6 @@ func (app *application) socket(w http.ResponseWriter, r *http.Request) {
 		// ptrSocketReader.con.WriteMessage(websocket.TextMessage, []byte("Greetings from golang"))
 
 		name = msg.Context
-		fmt.Println("WEBSOCKET MSG: ", msg)
 		if msg.MessageType == "offline" {
 			removeSocketReader(msg.Context)
 		} else {
@@ -131,17 +127,17 @@ func removeSocketReader(name string) {
 	}
 }
 
-func sendChatNotification(sender string, recipient string, message string){
+func sendChatNotification(sender string, recipient string, message string) {
 	var context = &Context{
 		ContextType: "chat",
-		Sender: sender,
-		Message: message,
+		Sender:      sender,
+		Message:     message,
 	}
 
 	for name, socket := range savedSocketReaders {
 		if name == recipient {
-		socket.con.WriteJSON(context)
-			
+			socket.con.WriteJSON(context)
+
 		}
 	}
 }
