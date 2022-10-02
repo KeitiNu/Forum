@@ -50,14 +50,14 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		categories, err := app.models.Categories.Latest()
 		if err != nil {
 			app.serverError(w, err)
-		}
-		currentUser := app.contextGetUser(r)
+		// }
+		// currentUser := app.contextGetUser(r)
 
 
-		if err != nil {
-			app.serverError(w, err)
-		}
-		users, err := app.models.Users.GetAllUsers(currentUser.Name)
+		// if err != nil {
+		// 	app.serverError(w, err)
+		// }
+		// users, err := app.models.Users.GetAllUsers(currentUser.Name)
 
 
 		app.render(w, r, "index.html", &templateData{Categories: categories, AuthenticatedUser: currentUser, Users: users})
