@@ -23,6 +23,8 @@ type Models struct {
 	Posts      PostModel
 	Comments   CommentsModel
 	Categories CategoryModel
+	Messages   MessageModel
+
 }
 
 // All database data has been divided into categories and is ready to be used. Actually it links the whole database to every category.
@@ -32,5 +34,7 @@ func NewModels(db *sql.DB) Models {
 		Posts:      PostModel{DB: db},
 		Comments:   CommentsModel{DB: db},
 		Categories: CategoryModel{DB: db},
+		Messages:   MessageModel{DB: db},
+
 	}
 }

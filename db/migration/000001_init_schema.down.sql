@@ -1,0 +1,10 @@
+DROP TABLE user_type IF EXISTS;
+DROP TABLE categories IF EXISTS;
+DROP TABLE users IF EXISTS;
+DROP TABLE posts if EXISTS;
+DROP TABLE post_in_category IF EXISTS;
+DROP TABLE comments IF EXISTS;
+DROP TABLE vote IF EXISTS;
+DROP TABLE gender_type IF EXISTS;
+-- DROP TABLE report IF EXISTS;
+-- DROP TABLE upgrade_request IF EXISTS

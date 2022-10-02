@@ -55,6 +55,7 @@ func (app *application) authenticate(next http.Handler) http.Handler {
 		// Let's locate the user linked with it if we get one.
 		user, err := app.models.Users.GetByToken(a.Value)
 
+
 		// Continue if there are no users associated with token.
 		if err != nil {
 			next.ServeHTTP(w, r)

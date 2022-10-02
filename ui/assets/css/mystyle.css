@@ -9,6 +9,28 @@ label {
     margin-top: 1rem;
 }
 
+.flex {
+    display: flex;
+    justify-content: center;
+}
+
+*::-webkit-scrollbar {
+    width: 5px;
+}
+body::-webkit-scrollbar {
+    width: 10px;
+}
+
+*::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: #3e3e3e;
+    border-radius: 10px;
+    outline: 1px solid #3e3e3e;
+}
+
 /*---------------------HEADERS % FOOTER---------------------*/
 
 
@@ -174,7 +196,8 @@ html {
 /*LOG IN PAGE*/
 
 .loginboxcontent {
-    padding: 140px;
+    padding: 40px;
+    align-self: center;
 }
 
 .loginbox {
@@ -424,6 +447,11 @@ border:1px solid #45ffdb;
     text-decoration: none;
 }
 
+a.catecardtitle:hover{
+    color:#45ffdb;
+}
+
+
 .card-text {
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -656,7 +684,7 @@ border:1px solid #45ffdb;
   .profilebox {
     max-width: 750px;
     min-width: 750px;
-    min-height: 355px;
+    min-height: 80.3vh;
     margin: auto;
     background-color: #1A1A1B;
     border:1px solid #676869;
@@ -702,7 +730,7 @@ border:1px solid #45ffdb;
 /* CREATE POST PAGE */
 
 .createpostcontent {
-    padding-top: 110px;
+    padding-top: 40px;
 }
 
 .createpostbox {
@@ -806,4 +834,222 @@ span.badge.me-2.bg-primary {
 .moderatorcomment {
     display: flex;
     position: relative;
+}
+
+/* CHAT SECTION */
+
+.extended {
+    transition: 1s linear;
+    height: 0px;
+    flex-grow: 1;
+}
+.large {
+    transition: 1s linear;
+    height: 0px;
+    flex-grow: 1;
+}
+.minimized {
+    transition: 1s linear;
+    height: 250px;
+}
+.none {
+    transition: 1s linear;
+    height: 0px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+.remove {
+    transition: 1s linear;
+    display: none !important;
+}
+.quick{
+    transition: 1s linear !important;
+}
+
+.box {
+    border-radius: 10px;
+    border: 1px solid #676869;
+    background-color: #1A1A1B;
+}
+
+
+.chat {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 40px 0 0 40px;
+    /* overflow: hidden; */
+    width: 280px;
+    height: 84.4vh;
+}
+
+.scroll {
+    padding: 20px;
+}
+
+.activity {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    overflow-y: auto;
+    width: 100%;
+    min-width: 125px;
+    padding: 10px;
+    height: 100%;
+}
+
+.activity .user {    
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 8px;
+    border: 1px solid #676869;
+    transition: 0.25s;
+
+    background-color: #1A1A1B;
+    padding: 8px 10px;
+    width: auto;
+    min-width: 124px;
+    height: 30px;
+}
+
+.activity .user .status {
+    border-radius: 10px;
+    border: 1px solid #45ffdb;
+    background-color: #45ffdb;
+    /* color: #676869; */
+
+    width: 10px;
+    height: 10px;
+}
+
+.activity .user.away .status {
+    background-color: transparent;
+    border: 1px solid #676869;
+}
+
+.activity .user .name {
+    margin-bottom: 0;
+    color: whitesmoke;
+}
+
+.activity .user.away .name {
+    margin-bottom: 0;
+    color: #757575;
+}
+
+.activity .user .bell {
+    display: none;
+}
+
+.activity .user .bell.notif {
+    display: inline-block;
+    color: #45ffdb;
+    margin-right: auto;
+    margin-left: 3px;
+}
+
+.activity .user:hover {
+    transition: 0.25s;
+    transform: scale(1.05);
+    border-color: whitesmoke;
+    cursor: pointer;
+    color: whitesmoke;
+}
+
+
+.dialog {
+    display: flex;
+    flex-direction: column;
+    transition: 1s linear;
+    margin-top: 20px;
+    padding: 20px;
+}
+
+.dialog .container {
+    flex-grow: 1;
+    overflow-y: scroll;
+    padding: 0 5px 0 0;
+    max-width: 300px;
+    min-width: 200px;
+    height: 0px;
+}
+
+.dialog .bubble {
+    display: inline-block;
+    transition: 1s linear;
+    display: block;
+    border-radius: 10px;
+    border-width: 1px;
+    border-style: solid;
+    word-wrap: break-word;
+
+    margin-bottom: 5px;
+    max-width: 80%;
+    padding: 10px;
+}
+
+.dialog .user, .dialog .recipient {
+    display: flex;
+    flex-direction: column;
+}
+.dialog .user {
+    align-items: flex-end;
+}
+
+.dialog .info {
+    display: flex;
+    gap: 5px;
+    padding: 0 5px;
+}
+.dialog .user .info{
+    justify-content: end;
+}
+.dialog .info p {
+    margin-bottom: 0 ;
+}
+
+.dialog .user .info p {
+    color: #45ffdb;
+}
+.dialog .recipient .info p {
+    color: whitesmoke;
+}
+
+.container .user .bubble {
+    margin-left: auto;
+    text-align: right;
+    background-color: #45ffdb;
+}
+
+.container .recipient .bubble {
+    color: whitesmoke;
+    border-color: #676869;
+    background-color: #1A1A1B;
+}
+
+.dialog .input {
+    margin-top: 10px;
+    height: 40px;
+}
+
+.dialog .input input{
+    color: whitesmoke;
+    border-radius: 10px 0 0 10px;
+    border: 1px solid #676869;
+    background-color: #1A1A1B;
+    padding: 5px 10px;
+    height: inherit;
+    width: 75%;
+}
+
+.dialog .input button {
+    border-radius: 0 10px 10px 0;
+    border: 1px solid #676869;
+    background-color: #45ffdb;
+    padding: 5px 10px;
+    height: inherit;
+    float: right;
+    width: 25%;
 }

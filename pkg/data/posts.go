@@ -16,6 +16,7 @@ type Post struct {
 	ImageSrc string
 	User     string
 	Category []string
+	Cat string
 }
 
 type PostModel struct {
