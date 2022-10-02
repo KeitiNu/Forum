@@ -3,7 +3,6 @@ package main
 import (
 	_ "encoding/json"
 	"errors"
-	_ "fmt"
 	"log"
 	"net/http"
 	_ "strings"
@@ -36,6 +35,7 @@ type Context struct {
 	// 	content string
 	// recipient   string
 	OnlineUsers []string
+	OfflineUser string
 	// offlineUsers []string
 }
 
@@ -44,11 +44,13 @@ type RecievedMessage struct {
 	Context     string `json:"context"`
 }
 
-var savedSocketReader []*socketReader = make([]*socketReader, 0)
+// var savedSocketReader []*socketReader = make([]*socketReader, 0)
 
 func (app *application) socket(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
+
+		var name string
 
 		defer func() {
 			err := recover()
@@ -56,7 +58,7 @@ func (app *application) socket(w http.ResponseWriter, r *http.Request) {
 				log.Println(err)
 			}
 			r.Body.Close()
-
+			// delete(savedSocketReaders, name)
 		}()
 		// if savedSocketReader == nil {
 		// 	savedSocketReader = make([]*socketReader, 0)
@@ -81,7 +83,7 @@ func (app *application) socket(w http.ResponseWriter, r *http.Request) {
 
 		// ptrSocketReader.con.WriteMessage(websocket.TextMessage, []byte("Greetings from golang"))
 
-		var name = msg.Context
+		name = msg.Context
 
 		// ptrSocketReader.name = name
 
@@ -90,24 +92,40 @@ func (app *application) socket(w http.ResponseWriter, r *http.Request) {
 		savedSocketReaders[name] = ptrSocketReader
 
 		// savedSocketReader = append(savedSocketReader, ptrSocketReader)
-
-		var onlineArr []string
-
-		for key, _ := range savedSocketReaders {
-			onlineArr = append(onlineArr, key)
-		}
-
-		var context = &Context{
-			ContextType: "online",
-			OnlineUsers: onlineArr,
-		}
-
-		for _, socket := range savedSocketReaders {
-			socket.con.WriteJSON(context)
-		}
+		sendOnlineUserInfo()
 
 	case "POST":
 		app.serverError(w, errors.New("POST METHOD NOT ALLOWED"))
+	}
+}
+
+func sendOnlineUserInfo() {
+	var onlineArr []string
+
+	for key := range savedSocketReaders {
+		onlineArr = append(onlineArr, key)
+	}
+
+	var context = &Context{
+		ContextType: "online",
+		OnlineUsers: onlineArr,
+	}
+
+	for _, socket := range savedSocketReaders {
+		socket.con.WriteJSON(context)
+	}
+}
+
+func removeSocketReader(name string) {
+	delete(savedSocketReaders, name)
+
+	var context = &Context{
+		ContextType: "offline",
+		OfflineUser: name,
+	}
+
+	for _, socket := range savedSocketReaders {
+		socket.con.WriteJSON(context)
 	}
 }
 

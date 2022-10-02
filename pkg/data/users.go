@@ -217,7 +217,7 @@ func (u *UserModel) GetByToken(token string) (*User, error) {
 }
 
 func (u *UserModel) GetByUserCredentials(credentials string) (*User, error) {
-	row := u.DB.QueryRow("SELECT username, forname, surname, email, age FROM users WHERE username = ? or email = ?", credentials, credentials)
+	row := u.DB.QueryRow("SELECT username, forname, surname, email, age FROM users WHERE email = ? OR username = ?", credentials, credentials)
 
 	user := &User{}
 	err := row.Scan(&user.Name, &user.Forname, &user.Surname, &user.Email, &user.Age)

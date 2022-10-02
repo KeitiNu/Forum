@@ -23,7 +23,6 @@ const openChat = async (e) => {
 
     // from the event we can get the id of the element
     // that was just clicked. Based on that we will open the chat
-    console.log("id:\n", e)
     if (!disable) {
         disable = true
 
@@ -43,14 +42,13 @@ const openChat = async (e) => {
 
         var resp = await fillChatLog(user, recipient, offset)
 
-
-
-        console.log(resp)
+        // User: us reciver: Keiti
         resp.forEach((message) => {
-            let reciever = message.Recipient == recipient ? "recipient" : "user";
-            let username = message.Recipient == recipient ? recipient : user;
+            let reciever = message.Recipient == recipient ? "user" : "recipient";
+            let username= message.Recipient == recipient ? user : recipient;
             let bubble = createBubble(message.Content, username, reciever, message.SentAt);
             chat.insertBefore(bubble, chat.firstChild)
+            chat.scrollTop = chat.scrollHeight
         })
         extend(activity, dialog, input)
     }
@@ -74,8 +72,9 @@ const applyEventListeners = async () => {
                 offset += 10
 
                 resp.forEach((message) => {
-                    let reciever = message.Recipient == recipient ? "recipient" : "user";
-                    let username = message.Recipient == recipient ? recipient : user;
+                    let time = `${message.SentAt}`
+                    let reciever = message.Recipient == recipient ? "user" : "recipient";
+                    let username= message.Recipient == recipient ? user : recipient;
                     let bubble = createBubble(message.Content, username, reciever, message.SentAt);
                     elem.target.insertBefore(bubble, elem.target.firstChild)
                 })

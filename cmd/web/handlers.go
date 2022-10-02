@@ -88,8 +88,6 @@ func (app *application) message(w http.ResponseWriter, r *http.Request) {
 		}
 
 
-		fmt.Println(c)
-
 		messages, err := app.models.Messages.GetMessages(c.User, c.Recipient, c.Offset)
 
 		if err != nil {
@@ -98,14 +96,6 @@ func (app *application) message(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		for _, v := range messages {
-			fmt.Println(v.Content)
-
-		}
-
-		// app.render(w, r, "index.html", messages)
-
-		// app.serveAsJSON(w, messages)
 
 		j, err := json.Marshal(messages)
 		if err != nil {
@@ -182,15 +172,6 @@ func (app *application) chat(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = app.models.Messages.Insert(msg)
-
-	models, err := app.models.Messages.GetMessages(msg.Sender, msg.Recipient, 0)
-
-	fmt.Println(c)
-
-	for _, v := range models {
-		fmt.Println(v.Content)
-
-	}
 
 }
 
@@ -311,7 +292,7 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 			app.serverError(w, err)
 			return
 		}
-		authUser, err := app.models.Users.GetByUserCredentials(user.Name)
+		authUser, err := app.models.Users.GetByUserCredentials(p.Username)
 
 		if err != nil {
 			app.serverError(w, err)
@@ -326,16 +307,15 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 		// cookie := http.Cookie{Name: "newsession", Value: "abcd", Expires: expiration}
 		// http.SetCookie(w, &cookie)
 
-		currentUser := app.contextGetUser(r)
-
-		fmt.Println("Current user: ", currentUser)
+		// currentUser := app.contextGetUser(r)
 
 		if err != nil {
 			app.serverError(w, err)
 		}
 
 		// Add the current cookie (token) to the user's profile in database.
-		err = app.models.Users.UpdateByToken(a.Value, user.Name)
+		err = app.models.Users.UpdateByToken(a.Value, authUser.Name)
+
 		if err != nil {
 			app.serverError(w, err)
 			return
@@ -456,7 +436,9 @@ func (app *application) register(w http.ResponseWriter, r *http.Request) {
 func (app *application) logout(w http.ResponseWriter, r *http.Request) {
 	c := &http.Cookie{Name: "session", Value: uuid.NewV4().String(), Expires: time.Now(), MaxAge: -1}
 	http.SetCookie(w, c)
-	http.Redirect(w, r, "/", http.StatusSeeOther)
+	authUser := app.contextGetUser(r)
+	removeSocketReader(authUser.Name)
+	// http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 func (app *application) profile(w http.ResponseWriter, r *http.Request) {

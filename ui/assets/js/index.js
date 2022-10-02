@@ -114,6 +114,8 @@ const Router = async () => {
             var mysocket = new MySocket()
             mysocket.connectSocket(msg);
 
+            // mysocket.sendMessage(msg)
+
             document.querySelector("#messageDiv").innerHTML = await chat.getHtml();
         }
     } else {
