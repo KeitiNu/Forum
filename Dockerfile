@@ -1,13 +1,13 @@
 FROM golang:1.17-buster
 
-#Selects everything in current directory and copies 
+#Selects everything in current directory and copies
 ADD ./ /forumcontainer
 
 # Move to working directory /forumcontainer/cmd/web
 WORKDIR /forumcontainer/cmd/web
 
 # Build the application
-RUN go build -o forumapp
+RUN go build --tags "sqlite_userauth" -o forumapp
 
 # Move to working directory /forumcontainer
 WORKDIR /forumcontainer
