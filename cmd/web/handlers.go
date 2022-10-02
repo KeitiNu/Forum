@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"net/http"
 	"strconv"
@@ -87,7 +86,6 @@ func (app *application) message(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-
 		messages, err := app.models.Messages.GetMessages(c.User, c.Recipient, c.Offset)
 
 		if err != nil {
@@ -95,7 +93,6 @@ func (app *application) message(w http.ResponseWriter, r *http.Request) {
 			app.serverError(w, err)
 			return
 		}
-
 
 		j, err := json.Marshal(messages)
 		if err != nil {
@@ -115,7 +112,7 @@ func (app *application) data(w http.ResponseWriter, r *http.Request) {
 		path := r.URL.Path[6:]
 		paths := strings.Split(path, "/")
 
-		fmt.Println(path)
+		// fmt.Println("PATH: ", path)
 
 		switch paths[0] {
 		case "category":
@@ -172,7 +169,12 @@ func (app *application) chat(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = app.models.Messages.Insert(msg)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
 
+	sendChatNotification(msg.Sender, msg.Recipient, msg.Content)
 }
 
 //! SOCKET

@@ -1,11 +1,11 @@
-// const sqlite3 = require('sqlite3').verbose();
 let user = undefined
 let recipient = undefined
 
-/* Opening and loading old messages */
-
 let disable = false;
 let offset = 0
+
+/* Opening and loading old messages */
+
 // Open chat between two two users
 // also applying the event listeners 
 const openChat = async (e) => {
@@ -24,59 +24,51 @@ const openChat = async (e) => {
     // from the event we can get the id of the element
     // that was just clicked. Based on that we will open the chat
     if (!disable) {
-        disable = true
-
-        // user = e.currentTarget
+        
+        let recipientField = document.getElementById('recipientId')
         recipient = e.currentTarget.getAttribute("data-username")
         user = e.currentTarget.getAttribute("data-currentuser")
-
-        let recipientField = document.getElementById('recipientId')
+        
+        let bell = document.getElementById(`bell-${recipient}`)
         recipientField.value = recipient;
-
         document.getElementById("input_text").textContent = recipient
+        
+        disable = true
         offset = 0
 
         if (input.container.classList.length === 1) {
             await collapse(activity, dialog, input)
         }
+        if (bell.classList == 2) {
+            removeClass(bell)
+        }
 
         var resp = await fillChatLog(user, recipient, offset)
+        offset += 10;
 
-        // User: us reciver: Keiti
         resp.forEach((message) => {
-            let reciever = message.Recipient == recipient ? "user" : "recipient";
-            let username= message.Recipient == recipient ? user : recipient;
-            let bubble = createBubble(message.Content, username, reciever, message.SentAt);
+            let bubble = addMessage(message)
             chat.insertBefore(bubble, chat.firstChild)
-            chat.scrollTop = chat.scrollHeight
         })
+
         extend(activity, dialog, input)
     }
 }
 
 const applyEventListeners = async () => {
-    // When the user presses enter, we send the message
-    let textBox = document.getElementById('input_text');
-    if (textBox) {
-        textBox.addEventListener("keydown", (e) => {
-            if (e.code === "Enter") send()
-        })
-    }
-
     // When the user scrolls up in the dialog box, we load 10 more messages
-    let scrollListen = document.getElementById('chat_area')
-    if (scrollListen) {
-        scrollListen.addEventListener("scroll", async (elem) => {
+    let chat = document.getElementById('chat_area')
+    if (chat) {
+        chat.addEventListener("scroll", async (elem) => {
             if (elem.target.scrollTop === 0) {
+                let height = chat.scrollHeight
                 let resp = await fillChatLog(user, recipient, offset);
                 offset += 10
 
                 resp.forEach((message) => {
-                    let time = `${message.SentAt}`
-                    let reciever = message.Recipient == recipient ? "user" : "recipient";
-                    let username= message.Recipient == recipient ? user : recipient;
-                    let bubble = createBubble(message.Content, username, reciever, message.SentAt);
+                    let bubble = addMessage(message)
                     elem.target.insertBefore(bubble, elem.target.firstChild)
+                    chat.scrollTop = height
                 })
             }
         })
@@ -85,8 +77,6 @@ const applyEventListeners = async () => {
 
 
 async function fillChatLog(user, recipient, offset) {
-    console.log(user, recipient, offset)
-
     var values =             {
         User: user,
         Recipient: recipient,
@@ -101,8 +91,6 @@ async function fillChatLog(user, recipient, offset) {
         body: JSON.stringify(values)
     })
         .then(response => {
-            console.log("RESPONSE:", response)
-
             if (!response.ok) {
                 throw new Error(`HTTP error: ${response.status}`);
             }
@@ -144,19 +132,25 @@ const collapse = async (activity, dialog, input) => {
 }
 
 const extend = async (activity, dialog, input) => {
+    let chat = document.getElementById("chat_area")
+    
     changeClass(activity, 'minimized')
     changeClass(dialog, 'none')
     removeClass(input.container)
-
+    
+    chat.scrollTop = chat.scrollHeight
     await delay(10)
     changeClass(dialog, 'large')
-
+    
+    chat.scrollTop = chat.scrollHeight
     await delay(490)
     removeClass(input.button)
     removeClass(input.input)
     
+    chat.scrollTop = chat.scrollHeight
     await delay(500)
     disable = false
+    chat.scrollTop = chat.scrollHeight
 }
 
 function delay(milliseconds){
@@ -181,11 +175,36 @@ const removeClass = elem => {
     elem.className = arr.join(' ')
 }
 
+// Takes in a date and return the correct message format
+const getDateformat = (date) => {
+    let today = new Date()
+
+    if (today.getFullYear() == date.getFullYear() &&
+        today.getMonth() == date.getMonth() &&
+        today.getDate() == date.getDate()) {
+        return `${date.getHours()}:${date.getMinutes()}`
+    } else {
+        return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`
+    } 
+}
+
 /* Sending messages to the chat */
-const send = () => {
-    let input = document.getElementById('input_text')
-    let bubble = createBubble(input.value, user, "user", new Date())
-    document.getElementById("chat_area").appendChild(bubble)
+const addMessage = (message) => {
+    console.log("date from database:", message.SentAt)
+    let date = getDateformat(new Date(message.SentAt))
+    console.log("date from conversion:", date)
+
+    let receiver = message.Recipient == recipient ? "user" : "recipient";
+    let username= message.Recipient == recipient ? user : recipient;
+    return createBubble(message.Content, username, receiver, date);
+
+    // let input = document.getElementById('input_text')
+    // let date = new Date()
+    // let sentBy = username == user ? "user" : "receiver"
+    // let sender = username == user ? user   : username
+
+    // let bubble = createBubble(input.value, sender, sentBy, `${date.getHours()}:${date.getMinutes()}`)
+    // document.getElementById("chat_area").appendChild(bubble)
 }
 
 const createBubble = (text, name, style, time) => {
@@ -213,7 +232,7 @@ const createBubble = (text, name, style, time) => {
 
 
 // status: what status do you want th user to be changed to 
-// 0: offline   1:oneline
+// 0: offline   1:online
 const changeStatus = (username, status) => {
     let div = document.getElementById(`status-${username}`)
 
@@ -224,4 +243,33 @@ const changeStatus = (username, status) => {
             removeClass(div)
         }
     }
+}
+
+const notify = (sender, message) => {
+    if (sender == recipient) {
+        createBubble(message, sender, "reciever", new Date())
+    } else {
+        let div = document.getAnimations(`status-${sender}`)
+        let bell = document.getElementById(`bell-${sender}`)
+        if (bell.classList.length == 1) {
+            addClass(bell, "notif")
+        }
+        moveToTop(sender)
+    }
+}
+
+// moves the user to the top of activities list
+const moveToTop = (username) => {
+    let activity = document.getElementById("activity")
+    let divs = activity.childNodes
+    let index = 0
+
+    div.forEach((elem, i) => {
+        if (elem.id == `status-${username}`) {
+            index = i
+        }
+    })
+
+    divs.unshift(data.splice(index, 1)[0]);
+    activity.childNodes = divs
 }

@@ -3,6 +3,7 @@ package main
 import (
 	_ "encoding/json"
 	"errors"
+	"fmt"
 	"log"
 	"net/http"
 	_ "strings"
@@ -36,6 +37,8 @@ type Context struct {
 	// recipient   string
 	OnlineUsers []string
 	OfflineUser string
+	Sender string
+	Message string
 	// offlineUsers []string
 }
 
@@ -84,15 +87,14 @@ func (app *application) socket(w http.ResponseWriter, r *http.Request) {
 		// ptrSocketReader.con.WriteMessage(websocket.TextMessage, []byte("Greetings from golang"))
 
 		name = msg.Context
+		fmt.Println("WEBSOCKET MSG: ", msg)
+		if msg.MessageType == "offline" {
+			removeSocketReader(msg.Context)
+		} else {
+			savedSocketReaders[name] = ptrSocketReader
 
-		// ptrSocketReader.name = name
-
-		// fmt.Println("Name retrieved: ", name)
-
-		savedSocketReaders[name] = ptrSocketReader
-
-		// savedSocketReader = append(savedSocketReader, ptrSocketReader)
-		sendOnlineUserInfo()
+			sendOnlineUserInfo()
+		}
 
 	case "POST":
 		app.serverError(w, errors.New("POST METHOD NOT ALLOWED"))
@@ -126,6 +128,21 @@ func removeSocketReader(name string) {
 
 	for _, socket := range savedSocketReaders {
 		socket.con.WriteJSON(context)
+	}
+}
+
+func sendChatNotification(sender string, recipient string, message string){
+	var context = &Context{
+		ContextType: "chat",
+		Sender: sender,
+		Message: message,
+	}
+
+	for name, socket := range savedSocketReaders {
+		if name == recipient {
+		socket.con.WriteJSON(context)
+			
+		}
 	}
 }
 

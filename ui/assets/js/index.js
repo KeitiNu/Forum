@@ -17,7 +17,13 @@ export {Router}
 
 const pathToRegex = path => new RegExp("^" + path.replace(/\//g, "\\/").replace(/:\w+/g, "(.+)") + "$");
 var authenticated = stringToBool(getCookie('auth'));
+var authUserName = "undefined";
+var wSocket = new MySocket()
 
+var now = new Date();
+var time = now.getTime();
+var expireTime = time + 1000*36000;
+now.setTime(expireTime);
 
 
 const Router = async () => {
@@ -58,6 +64,10 @@ const Router = async () => {
 
     if (match.route.path == '/logout') {
         document.cookie = "auth=false;"
+        // var now = new Date();
+        // var time = now.getTime();
+        // var expireTime = time + 1000 * 36000;
+        // now.setTime(expireTime);
 
         fetch("/logout", {
             method: "POST"
@@ -100,22 +110,18 @@ const Router = async () => {
     if (authenticated) {
         const chat = new Chat(data);
         const headin = new HeaderIn();
-
-
-
         
         document.querySelector("#header").innerHTML = await headin.getHtml();
         if (document.querySelector("#messageDiv").innerHTML == "") {
 
             var text = data.AuthenticatedUser != null? data.AuthenticatedUser.Name:  "unauthenticated";
+            authUserName = data.AuthenticatedUser != null? data.AuthenticatedUser.Name:  "unauthenticated";
+
             let message = {messageType:"online", context: text};
             let msg = JSON.stringify(message);
+            var socket = new MySocket()
 
-            var mysocket = new MySocket()
-            mysocket.connectSocket(msg);
-
-            // mysocket.sendMessage(msg)
-
+            socket.connectSocket(msg);
             document.querySelector("#messageDiv").innerHTML = await chat.getHtml();
         }
     } else {
@@ -150,11 +156,17 @@ document.addEventListener("DOMContentLoaded", () => {
 window.addEventListener("popstate", Router);
 
 
+window.addEventListener("beforeunload", function(){
+    let message = {messageType:"offline", context: authUserName};
+    let msg = JSON.stringify(message);
+    wSocket.mysocket.send(msg);
+
+})
+
+
 const getParams = match => {
     const values = match.result.slice(1);
     const keys = Array.from(match.route.path.matchAll(/:(\w+)/g)).map(result => result[1]);
-
-
 
     var obj = Object.fromEntries(keys.map((key, i) => {
         return [key, values[i]];
@@ -198,33 +210,33 @@ async function fetchData(url) {
 
 
 
-async function fetchFormData(value, url) {
+// async function fetchFormData(value, url) {
 
-    var obj = fetch('/data'+url, {
-        method: 'POST',
-        headers: {
-            'Content-type': 'application/json; charset=UTF-8'
-        },
-        body: JSON.stringify(value)
-    })
-        .then(response => {
+//     var obj = fetch('/data'+url, {
+//         method: 'POST',
+//         headers: {
+//             'Content-type': 'application/json; charset=UTF-8'
+//         },
+//         body: JSON.stringify(value)
+//     })
+//         .then(response => {
 
-            if (!response.ok) {
-                throw new Error(`HTTP error: ${response.status}`);
-            }
-            // Otherwise (if the response succeeded), our handler fetches the response
-            // as text by calling response.text(), and immediately returns the promise
-            // returned by `response.text()`.
-            return response.text()
+//             if (!response.ok) {
+//                 throw new Error(`HTTP error: ${response.status}`);
+//             }
+//             // Otherwise (if the response succeeded), our handler fetches the response
+//             // as text by calling response.text(), and immediately returns the promise
+//             // returned by `response.text()`.
+//             return response.text()
 
-        })
-        .then(json => JSON.parse(json))
-        .catch(err => console.error(`Fetch problem: ${err.message}`))
+//         })
+//         .then(json => JSON.parse(json))
+//         .catch(err => console.error(`Fetch problem: ${err.message}`))
 
 
 
-    return obj
-}
+//     return obj
+// }
 
 
 

@@ -259,7 +259,17 @@ func (u *UserModel) EmailExist(email string) (bool, string, error) {
 }
 
 func (u *UserModel) GetAllUsers() ([]*User, error) {
-	stmt := `SELECT username, forname, surname, email FROM users ORDER BY username`
+	// stmt := `SELECT username, forname, surname, email FROM users ORDER BY username`
+
+	stmt :=  `SELECT DISTINCT users.username FROM users 
+	JOIN messages on messages.sender_id = users.username 
+	WHERE messages.receiver_id ="Keiti"  
+	ORDER bBY messages.sent_at, username COLLATE NOCASE ASC`
+
+
+
+	// SELECT DISTINCT users.username FROM user WHERE username = Keiti, JOIN messages on messages.sender_id = users.username order by messages.sent_at, username COLLATE NOCASE ASC
+
 
 	rows, err := u.DB.Query(stmt)
 	fmt.Println(rows)

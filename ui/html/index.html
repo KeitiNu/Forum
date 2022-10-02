@@ -41,7 +41,7 @@
         </nav>
     </div>
 
-    <script src="/static/js/chat.js"></script>
+    <!-- <script src="/static/js/chat.js"></script> -->
     <script src="https://code.iconify.design/iconify-icon/1.0.0/iconify-icon.min.js"></script>
 
     <!-- Bootstrap Buncle with Popper -->
@@ -134,7 +134,13 @@
                 const tempLocation = document.querySelector('.registerlink')
 
                 if (o.AuthenticatedUser != null) {
-                    document.cookie = "auth=true;"
+
+                    var now = new Date();
+                    var time = now.getTime();
+                    var expireTime = time + 1000 * 3600;
+                    now.setTime(expireTime);
+                    document.cookie = 'auth=true;expires='+now.toUTCString();
+
 
                     tempLink.href = '/'
                     tempLink.dataset.link = true;
@@ -163,32 +169,26 @@
         $('#messageDiv').on('submit', 'form', async function (e) {
             e.preventDefault()
 
+
             var data = new FormData(e.target)
             var values = Object.fromEntries(data.entries())
+            debugger
+
             if (values["Message"] != "") {
 
                 const location = window.location.pathname
                 var o = await fetchFormData(values, "/chat")
 
-                this.params = o
-                console.log(o)
-
-                const errors = this.params.Form.Errors.Errors
-                const keys = Object.keys(errors)
-
-                if (keys.length == 0) {
-                    // const tempLink = document.createElement('a')
-                    // const tempLocation = document.querySelector('.mainpagecontent')
-
-                    // tempLink.href = location
-                    // tempLink.dataset.link = true
-
-                    // tempLocation.appendChild(tempLink)
-                    // tempLink.click()
-
-                }
             }
 
+            let input = document.getElementById('input_text')
+            let date = new Date()
+            let bubble = createBubble(input.value, user, "user", `${date.getHours()}:${date.getMinutes()}`)
+            document.getElementById("chat_area").appendChild(bubble)
+            input.value = ""
+            
+            let chat = document.getElementById("chat_area")
+            chat.scrollTop = chat.scrollHeight
 
         })
 
@@ -264,6 +264,25 @@
 
             return obj
         }
+
+
+
+        function getCookieExpDate(cname) {
+            debugger
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for(let i = 0; i <ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+  }
     </script>
 
 

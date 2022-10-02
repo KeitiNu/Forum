@@ -28,6 +28,10 @@ class MySocket{
       if (json.OfflineUser) {
         changeStatus(json.OfflineUser, 0);
       }
+
+      if (json.Sender) {
+        notify(json.Sender, json.Message)
+      }
     }
 
 
@@ -35,25 +39,16 @@ class MySocket{
       console.log("socket opend")
       console.log("MSG:",  msg)
 
+
+
       socket.send(msg);
       // this.counter++;
     }; 
 
 
-    socket.onclose = (e)=>{
-      e.preventDefault();
-      // socket.send({"Closing"});
-
+    socket.onclose = ()=>{
       console.log("socket close")
     }
     
   }
-
-
-  // sendMessage(msg){
-  //   // var string = msg.toString()
-  //   console.log(msg)
-  //   this.mysocket.send("send messagde");
-  // }
-
 }

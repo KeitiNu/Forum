@@ -3,6 +3,7 @@ package data
 import (
 	"database/sql"
 	"fmt"
+	"time"
 
 	"github.com/mattn/go-sqlite3"
 )
@@ -20,9 +21,14 @@ type MessageModel struct {
 
 func (msg MessageModel) Insert(message *Message) error {
 	query := `INSERT INTO messages (sender_id, receiver_id, content, sent_at)
-	VALUES(?, ? ,?, datetime('now'))`
+	VALUES(?, ? ,?, ?)`
 
-	args := []interface{}{message.Sender, message.Recipient, message.Content}
+	fmt.Println(time.Now())
+	sering := time.Now().Format("2006-01-02 15:04:05")
+
+	fmt.Print("TIME NOW: ", sering)
+
+	args := []interface{}{message.Sender, message.Recipient, message.Content, sering}
 
 	// If the table already contains a record with this email address, then when we try
 	// to perform the insert there will be a violation of the UNIQUE "users_email_key"
@@ -48,6 +54,8 @@ func (msg MessageModel) GetMessages(rec_id string, sender_id string, offset int)
 
 	// query := `INSERT INTO messages (sender_id, receiver_id, content, sent_at)
 	// VALUES(?, ? ,?, datetime('now'))`
+
+
 
 	query := `SELECT sender_id, receiver_id, content, sent_at FROM messages
 	WHERE sender_id = ? AND receiver_id = ? OR receiver_id = ? AND sender_id = ?
