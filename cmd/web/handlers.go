@@ -50,7 +50,7 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		categories, err := app.models.Categories.Latest()
 		if err != nil {
 			app.serverError(w, err)
-		// }
+		}
 		// currentUser := app.contextGetUser(r)
 
 
