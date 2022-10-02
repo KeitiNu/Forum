@@ -60,7 +60,7 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		// users, err := app.models.Users.GetAllUsers(currentUser.Name)
 
 
-		app.render(w, r, "index.html", &templateData{Categories: categories, AuthenticatedUser: currentUser, Users: users})
+		app.render(w, r, "index.html", &templateData{Categories: categories})
 
 	case "POST":
 		app.serverError(w, errors.New("POST METHOD NOT ALLOWED"))
