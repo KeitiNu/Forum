@@ -45,7 +45,7 @@ func (app *application) showCategory(w http.ResponseWriter, r *http.Request, cat
 		app.serverError(w, err)
 	}
 
-	data := &templateData{Posts: posts, Categories: categories, Users: users}
+	data := &templateData{Posts: posts, Categories: categories, Users: users, AuthenticatedUser: currentUser}
 	app.serveAsJSON(w, data)
 
 	// j, err := json.Marshal(data)

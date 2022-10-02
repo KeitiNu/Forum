@@ -105,7 +105,7 @@ const Router = async () => {
     document.querySelector("#app").innerHTML = await view.getHtml();
 
 
-
+debugger
 
     if (authenticated) {
         const chat = new Chat(data);
@@ -114,10 +114,9 @@ const Router = async () => {
         document.querySelector("#header").innerHTML = await headin.getHtml();
         if (document.querySelector("#messageDiv").innerHTML == "") {
 
-            var text = data.AuthenticatedUser != null? data.AuthenticatedUser.Name:  "unauthenticated";
             authUserName = data.AuthenticatedUser != null? data.AuthenticatedUser.Name:  "unauthenticated";
 
-            let message = {messageType:"online", context: text};
+            let message = {messageType:"online", context: authUserName};
             let msg = JSON.stringify(message);
             var socket = new MySocket()
 
@@ -126,6 +125,7 @@ const Router = async () => {
         }
     } else {
         const headout = new HeaderOut();
+        document.querySelector("#messageDiv").innerHTML == ""
         document.querySelector("#header").innerHTML = await headout.getHtml();
     }
 
@@ -206,37 +206,6 @@ async function fetchData(url) {
 
     return obj
 }
-
-
-
-
-// async function fetchFormData(value, url) {
-
-//     var obj = fetch('/data'+url, {
-//         method: 'POST',
-//         headers: {
-//             'Content-type': 'application/json; charset=UTF-8'
-//         },
-//         body: JSON.stringify(value)
-//     })
-//         .then(response => {
-
-//             if (!response.ok) {
-//                 throw new Error(`HTTP error: ${response.status}`);
-//             }
-//             // Otherwise (if the response succeeded), our handler fetches the response
-//             // as text by calling response.text(), and immediately returns the promise
-//             // returned by `response.text()`.
-//             return response.text()
-
-//         })
-//         .then(json => JSON.parse(json))
-//         .catch(err => console.error(`Fetch problem: ${err.message}`))
-
-
-
-//     return obj
-// }
 
 
 

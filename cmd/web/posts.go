@@ -156,7 +156,7 @@ func (app *application) showPost(w http.ResponseWriter, r *http.Request, idStrin
 			user = &data.User{}
 		}
 
-		data := &templateData{User: user, Post: post, Comments: comments, Users: users}
+		data := &templateData{User: user, Post: post, Comments: comments, Users: users, AuthenticatedUser: user}
 
 		j, err := json.Marshal(data)
 		if err != nil {
