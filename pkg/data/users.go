@@ -23,7 +23,10 @@ type User struct {
 	Hashed_password string
 	CreatedAt       time.Time
 	Online          int
-	Messages    	[]Message
+	Messages        []Message
+	LastMessage     sql.NullString
+	LastReceived     sql.NullString
+
 }
 
 type password struct {
@@ -258,41 +261,71 @@ func (u *UserModel) EmailExist(email string) (bool, string, error) {
 	return true, user.Name, nil
 }
 
-func (u *UserModel) GetAllUsers() ([]*User, error) {
+func (u *UserModel) GetAllUsers(myId string) ([]*User, error) {
+	myId = "Keiti"
 	// stmt := `SELECT username, forname, surname, email FROM users ORDER BY username`
 
-	stmt :=  `SELECT DISTINCT users.username FROM users 
-	JOIN messages on messages.sender_id = users.username 
-	WHERE messages.receiver_id ="Keiti"  
-	ORDER bBY messages.sent_at, username COLLATE NOCASE ASC`
+	// stmt1 := `
+	// SELECT sender_id, receiver_id, MAX(sent_at)
+	// FROM messages 
+	// WHERE sender_id = ? OR receiver_id = ?
+	// `
 
+	// stmt2 := `
+	// SELECT MAX(sent_at)
+	// FROM messages 
+	// WHERE sender_id = ? OR receiver_id = ?
+	// `
 
+	//MAX(mt.sent_at), MAX(m.sent_at) 
+	
+	stmt := `SELECT users.username, users.forname, users.surname, users.email, MAX(mt.sent_at), MAX(m.sent_at)  FROM users                                                                                                                                                             
+        LEFT OUTER JOIN messages m on m.sender_id = users.username AND m.receiver_id = ?
+        LEFT OUTER JOIN messages mt on mt.receiver_id = users.username AND mt.sender_id = ?
+        GROUP BY users.username ORDER BY MAX(mt.sent_at, m.sent_at), users.username COLLATE NOCASE ASC`
+
+	// stmt := `SELECT DISTINCT username, forname, surname, email, MAX(m.sent_at), MAX(mt.sent_at) FROM users
+	// LEFT OUTER JOIN messages m on m.sender_id = users.username
+	// LEFT OUTER JOIN messages mt on mt.receiver_id = users.username
+	// WHERE m.receiver_id = "Keiti" OR m.sender_id = "Keiti"
+	// OR mt.receiver_id = "Keiti" OR mt.sender_id = "Keiti"
+	// ORDER BY mt.sent_at, m.sent_at, users.username`
+
+	//username COLLATE NOCASE ASC
+	//SELECT DISTINCT username, forname, surname, email FROM users JOIN messages on messages.sender_id = users.username WHERE messages.receiver_id = "Keiti" OR messages.sender_id = "Keiti"  ORDER BY messages.sent_at, username COLLATE NOCASE ASC
 
 	// SELECT DISTINCT users.username FROM user WHERE username = Keiti, JOIN messages on messages.sender_id = users.username order by messages.sent_at, username COLLATE NOCASE ASC
 
+	rows, err := u.DB.Query(stmt, myId, myId)
 
-	rows, err := u.DB.Query(stmt)
-	fmt.Println(rows)
+
 	if err != nil {
 		return nil, err
 	}
 
+	
 	defer rows.Close()
-
+	
 	users := []*User{}
-
+	
 	for rows.Next() {
+
 		s := &User{}
 
-		err := rows.Scan(&s.Name, &s.Forname, &s.Surname, &s.Email)
+		err := rows.Scan(&s.Name, &s.Forname, &s.Surname, &s.Email, &s.LastReceived, &s.LastMessage)
 		if err != nil {
+			fmt.Println("ERROR")
 			return nil, err
 		}
+		fmt.Println("ROW SCANNED: ", s)
 		users = append(users, s)
 	}
+
+	fmt.Println("USERS: ", users)
 
 	if err = rows.Err(); err != nil {
 		return nil, err
 	}
+
 	return users, nil
 }

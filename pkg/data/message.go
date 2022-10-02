@@ -90,3 +90,39 @@ func (msg MessageModel) GetMessages(rec_id string, sender_id string, offset int)
 	}
 	return messages, nil
 }
+
+
+// func (msg *MessageModel) getRecentMessages(myId string) ([]*Message, error) {
+// 	stmt := `
+// 	SELECT sender_id, receiver_id, MAX(sent_at)
+// 	FROM messages 
+// 	WHERE sender_id = ? OR receiver_id = ?
+// 	`
+
+// 	rows, err := msg.DB.Query(stmt, myId, myId)
+
+// 	if err != nil {
+// 		return nil, err
+// 	}
+
+// 	defer rows.Close()
+
+// 	recentUsers := []*Message{}
+
+// 	for rows.Next() {
+// 		s := &Message{}
+
+// 		err := rows.Scan(&s.Recipient, &s.Sender, &s.SentAt)
+// 		if err != nil {
+// 			return nil, err
+// 		}
+// 		fmt.Println(s)
+// 		recentUsers = append(recentUsers, s)
+// 	}
+
+// 	if err = rows.Err(); err != nil {
+// 		return nil, err
+// 	}
+
+// 	return recentUsers, nil
+// }

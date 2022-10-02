@@ -23,7 +23,7 @@ type Models struct {
 	Posts      PostModel
 	Comments   CommentsModel
 	Categories CategoryModel
-	Messages MessageModel
+	Messages   MessageModel
 
 }
 
@@ -34,7 +34,7 @@ func NewModels(db *sql.DB) Models {
 		Posts:      PostModel{DB: db},
 		Comments:   CommentsModel{DB: db},
 		Categories: CategoryModel{DB: db},
-		Messages: MessageModel{DB: db},
+		Messages:   MessageModel{DB: db},
 
 	}
 }

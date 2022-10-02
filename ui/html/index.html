@@ -169,6 +169,7 @@
         $('#messageDiv').on('submit', 'form', async function (e) {
             e.preventDefault()
 
+            // saves the message to the database
 
             var data = new FormData(e.target)
             var values = Object.fromEntries(data.entries())
@@ -181,6 +182,8 @@
 
             }
 
+            // adds a chat bubble to the chat and scrolls the user to the bottom
+
             let input = document.getElementById('input_text')
             let date = new Date()
             let bubble = createBubble(input.value, user, "user", `${date.getHours()}:${date.getMinutes()}`)
@@ -190,6 +193,22 @@
             let chat = document.getElementById("chat_area")
             chat.scrollTop = chat.scrollHeight
 
+            // moves the person you send a message to to the top of activities
+
+            let activity = document.getElementById("activity")
+            let username = document.getElementById("recipientId").value
+
+            let divs = activity.childNodes
+            let index = 0
+
+            div.forEach((elem, i) => {
+                if (elem.id == `status-${username}`) {
+                    index = i
+                }
+            })
+
+            divs.unshift(data.splice(index, 1)[0]);
+            activity.childNodes = divs
         })
 
         $('#app').on('submit', 'form', async function (e) {

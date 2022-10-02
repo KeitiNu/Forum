@@ -28,7 +28,9 @@ func (app *application) showCategory(w http.ResponseWriter, r *http.Request, cat
 		app.serverError(w, err)
 	}
 
-	users, err := app.models.Users.GetAllUsers()
+	currentUser := app.contextGetUser(r)
+
+	users, err := app.models.Users.GetAllUsers(currentUser.Name)
 
 	if err != nil {
 		app.serverError(w, err)

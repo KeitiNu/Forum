@@ -51,14 +51,14 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			app.serverError(w, err)
 		}
+		currentUser := app.contextGetUser(r)
 
-		users, err := app.models.Users.GetAllUsers()
 
 		if err != nil {
 			app.serverError(w, err)
 		}
+		users, err := app.models.Users.GetAllUsers(currentUser.Name)
 
-		currentUser := app.contextGetUser(r)
 
 		app.render(w, r, "index.html", &templateData{Categories: categories, AuthenticatedUser: currentUser, Users: users})
 
@@ -135,7 +135,7 @@ func (app *application) data(w http.ResponseWriter, r *http.Request) {
 			categories, _ := app.models.Categories.Latest()
 			currentUser := app.contextGetUser(r)
 
-			users, _ := app.models.Users.GetAllUsers()
+			users, _ := app.models.Users.GetAllUsers(currentUser.Name)
 
 			app.serveAsJSON(w, &templateData{Categories: categories, AuthenticatedUser: currentUser, Users: users})
 		}
@@ -323,7 +323,7 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		users, err := app.models.Users.GetAllUsers()
+		users, err := app.models.Users.GetAllUsers(authUser.Name)
 
 		if err != nil {
 			app.serverError(w, err)
@@ -458,7 +458,7 @@ func (app *application) profile(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 	}
 
-	users, err := app.models.Users.GetAllUsers()
+	users, err := app.models.Users.GetAllUsers(user.Name)
 
 	if err != nil {
 		app.serverError(w, err)

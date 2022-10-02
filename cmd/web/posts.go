@@ -107,7 +107,7 @@ func (app *application) submitPost(w http.ResponseWriter, r *http.Request) {
 			fmt.Println("error happened", err)
 		}
 
-		users, err := app.models.Users.GetAllUsers()
+		users, err := app.models.Users.GetAllUsers(user.Name)
 
 		if err != nil {
 			app.serverError(w, err)
@@ -141,7 +141,7 @@ func (app *application) showPost(w http.ResponseWriter, r *http.Request, idStrin
 	}
 	user := app.contextGetUser(r)
 
-	users, err := app.models.Users.GetAllUsers()
+	users, err := app.models.Users.GetAllUsers(user.Name)
 
 	if err != nil {
 		app.serverError(w, err)
@@ -312,7 +312,7 @@ func (app *application) comment(w http.ResponseWriter, r *http.Request) {
 	}
 
 	
-	users, err := app.models.Users.GetAllUsers()
+	users, err := app.models.Users.GetAllUsers(user.Name)
 
 	if err != nil {
 		app.serverError(w, err)
