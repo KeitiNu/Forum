@@ -6,10 +6,6 @@ import (
 
 func (app *application) showCategory(w http.ResponseWriter, r *http.Request, category string) {
 
-	// cookie, _ := r.Cookie("session")
-	// fmt.Println(cookie)
-	// fmt.Println("cookie")
-	// fmt.Println(cookie.Expires)
 
 	sortColumn := "created"
 	time := "9999"

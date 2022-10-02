@@ -23,12 +23,9 @@ func (msg MessageModel) Insert(message *Message) error {
 	query := `INSERT INTO messages (sender_id, receiver_id, content, sent_at)
 	VALUES(?, ? ,?, ?)`
 
-	fmt.Println(time.Now())
-	sering := time.Now().Format("2006-01-02 15:04:05")
+	timeNow := time.Now().Format("2006-01-02 15:04:05")
 
-	fmt.Print("TIME NOW: ", sering)
-
-	args := []interface{}{message.Sender, message.Recipient, message.Content, sering}
+	args := []interface{}{message.Sender, message.Recipient, message.Content, timeNow}
 
 	// If the table already contains a record with this email address, then when we try
 	// to perform the insert there will be a violation of the UNIQUE "users_email_key"
@@ -66,7 +63,6 @@ func (msg MessageModel) GetMessages(rec_id string, sender_id string, offset int)
 	// rows, err := msg.DB.Exec(query, args...)
 
 	rows, err := msg.DB.Query(query, args...)
-	fmt.Println(rows)
 	if err != nil {
 		return nil, err
 	}
