@@ -161,7 +161,7 @@
 
         });
 
-        $('#messageDiv').on('submit', 'form', async function (e) {
+        $('#messageDiv').on('submit', 'form#chatmessage', async function (e) {
             e.preventDefault()
 
             // saves the message to the database
@@ -212,7 +212,7 @@
             })
         })
 
-        $('#app').on('submit', 'form', async function (e) {
+        $('#app').on('submit', 'form#threadform', async function (e) {
             e.preventDefault();
 
             var data = new FormData(e.target);
@@ -254,6 +254,57 @@
 
         });
 
+        $('#app').on('submit', 'form#signupform', async function (e) {
+            debugger
+            e.preventDefault();
+
+            var data = new FormData(e.target);
+            var values = Object.fromEntries(data.entries());
+
+            console.log("VALUES FROM SIGNUP: ", values )
+
+
+            const location = window.location.pathname
+
+            var o = await fetchFormData(values, location)
+
+            this.params = o
+            console.log("OBJECT FROM SIGNUP: ", o )
+
+            const errors = this.params.Form.Errors.Errors
+            const keys = Object.keys(errors)
+
+
+            if (keys.length == 0) {
+                const tempLink = document.createElement('a')
+                const tempLocation = document.querySelector('.registerlink')
+
+                // if (o.AuthenticatedUser != null) {
+                    document.cookie = "auth=true;"
+                // }
+
+                tempLink.href = '/'
+                tempLink.dataset.link
+
+                tempLocation.appendChild(tempLink)
+                tempLink.click()
+
+            } else {
+                var errorSpots = document.querySelectorAll('.error')
+
+                errorSpots.forEach(err => {
+                    err.innerHTML = ""
+                });
+
+                console.log("IN ERRORS")
+                keys.map(function (key) {
+                    var spot = $('#error' + key)
+                    spot.text(errors[key])
+                })
+            }
+
+        });
+
 
 
         async function fetchFormData(value, url) {
@@ -283,23 +334,6 @@
             return obj
         }
 
-
-
-        function getCookieExpDate(cname) {
-    let name = cname + "=";
-    let decodedCookie = decodeURIComponent(document.cookie);
-    let ca = decodedCookie.split(';');
-    for(let i = 0; i <ca.length; i++) {
-      let c = ca[i];
-      while (c.charAt(0) == ' ') {
-        c = c.substring(1);
-      }
-      if (c.indexOf(name) == 0) {
-        return c.substring(name.length, c.length);
-      }
-    }
-    return "";
-  }
     </script>
 
 

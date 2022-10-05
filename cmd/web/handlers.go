@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"strconv"
@@ -15,35 +16,6 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-//! SOCKET
-// // Create a variable to store the page where the client was before action (ex. logging in and returning directly to the post)
-// var back string
-
-// var upgrader = websocket.Upgrader{
-// 	ReadBufferSize:  1024,
-// 	WriteBufferSize: 1024,
-// }
-
-// type socketReader struct {
-// 	con  *websocket.Conn
-// 	mode int
-// 	name string
-// }
-
-// var savedsocketreader []*socketReader
-
-type ChatForm struct {
-	Message     string
-	RecipientId string
-	UserId      string
-}
-
-type ChatBoxForm struct {
-	User      string
-	Recipient string
-	Offset    int
-}
-
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
@@ -53,12 +25,10 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		}
 		// currentUser := app.contextGetUser(r)
 
-
 		// if err != nil {
 		// 	app.serverError(w, err)
 		// }
 		// users, err := app.models.Users.GetAllUsers(currentUser.Name)
-
 
 		app.render(w, r, "index.html", &templateData{Categories: categories})
 
@@ -76,7 +46,7 @@ func (app *application) message(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		var c ChatBoxForm
+		var c forms.ChatBoxForm
 
 		decoder := json.NewDecoder(r.Body)
 		err = decoder.Decode(&c)
@@ -112,7 +82,7 @@ func (app *application) data(w http.ResponseWriter, r *http.Request) {
 		path := r.URL.Path[6:]
 		paths := strings.Split(path, "/")
 
-		// fmt.Println("PATH: ", path)
+		fmt.Println("PATH: ", path)
 
 		switch paths[0] {
 		case "category":
@@ -134,10 +104,12 @@ func (app *application) data(w http.ResponseWriter, r *http.Request) {
 		default:
 			categories, _ := app.models.Categories.Latest()
 			currentUser := app.contextGetUser(r)
-
 			users, _ := app.models.Users.GetAllUsers(currentUser.Name)
 
 			app.serveAsJSON(w, &templateData{Categories: categories, AuthenticatedUser: currentUser, Users: users})
+
+			// app.serveAsJSON(w, &templateData{Categories: categories})
+
 		}
 	case "GET":
 		app.serverError(w, errors.New("GET METHOD NOT ALLOWED"))
@@ -152,7 +124,7 @@ func (app *application) chat(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var c ChatForm
+	var c forms.ChatForm
 
 	decoder := json.NewDecoder(r.Body)
 	err = decoder.Decode(&c)
@@ -176,64 +148,6 @@ func (app *application) chat(w http.ResponseWriter, r *http.Request) {
 
 	sendChatNotification(msg.Sender, msg.Recipient, msg.Content)
 }
-
-//! SOCKET
-// func (app *application) socket(w http.ResponseWriter, r *http.Request) {
-// 	switch r.Method {
-// 	case "GET":
-
-// 		if savedsocketreader == nil {
-// 			savedsocketreader = make([]*socketReader, 0)
-// 		}
-
-// 		defer func() {
-// 			err := recover()
-// 			if err != nil {
-// 				log.Println(err)
-// 			}
-// 			r.Body.Close()
-
-// 		}()
-
-// 		con, _ := upgrader.Upgrade(w, r, nil)
-
-// 		ptrSocketReader := &socketReader{
-// 			con: con,
-// 		}
-
-// 		// a, _ := r.Cookie("newsession")
-// 		// fmt.Println(a.Expires)
-
-// 		// ptrSocketReader.con.WriteMessage(websocket.TextMessage, []byte("Greetings from golang"))
-
-// 		_, message, _ := ptrSocketReader.con.ReadMessage()
-// 		fmt.Println("Message retrieved: ", string(message))
-// 		ptrSocketReader.name = string(message)
-// 		savedsocketreader = append(savedsocketreader, ptrSocketReader)
-
-// 		var onlineArr []string
-
-// 		for _, socket := range savedsocketreader {
-
-// 			if !contains(onlineArr, string(socket.name)) {
-// 				onlineArr = append(onlineArr, socket.name)
-// 			}
-// 		}
-
-// 		var names = strings.Join(onlineArr, ", ")
-
-// 		// var len = len(onlineArr)
-// 		// s1 := strconv.Itoa(len)
-
-// 		for _, socket := range savedsocketreader {
-
-// 			socket.con.WriteMessage(websocket.TextMessage, []byte(names))
-// 		}
-
-// 	case "POST":
-// 		app.serverError(w, errors.New("POST METHOD NOT ALLOWED"))
-// 	}
-// }
 
 func (app *application) login(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {

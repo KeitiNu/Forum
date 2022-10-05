@@ -27,6 +27,18 @@ type RegisterForm struct {
 	ConfirmPassword string
 }
 
+type ChatForm struct {
+	Message     string
+	RecipientId string
+	UserId      string
+}
+
+type ChatBoxForm struct {
+	User      string
+	Recipient string
+	Offset    int
+}
+
 func New(data url.Values) *Form {
 	return &Form{
 		data,

@@ -8,57 +8,7 @@ export default class extends AbstractView {
 
 
      get signup() {
-        $(document.body).on('submit', 'form#signupform', async function (e) {
-            debugger
-            e.preventDefault();
-
-            var data = new FormData(e.target);
-            var values = Object.fromEntries(data.entries());
-
-            console.log("VALUES FROM SIGNUP: ", values )
-
-
-            const location = window.location.pathname
-
-            var o = await fetchFormData(values, location)
-
-            this.params = o
-            console.log("OBJECT FROM SIGNUP: ", o )
-
-            const errors = this.params.Form.Errors.Errors
-            const keys = Object.keys(errors)
-
-
-            if (keys.length == 0) {
-                const tempLink = document.createElement('a')
-                const tempLocation = document.querySelector('.registerlink')
-
-                // if (o.AuthenticatedUser != null) {
-                    document.cookie = "auth=true;"
-                // }
-
-                tempLink.href = '/'
-                tempLink.dataset.link
-
-                tempLocation.appendChild(tempLink)
-                tempLink.click()
-
-            } else {
-                var errorSpots = document.querySelectorAll('.error')
-
-                errorSpots.forEach(err => {
-                    err.innerHTML = ""
-                });
-
-                console.log("IN ERRORS")
-                keys.map(function (key) {
-                    var spot = $('#error' + key)
-                    spot.text(errors[key])
-                })
-            }
-
-        });
-
+      
 
         async function fetchFormData(value, url) {
 

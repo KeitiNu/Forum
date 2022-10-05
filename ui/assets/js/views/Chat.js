@@ -35,7 +35,7 @@ export default class extends AbstractView {
                 </div>
 
                 <div id="input" class="input remove" method="POST">
-                <form>
+                <form id="chatmessage">
                     <input id="input_text" class="quick remove" name="Message" value="" autocomplete="off"></input>
                     <input type="hidden" name="RecipientId" id="recipientId"></input>
                     <input type="hidden" name="UserId" value="${currentUser}"></input>

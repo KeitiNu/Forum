@@ -6,16 +6,6 @@ export default class extends AbstractView {
         this.setTitle("Kodify - Post");
     }
 
-    // get submitComment(){
-
-       
-        // <div style="display: none">${this.submitComment}</div>
-    
-    
-      
-    
-    // };
-
 
     async getHtml() {
         return `

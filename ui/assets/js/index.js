@@ -87,36 +87,29 @@ const Router = async () => {
     const v = getParams(match);
     var dataUrl = "/data/"
 
+    debugger
     if (v.id != undefined && v.url != undefined) {
         dataUrl += v.url + v.id;
+    }else if (v.url != undefined && v.url != "/"){
+        dataUrl += v.url ;
     }
 
     
-    if (v.url == "/profile") {
-        dataUrl = "/data/profile"
-    }
-
-    if (v.url == "/comment") {
-        dataUrl = "/data/comment"
-    }
-
     var data = await fetchData(dataUrl);
     const view = new match.route.view(data);
     document.querySelector("#app").innerHTML = await view.getHtml();
 
 
-debugger
-
     if (authenticated) {
         const chat = new Chat(data);
         const headin = new HeaderIn();
-        
+
         document.querySelector("#header").innerHTML = await headin.getHtml();
         if (document.querySelector("#messageDiv").innerHTML == "") {
 
-            authUserName = data.AuthenticatedUser != null? data.AuthenticatedUser.Name:  "unauthenticated";
+            authUserName = data.AuthenticatedUser != null ? data.AuthenticatedUser.Name : "unauthenticated";
 
-            let message = {messageType:"online", context: authUserName};
+            let message = { messageType: "online", context: authUserName };
             let msg = JSON.stringify(message);
             var socket = new MySocket()
 
