@@ -29,9 +29,19 @@ class MySocket{
         changeStatus(json.OfflineUser, 0);
       }
 
-      if (json.Sender) {
+      if (json.ContextType == "chat"){
         notify(json.Sender, json.Message)
+        
+      }else if (json.ContextType == "typing"){
+        typing(json.Sender)
+
       }
+
+      // if (json.Message) {
+      //   notify(json.Sender, json.Message)
+      // }else if (json.Sender) {
+      //   typing(json.Sender)
+      // }
     }
 
 

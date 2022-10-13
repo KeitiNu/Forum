@@ -149,6 +149,38 @@ func (app *application) chat(w http.ResponseWriter, r *http.Request) {
 	sendChatNotification(msg.Sender, msg.Recipient, msg.Content)
 }
 
+func (app *application) typing(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case "POST":
+
+		err := r.ParseForm()
+		if err != nil {
+			app.serverError(w, err)
+			return
+		}
+
+		var c forms.ChatForm
+
+		decoder := json.NewDecoder(r.Body)
+		err = decoder.Decode(&c)
+		if err != nil {
+
+			app.serverError(w, err)
+			return
+		}
+
+		if c.UserId != c.RecipientId {
+			typingInProgress(c.UserId, c.RecipientId)
+		}
+
+		app.serveAsJSON(w, &templateData{})
+
+	case "GET":
+		app.serverError(w, errors.New("GET METHOD NOT ALLOWED"))
+	}
+
+}
+
 func (app *application) login(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET": // When a person clicks the login link, the form appears.

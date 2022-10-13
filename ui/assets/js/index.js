@@ -9,7 +9,6 @@ import ShowCat from "./views/ShowCat.js";
 import PostView from "./views/PostView.js";
 import NewPost from "./views/NewPost.js";
 import Chat from "./views/Chat.js";
-import connectSocket from "./views/Chat.js";
 
 
 

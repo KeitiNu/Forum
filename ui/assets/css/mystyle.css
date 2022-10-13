@@ -1053,3 +1053,7 @@ span.badge.me-2.bg-primary {
     float: right;
     width: 25%;
 }
+
+​div.loading::after {
+    content:url(static/css/images/logo_white.png);
+}

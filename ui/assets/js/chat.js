@@ -13,6 +13,7 @@ const openChat = async (e) => {
     let dialog = document.getElementById('dialog')
     let chat = document.getElementById("chat_area")
 
+
     let input = {
         "container": document.getElementById('input'),
         "input": document.getElementById("input_text"),
@@ -31,8 +32,21 @@ const openChat = async (e) => {
         
         let bell = document.getElementById(`bell-${recipient}`)
         recipientField.value = recipient;
+        let input_field = document.getElementById("input_text")
         document.getElementById("input_text").textContent = recipient
         
+        $('#messageDiv').on('keyup', '#input_text', function (e) {
+
+        
+        // input_field.addEventListener("keyup", function (e) {
+
+debounce(typingInProgress(user, recipient), 1000, true)
+
+            
+            
+        });
+
+
         disable = true
         offset = 0
 
@@ -252,13 +266,42 @@ const notify = (sender, message) => {
     }
 }
 
+const typing = (sender) =>{
+    let chat = document.getElementById("chat_area")
+    var alreadyLoading = chat.lastElementChild.classList.contains("loading");
+
+    if (sender == recipient && !alreadyLoading && sender != user) {
+
+        let container = document.createElement('div')
+        let info = document.createElement('div')
+        let username = document.createElement('p')
+
+        container.className = "recipient loading"
+        info.className = "info"
+        username.textContent = sender
+
+        let img = document.createElement("img");
+        img.src = 'static/css/images/dots.gif'
+        img.width = 24
+
+    info.appendChild(username)
+    info.appendChild(img)
+    container.appendChild(info)
+    chat.appendChild(container)
+
+    }
+
+
+
+}
+
 // moves the user to the top of activities list
 const moveToTop = (username) => {
     let activity = document.getElementById("activity")
     let divs = activity.childNodes
     let index = 0
 
-    div.forEach((elem, i) => {
+    divs.forEach((elem, i) => {
         if (elem.id == `status-${username}`) {
             index = i
         }
@@ -267,3 +310,52 @@ const moveToTop = (username) => {
     divs.unshift(data.splice(index, 1)[0]);
     activity.childNodes = divs
 }
+
+
+
+function typingInProgress(sender, recipient){
+    var values =             {
+        UserId: sender,
+        RecipientId: recipient,
+    }
+
+    var obj = fetch('/typing', {
+        method: 'POST',
+        headers: {
+            'Content-type': 'application/json; charset=UTF-8'
+        },
+        body: JSON.stringify(values)
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error: ${response.status}`);
+            }
+            // Otherwise (if the response succeeded), our handler fetches the response
+            // as text by calling response.text(), and immediately returns the promise
+            // returned by `response.text()`.
+            return response.text()
+
+        })
+        .then(json => JSON.parse(json))
+        .catch(err => console.error(`Fetch problem: ${err.message}`))
+
+    return obj
+}
+
+
+
+function debounce(func, wait, immediate) {
+    var timeout;
+    return function() {
+        var context = this,
+            args = arguments;
+        var later = function() {
+            timeout = null;
+            if (!immediate) func.apply(context, args);
+        };
+        var callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+        if (callNow) func.apply(context, args);
+    };
+};

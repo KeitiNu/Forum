@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -42,6 +43,7 @@ type Context struct {
 type RecievedMessage struct {
 	MessageType string `json:"messageType"`
 	Context     string `json:"context"`
+	Recipient   string `json:"recipient"`
 }
 
 // var savedSocketReader []*socketReader = make([]*socketReader, 0)
@@ -84,13 +86,35 @@ func (app *application) socket(w http.ResponseWriter, r *http.Request) {
 		// ptrSocketReader.con.WriteMessage(websocket.TextMessage, []byte("Greetings from golang"))
 
 		name = msg.Context
-		if msg.MessageType == "offline" {
-			removeSocketReader(msg.Context)
-		} else {
-			savedSocketReaders[name] = ptrSocketReader
 
+		switch msg.MessageType {
+		case "offline":
+			removeSocketReader(msg.Context)
+			break
+		case "online":
+			savedSocketReaders[name] = ptrSocketReader
 			sendOnlineUserInfo()
+			break
+		case "typing":
+			fmt.Println("typing")
+			break
+		default:
+			break
 		}
+
+		// if msg.MessageType == "offline" {
+		// 	removeSocketReader(msg.Context)
+		// }
+		// if msg.MessageType == "online" {
+
+		// 	savedSocketReaders[name] = ptrSocketReader
+		// 	sendOnlineUserInfo()
+		// }
+
+		// if msg.MessageType == "typing" {
+		// 	typingInProgress("sender", "recipient")
+
+		// }
 
 	case "POST":
 		app.serverError(w, errors.New("POST METHOD NOT ALLOWED"))
@@ -137,7 +161,19 @@ func sendChatNotification(sender string, recipient string, message string) {
 	for name, socket := range savedSocketReaders {
 		if name == recipient {
 			socket.con.WriteJSON(context)
+		}
+	}
+}
 
+func typingInProgress(sender string, recipient string) {
+	var context = &Context{
+		ContextType: "typing",
+		Sender:      sender,
+	}
+
+	for name, socket := range savedSocketReaders {
+		if name == recipient {
+			socket.con.WriteJSON(context)
 		}
 	}
 }
@@ -146,9 +182,9 @@ func fillInfo(recipient string, offset int) {
 	// const db = new sqlite3.Database("database.db");
 	var sql string = `
     SELECT
-        sender_id, 
-        recipient_id, 
-        content, 
+        sender_id,
+        recipient_id,
+        content,
         sent_at
     FROM messages
     WHERE
