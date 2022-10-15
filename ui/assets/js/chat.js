@@ -262,7 +262,9 @@ const notify = (sender, message) => {
 
 const typing = (sender) => {
     let chat = document.getElementById("chat_area")
-    var alreadyLoading = chat.lastElementChild.classList.contains("loading");
+    var loadingDiv = chat.lastElementChild;
+    var alreadyloading = loadingDiv != null?  loadingDiv.classList.contains("loading"):false
+    // var alreadyLoading = chat.lastElementChild.classList.contains("loading");
 
     if (sender == recipient && !alreadyLoading && sender != user) {
 
@@ -298,7 +300,7 @@ function startRemoveCouter(){
     console.log("here")
      removeTimer = setTimeout(() => {
         $( ".loading" ).remove();
-    }, 3000);
+    }, 1000);
 }
 
 // moves the user to the top of activities list
