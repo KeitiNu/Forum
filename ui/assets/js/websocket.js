@@ -34,7 +34,6 @@ class MySocket{
         
       }else if (json.ContextType == "typing"){
         typing(json.Sender)
-
       }
 
       // if (json.Message) {

@@ -4,6 +4,8 @@ let recipient = undefined
 let disable = false;
 let offset = 0
 
+let removeTimer = 0;
+
 /* Opening and loading old messages */
 
 // Open chat between two two users
@@ -32,20 +34,12 @@ const openChat = async (e) => {
         
         let bell = document.getElementById(`bell-${recipient}`)
         recipientField.value = recipient;
-        let input_field = document.getElementById("input_text")
+        // let input_field = document.getElementById("input_text")
         document.getElementById("input_text").textContent = recipient
         
-        $('#messageDiv').on('keyup', '#input_text', function (e) {
-
-        
-        // input_field.addEventListener("keyup", function (e) {
-
-debounce(typingInProgress(user, recipient), 1000, true)
-
-            
-            
+        $('#messageDiv').on('keyup', '#input_text', function () {
+            debounce(typingInProgress(user, recipient), 2000, true)
         });
-
 
         disable = true
         offset = 0
@@ -266,7 +260,7 @@ const notify = (sender, message) => {
     }
 }
 
-const typing = (sender) =>{
+const typing = (sender) => {
     let chat = document.getElementById("chat_area")
     var alreadyLoading = chat.lastElementChild.classList.contains("loading");
 
@@ -284,15 +278,27 @@ const typing = (sender) =>{
         img.src = 'static/css/images/dots.gif'
         img.width = 24
 
-    info.appendChild(username)
-    info.appendChild(img)
-    container.appendChild(info)
-    chat.appendChild(container)
-
+        info.appendChild(username)
+        info.appendChild(img)
+        container.appendChild(info)
+        chat.appendChild(container)
+        startRemoveCouter();
+    }else{
+        resetRemoveCouter()
     }
+}
 
+function resetRemoveCouter(){
+    clearTimeout(removeTimer);
+    startRemoveCouter();
 
+}
 
+function startRemoveCouter(){
+    console.log("here")
+     removeTimer = setTimeout(() => {
+        $( ".loading" ).remove();
+    }, 3000);
 }
 
 // moves the user to the top of activities list
@@ -314,6 +320,7 @@ const moveToTop = (username) => {
 
 
 function typingInProgress(sender, recipient){
+
     var values =             {
         UserId: sender,
         RecipientId: recipient,
