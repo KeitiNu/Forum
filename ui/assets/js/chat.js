@@ -36,9 +36,11 @@ const openChat = async (e) => {
         recipientField.value = recipient;
         // let input_field = document.getElementById("input_text")
         document.getElementById("input_text").textContent = recipient
-        
-        $('#messageDiv').on('keyup', '#input_text', function () {
-            debounce(typingInProgress(user, recipient), 2000, true)
+
+        $('#messageDiv').on('keyup', '#input_text', function (e) {
+            if ((e.which <= 90 && e.which >= 48) || (e.which >= 96 && e.which <= 111)  || e.which >= 186){
+                debounce(typingInProgress(user, recipient), 2000, true)
+            }
         });
 
         disable = true
@@ -246,6 +248,7 @@ const changeStatus = (username, status) => {
 
 const notify = (sender, message) => {
     if (sender == recipient) {
+        removeLoadingDiv();
         let chat = document.getElementById("chat_area")
         let bubble = createBubble(message, sender, "recipient", getDateformat(new Date()))
         chat.appendChild(bubble)
@@ -262,11 +265,10 @@ const notify = (sender, message) => {
 
 const typing = (sender) => {
     let chat = document.getElementById("chat_area")
-    var loadingDiv = chat.lastElementChild;
-    var alreadyloading = loadingDiv != null?  loadingDiv.classList.contains("loading"):false
-    // var alreadyLoading = chat.lastElementChild.classList.contains("loading");
+    var loadingDiv = document.getElementsByClassName("loading")
+    var alreadyloading = loadingDiv.length > 0;
 
-    if (sender == recipient && !alreadyLoading && sender != user) {
+    if (sender == recipient && !alreadyloading && sender != user) {
 
         let container = document.createElement('div')
         let info = document.createElement('div')
@@ -283,7 +285,8 @@ const typing = (sender) => {
         info.appendChild(username)
         info.appendChild(img)
         container.appendChild(info)
-        chat.appendChild(container)
+
+        chat.after(container)
         startRemoveCouter();
     }else{
         resetRemoveCouter()
@@ -299,8 +302,12 @@ function resetRemoveCouter(){
 function startRemoveCouter(){
     console.log("here")
      removeTimer = setTimeout(() => {
-        $( ".loading" ).remove();
+        removeLoadingDiv();
     }, 1000);
+}
+
+function removeLoadingDiv(){
+    $( ".loading" ).remove();
 }
 
 // moves the user to the top of activities list
@@ -323,7 +330,7 @@ const moveToTop = (username) => {
 
 function typingInProgress(sender, recipient){
 
-    var values =             {
+    var values = {
         UserId: sender,
         RecipientId: recipient,
     }
@@ -339,9 +346,6 @@ function typingInProgress(sender, recipient){
             if (!response.ok) {
                 throw new Error(`HTTP error: ${response.status}`);
             }
-            // Otherwise (if the response succeeded), our handler fetches the response
-            // as text by calling response.text(), and immediately returns the promise
-            // returned by `response.text()`.
             return response.text()
 
         })

@@ -25,6 +25,7 @@ class MySocket{
       onlineUsers.forEach(user => {
         changeStatus(user, 1);
       });
+      
       if (json.OfflineUser) {
         changeStatus(json.OfflineUser, 0);
       }

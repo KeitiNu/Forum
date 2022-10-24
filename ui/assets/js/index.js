@@ -80,26 +80,38 @@ const Router = async () => {
 
     if(!authenticated && match.route.path != '/signup' && match.route.path != '/login'){
         location.assign('http://localhost:8090/login')
+        // return
     }
 
 
     const v = getParams(match);
     var dataUrl = "/data/"
 
-    debugger
     if (v.id != undefined && v.url != undefined) {
         dataUrl += v.url + v.id;
-    }else if (v.url != undefined && v.url != "/"){
-        dataUrl += v.url ;
+    }else if (v.url != undefined){
+        dataUrl = "/data" + v.url ;
+    }
+
+    if (v.url == "/submit") {
+        dataUrl = "/data/"
     }
 
     
-    var data = await fetchData(dataUrl);
-    const view = new match.route.view(data);
+    var view;
+
+    if (v.url == "/login" || v.url == "/signup" || (v.url == "/" && !authenticated)) {
+        view = new match.route.view({})
+    } else {
+        var data = await fetchData(dataUrl);
+        view = new match.route.view(data);
+    }
+        
+ 
     document.querySelector("#app").innerHTML = await view.getHtml();
 
 
-    if (authenticated) {
+    if (authenticated && v.url != "/login" && v.url != "/signup") {
         const chat = new Chat(data);
         const headin = new HeaderIn();
 
@@ -177,13 +189,12 @@ const getParams = match => {
 };
 
 
-async function fetchData(url) {
 
+async function fetchData(url) {
     var obj = fetch(url, {
         method: 'POST'
     })
         .then(response => {
-
             if (!response.ok) {
                 throw new Error(`HTTP error: ${response.status}`);
             }
@@ -194,7 +205,7 @@ async function fetchData(url) {
 
         })
         .then(json => JSON.parse(json))
-        .catch(err => console.error(`Fetch problem: ${err.message}`))
+        .catch(err => console.log(`Fetch problem: ${err.message}`))
 
     return obj
 }

@@ -6,53 +6,8 @@ export default class extends AbstractView {
         this.setTitle("Kodify - Login");
     }
 
-
-    get login(){
- 
-    
-        async function fetchFormData(value, url) {
-            var obj = fetch('/data'+url, {
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json; charset=UTF-8'
-                },
-                body: JSON.stringify(value)
-            })
-                .then(response => {
-
-                    if (!response.ok) {
-                        throw new Error(`HTTP error: ${response.status}`);
-                    }
-                    // Otherwise (if the response succeeded), our handler fetches the response
-                    // as text by calling response.text(), and immediately returns the promise
-                    // returned by `response.text()`.
-
-                    // console.log("RESPONSEtext:", response.text())
-
-                    return response.text()
-    
-                })
-                .then(json => {
-                    // console.log("RESPONSEtext:", json)
-                    
-                    
-                    return JSON.parse(json)})
-                .catch(err => console.error(`Fetch problem: ${err.message}`))
-    
-
-                
-            var ans = obj.then(function (result) {
-                return result; // "Some User token"
-            })
-
-            return obj
-        }
-    
-    };
-
     async getHtml() {
         return `
-        <div style="display: none">${this.login}</div>
         <div class="loginboxcontent">
         <div class=loginbox>
             <div class="iconbox">

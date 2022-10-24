@@ -21,6 +21,8 @@
     <script src="static/js/moment/moment.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="static/js/chat.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
     <link rel="stylesheet" href="static/css/mystyle.css">
 
     <title>kodify</title>
@@ -255,7 +257,6 @@
         });
 
         $('#app').on('submit', 'form#signupform', async function (e) {
-            debugger
             e.preventDefault();
 
             var data = new FormData(e.target);
@@ -327,7 +328,7 @@
 
                 })
                 .then(json => JSON.parse(json))
-                .catch(err => console.error(`Fetch problem: ${err.message}`))
+                .catch(err => console.log(`Fetch problem: ${err.message}`))
 
 
 

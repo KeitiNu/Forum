@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"sync"
 
 	"github.com/gorilla/websocket"
 )
@@ -23,6 +24,7 @@ type socketReader struct {
 	// name string 			// name of our current user
 	// request string  // what info is being send (ex: message request)
 	context Context // info being sent
+    mu      sync.Mutex
 
 	// mode int 			// we are not using this at the moment
 }
@@ -60,11 +62,8 @@ func (app *application) socket(w http.ResponseWriter, r *http.Request) {
 				log.Println(err)
 			}
 			r.Body.Close()
-			// delete(savedSocketReaders, name)
 		}()
-		// if savedSocketReader == nil {
-		// 	savedSocketReader = make([]*socketReader, 0)
-		// }
+
 		con, _ := upgrader.Upgrade(w, r, nil)
 		ptrSocketReader := &socketReader{
 			con: con,
@@ -72,18 +71,13 @@ func (app *application) socket(w http.ResponseWriter, r *http.Request) {
 
 		var msg RecievedMessage
 
-		// _, message, _ := ptrSocketReader.con.ReadMessage()
-		// json.Unmarshal(message, &msg)
+
 
 		err := ptrSocketReader.con.ReadJSON(&msg)
 		if err != nil {
 			log.Println(err)
 		}
-		// // Get struct from string.
-		// json.Unmarshal(message, &msg)
-		// fmt.Println("Message retrieved: ", msg.Context)
 
-		// ptrSocketReader.con.WriteMessage(websocket.TextMessage, []byte("Greetings from golang"))
 
 		name = msg.Context
 
@@ -134,7 +128,7 @@ func sendOnlineUserInfo() {
 	}
 
 	for _, socket := range savedSocketReaders {
-		socket.con.WriteJSON(context)
+		socket.send(context)
 	}
 }
 
@@ -147,7 +141,7 @@ func removeSocketReader(name string) {
 	}
 
 	for _, socket := range savedSocketReaders {
-		socket.con.WriteJSON(context)
+		socket.send(context)
 	}
 }
 
@@ -160,7 +154,7 @@ func sendChatNotification(sender string, recipient string, message string) {
 
 	for name, socket := range savedSocketReaders {
 		if name == recipient {
-			socket.con.WriteJSON(context)
+			socket.send(context)
 		}
 	}
 }
@@ -173,13 +167,21 @@ func typingInProgress(sender string, recipient string) {
 
 	for name, socket := range savedSocketReaders {
 		if name == recipient {
-			socket.con.WriteJSON(context)
+			socket.send(context)
 		}
 	}
 }
 
+
+func (p *socketReader) send(v interface{}) error {
+    p.mu.Lock()
+    defer p.mu.Unlock()
+    return p.con.WriteJSON(v)
+}
+
+
 func fillInfo(recipient string, offset int) {
-	// const db = new sqlite3.Database("database.db");
+	// const db = new sqlite3.Database("database.db");WriteJSON
 	var sql string = `
     SELECT
         sender_id,

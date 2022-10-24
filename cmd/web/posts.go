@@ -228,12 +228,10 @@ func (app *application) comment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println("C", c)
 
 	user := app.contextGetUser(r)
 	form := forms.New(r.PostForm)
 
-	fmt.Println("FORM", form)
 
 	v := forms.NewValidator()
 	form.Errors = v
@@ -277,7 +275,6 @@ func (app *application) comment(w http.ResponseWriter, r *http.Request) {
 		return
 
 	case "POST":
-		fmt.Println(c.Comment)
 
 		v.Check(c.Comment != "", "comment", "Cannot add empty comment")
 		if !v.Valid() {

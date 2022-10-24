@@ -31,16 +31,13 @@ export default class extends AbstractView {
             </div>
 
             <div id="dialog" class="dialog box remove">
-                <div class="container" id="chat_area">
-                </div>
-
+                <div class="container" id="chat_area"></div>
                 <div id="input" class="input remove" method="POST">
                 <form id="chatmessage">
-                    <input id="input_text" class="quick remove" name="Message" value="" autocomplete="off"></input>
+                    <input type="text" id="input_text" class="quick remove" name="Message" value="" autocomplete="off"></input>
                     <input type="hidden" name="RecipientId" id="recipientId"></input>
                     <input type="hidden" name="UserId" value="${currentUser}"></input>
                     <button id="input_button" data-userId="" class="quick remove" type="submit">Send!</button>
-
                 </form>
                 </div>
             </div>

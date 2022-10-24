@@ -28,6 +28,7 @@ func (app *application) routes() http.Handler {
 	mux.HandleFunc("/message", app.message)
 	mux.HandleFunc("/typing", app.typing)
 
+
 	// mux.HandleFunc("/signup", app.register)
 
 	// mux.HandleFunc("/profile/", app.requireAuthenticatedUser(app.profile))

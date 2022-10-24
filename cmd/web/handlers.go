@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"net/http"
 	"strconv"
@@ -82,8 +81,6 @@ func (app *application) data(w http.ResponseWriter, r *http.Request) {
 		path := r.URL.Path[6:]
 		paths := strings.Split(path, "/")
 
-		fmt.Println("PATH: ", path)
-
 		switch paths[0] {
 		case "category":
 			app.showCategory(w, r, paths[1])
@@ -107,9 +104,6 @@ func (app *application) data(w http.ResponseWriter, r *http.Request) {
 			users, _ := app.models.Users.GetAllUsers(currentUser.Name)
 
 			app.serveAsJSON(w, &templateData{Categories: categories, AuthenticatedUser: currentUser, Users: users})
-
-			// app.serveAsJSON(w, &templateData{Categories: categories})
-
 		}
 	case "GET":
 		app.serverError(w, errors.New("GET METHOD NOT ALLOWED"))
@@ -249,7 +243,6 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 		// Get the token for the current user who is attempting to log in.
 		a, err := r.Cookie("session")
 
-		// fmt.Println("Cookie: ", a)
 
 		// expiration := time.Now().Add(5 * time.Minute)
 		// cookie := http.Cookie{Name: "newsession", Value: "abcd", Expires: expiration}

@@ -8,6 +8,7 @@ export default class extends AbstractView {
     }
 
 
+	
 
 
     async getHtml() {
@@ -43,20 +44,12 @@ export default class extends AbstractView {
 
 				<!-- Category tagging -->
 				<div class="">
-					<label class="form-label labels">Tags (maximum 5)</label>
+					<label class="form-label labels">Tags</label>
 					<fieldset>
 					${this.params.Categories.map(function(cat){
-						return `<input type="checkbox" name="category" value=`+cat.Title+`>`+cat.Title+`</input>`
-						})}
-				<!--	<select class="form-select form-control" id="tags-input" name="category" multiple
-						data-allow-clear="true" data-show-all-suggestions="true" data-suggestions-threshold="0"
-						data-max="5">
-
-
-						{{range .Categories}}
-						<option class="dropdownoption" value="{{.Title}}">{{.Title}}</option>
-						{{end}}
-					</select>-->
+						return `<label style="color:white;"><input type="checkbox" name="category" value=`+cat.Title+`>
+						`+cat.Title+`</label>`
+						}).join("")}
 					</fieldset>
 					<label class='error' id='errorcategory'></label>
 				</div>
