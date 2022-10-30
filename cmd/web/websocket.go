@@ -142,6 +142,7 @@ func removeSocketReader(name string) {
 
 	for _, socket := range savedSocketReaders {
 		socket.send(context)
+
 	}
 }
 

@@ -89,7 +89,7 @@ func (app *application) submitPost(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		user := app.contextGetUser(r)
+		user := app.contextGetUserByCookie(r)
 		post.User = user.Name
 		categoryList, _ := app.models.Categories.Latest()
 		v.Check(post.Title != "", "title", "Title must be provided")
@@ -139,7 +139,7 @@ func (app *application) showPost(w http.ResponseWriter, r *http.Request, idStrin
 	if err != nil {
 		fmt.Println(err)
 	}
-	user := app.contextGetUser(r)
+	user := app.contextGetUserByCookie(r)
 
 	users, err := app.models.Users.GetAllUsers(user.Name)
 
@@ -173,7 +173,7 @@ func (app *application) showPost(w http.ResponseWriter, r *http.Request, idStrin
 			app.serverError(w, err)
 			return
 		}
-		user := app.contextGetUser(r)
+		user := app.contextGetUserByCookie(r)
 		form := forms.New(r.PostForm)
 		v := forms.NewValidator()
 		form.Errors = v
@@ -198,7 +198,7 @@ func (app *application) showPost(w http.ResponseWriter, r *http.Request, idStrin
 				PostID:  id,
 				Content: form.Get("comment"),
 			}
-			user := app.contextGetUser(r)
+			user := app.contextGetUserByCookie(r)
 			comment.User = user.Name
 
 			_, err = app.models.Comments.Insert(comment)
@@ -229,7 +229,7 @@ func (app *application) comment(w http.ResponseWriter, r *http.Request) {
 	}
 
 
-	user := app.contextGetUser(r)
+	user := app.contextGetUserByCookie(r)
 	form := forms.New(r.PostForm)
 
 
@@ -296,7 +296,7 @@ func (app *application) comment(w http.ResponseWriter, r *http.Request) {
 				PostID:  id,
 				Content: c.Comment,
 			}
-			user := app.contextGetUser(r)
+			user := app.contextGetUserByCookie(r)
 			comment.User = user.Name
 
 			_, err = app.models.Comments.Insert(comment)

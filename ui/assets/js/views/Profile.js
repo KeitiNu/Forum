@@ -1,13 +1,13 @@
 import AbstractView from "./AbstractView.js";
 
 export default class extends AbstractView {
-    constructor(params) {
-        super(params);
-        this.setTitle("Kodify - Profile");
-    }
+	constructor(params) {
+		super(params);
+		this.setTitle("Kodify - Profile");
+	}
 
-    async getHtml() {
-        return `
+	async getHtml() {
+		return `
 
 <div class="createpostcontent">
 	<div class="profilebox">
@@ -35,5 +35,5 @@ export default class extends AbstractView {
 	</div>
 </div>
 `;
-}
+	}
 }

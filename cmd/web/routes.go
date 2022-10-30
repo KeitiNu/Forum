@@ -35,5 +35,7 @@ func (app *application) routes() http.Handler {
 	// mux.HandleFunc("/newcategory", app.requireAuthenticatedUser(app.newCategory))
 	// mux.HandleFunc("/submit", app.requireAuthenticatedUser(app.submitPost))
 
-	return app.recoverPanic(app.authenticate(app.session(mux)))
+	// return app.recoverPanic(app.authenticate(app.session(mux)))
+	return app.recoverPanic(mux)
+
 }

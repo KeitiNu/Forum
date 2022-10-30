@@ -34,3 +34,16 @@ func (app *application) contextGetUser(r *http.Request) *data.User {
 
 	return user
 }
+
+func (app *application) contextGetUserByCookie(r *http.Request) *data.User {
+
+	a, err := r.Cookie("session")
+
+	if err != nil {
+		return nil
+	}
+
+	user, err := app.models.Users.GetByToken(a.Value)
+
+	return user
+}

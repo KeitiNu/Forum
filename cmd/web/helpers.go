@@ -98,7 +98,7 @@ func (app *application) addDefaultData(td *templateData, r *http.Request) *templ
 	if td == nil {
 		td = &templateData{}
 	}
-	td.AuthenticatedUser = app.contextGetUser(r)
+	td.AuthenticatedUser = app.contextGetUserByCookie(r)
 	if td.AuthenticatedUser == nil {
 		return td
 	} else {

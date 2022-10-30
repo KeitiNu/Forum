@@ -15,7 +15,7 @@ func (app *application) showCategory(w http.ResponseWriter, r *http.Request, cat
 		app.serverError(w, err)
 	}
 
-	currentUser := app.contextGetUser(r)
+	currentUser := app.contextGetUserByCookie(r)
 
 	users, err := app.models.Users.GetAllUsers(currentUser.Name)
 

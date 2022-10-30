@@ -74,7 +74,7 @@ func (app *application) authenticate(next http.Handler) http.Handler {
 func (app *application) requireAuthenticatedUser(next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Check that the authenticatedUser helper doesn't return nil.
-		if app.contextGetUser(r) == nil {
+		if app.contextGetUserByCookie(r) == nil {
 			http.Redirect(w, r, "/login", http.StatusFound)
 			return
 		}

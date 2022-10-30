@@ -243,6 +243,7 @@ func (u *UserModel) UpdateByToken(token, username string) error {
 	// 	fmt.Println(err)
 	// 	return err
 	// }
+
 	return nil
 }
 

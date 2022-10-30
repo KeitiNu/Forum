@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"strconv"
@@ -100,10 +101,15 @@ func (app *application) data(w http.ResponseWriter, r *http.Request) {
 			app.chat(w, r)
 		default:
 			categories, _ := app.models.Categories.Latest()
-			currentUser := app.contextGetUser(r)
-			users, _ := app.models.Users.GetAllUsers(currentUser.Name)
+			currentUser := app.contextGetUserByCookie(r)
+			if currentUser != nil {
+				users, _ := app.models.Users.GetAllUsers(currentUser.Name)
+				app.serveAsJSON(w, &templateData{Categories: categories, AuthenticatedUser: currentUser, Users: users})
 
-			app.serveAsJSON(w, &templateData{Categories: categories, AuthenticatedUser: currentUser, Users: users})
+			} else {
+				app.serveAsJSON(w, &templateData{Categories: categories})
+
+			}
 		}
 	case "GET":
 		app.serverError(w, errors.New("GET METHOD NOT ALLOWED"))
@@ -241,20 +247,43 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		// Get the token for the current user who is attempting to log in.
+		// a, err := r.Cookie("session")
+
 		a, err := r.Cookie("session")
 
+		if err != nil {
+			a = &http.Cookie{Name: "session", Value: uuid.NewV4().String(), Expires: time.Now().Add(time.Hour), Path: "/"}
+			http.SetCookie(w, a)
+		}
 
-		// expiration := time.Now().Add(5 * time.Minute)
-		// cookie := http.Cookie{Name: "newsession", Value: "abcd", Expires: expiration}
-		// http.SetCookie(w, &cookie)
+		userc, err := app.models.Users.GetByToken(a.Value)
+		// if err != nil {
+		// 	app.serverError(w, err)
+		// 	return
+		// }
+
+		// // Continue if there are no users associated with token.
+		// if err != nil {
+		// 	next.ServeHTTP(w, r)
+		// 	return
+		// }
+
+		// // Otherwise, we can see that there is a match between the user in the database and cookie.
+		// // Add their information to the context of our request.
+		r = app.contextSetUser(r, userc)
+		// // Call the next handler in the chain.
+		// next.ServeHTTP(w, r)
+
 
 		// currentUser := app.contextGetUser(r)
 
-		if err != nil {
-			app.serverError(w, err)
-		}
+		// if err != nil {
+		// 	app.serverError(w, err)
+		// }
 
 		// Add the current cookie (token) to the user's profile in database.
+
+		fmt.Println(a.Value)
 		err = app.models.Users.UpdateByToken(a.Value, authUser.Name)
 
 		if err != nil {
@@ -375,17 +404,20 @@ func (app *application) register(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) logout(w http.ResponseWriter, r *http.Request) {
+
+	authUser := app.contextGetUserByCookie(r)
+	removeSocketReader(authUser.Name)
 	c := &http.Cookie{Name: "session", Value: uuid.NewV4().String(), Expires: time.Now(), MaxAge: -1}
 	http.SetCookie(w, c)
-	authUser := app.contextGetUser(r)
-	removeSocketReader(authUser.Name)
+
+
 	// http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 func (app *application) profile(w http.ResponseWriter, r *http.Request) {
 	// url := r.URL.Path[9:]
 
-	user := app.contextGetUser(r)
+	user := app.contextGetUserByCookie(r)
 	posts, err := app.models.Posts.GetUserPosts(user.Name)
 
 	if err != nil {

@@ -73,6 +73,7 @@ const Router = async () => {
         });
     };
 
+    debugger
 
 
     authenticated = stringToBool(getCookie('auth'));
@@ -80,7 +81,7 @@ const Router = async () => {
 
     if(!authenticated && match.route.path != '/signup' && match.route.path != '/login'){
         location.assign('http://localhost:8090/login')
-        // return
+        return
     }
 
 
