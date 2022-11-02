@@ -370,14 +370,11 @@ func (app *application) register(w http.ResponseWriter, r *http.Request) {
 
 		// // Get the token for the current user who is attempting to register.
 
-		a, err := r.Cookie("session")
-
-		if err != nil {
-			app.serverError(w, err)
-		}
+		cookie := &http.Cookie{Name: "session", Value: uuid.NewV4().String(), Expires: time.Now().Add(time.Hour), Path: "/"}
+		http.SetCookie(w, cookie)
 
 		//NEW DB FIELDS TO DB
-		err = app.models.Users.Insert(user, a.Value)
+		err = app.models.Users.Insert(user, cookie.Value)
 
 		if err != nil {
 			switch err {
