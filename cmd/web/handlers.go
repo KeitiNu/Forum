@@ -368,8 +368,6 @@ func (app *application) register(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		// // Get the token for the current user who is attempting to register.
-
 		cookie := &http.Cookie{Name: "session", Value: uuid.NewV4().String(), Expires: time.Now().Add(time.Hour), Path: "/"}
 		http.SetCookie(w, cookie)
 
