@@ -174,11 +174,13 @@ const changeClass = (elem, value) => {
     arr[arr.length-1] = value
     elem.className = arr.join(' ')
 }
+
 const addClass = (elem, value) => {
     let arr = elem.className.split(' ')
     arr.push(value)
     elem.className = arr.join(' ')
 }
+
 const removeClass = elem => {
     let arr = elem.className.split(' ')
     arr.pop()
@@ -248,6 +250,7 @@ const changeStatus = (username, status) => {
 
 const notify = (sender, message) => {
     if (sender == recipient) {
+        debugger
         removeLoadingDiv();
         let chat = document.getElementById("chat_area")
         let bubble = createBubble(message, sender, "recipient", getDateformat(new Date()))
@@ -311,19 +314,40 @@ function removeLoadingDiv(){
 }
 
 // moves the user to the top of activities list
+// const moveToTop = (username) => {
+//     let activity = document.getElementById("activity")
+//     let divs = activity.childNodes
+//     let index = 0
+
+//     divs.forEach((elem, i) => {
+//         if (elem.id == `status-${username}`) {
+//             index = i
+//         }
+//     })
+
+//     divs.unshift(data.splice(index, 1)[0]);
+//     activity.childNodes = divs
+// }
+
 const moveToTop = (username) => {
-    let activity = document.getElementById("activity")
-    let divs = activity.childNodes
+    let activity = document.getElementById("inner_activity")
+
+    let divs = Array.from(activity.children)
     let index = 0
 
-    divs.forEach((elem, i) => {
-        if (elem.id == `status-${username}`) {
+    for (let i in divs) {
+        if (divs[i].id == `status-${username}`) {
             index = i
+            break
         }
-    })
+    }
 
-    divs.unshift(data.splice(index, 1)[0]);
-    activity.childNodes = divs
+    divs.unshift(divs.splice(index, 1)[0]);
+    activity.innerHTML = ""
+
+    divs.forEach((elem) => {
+        activity.appendChild(elem)
+    })
 }
 
 

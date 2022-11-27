@@ -1,7 +1,6 @@
 class MySocket{
   constructor(){
     this.mysocket =  new WebSocket("ws://localhost:8090/socket");
-    // this.counter = 0;
   }
   
 
@@ -19,8 +18,7 @@ class MySocket{
       var json = JSON.parse(e.data);
       var onlineUsers = json.OnlineUsers ? json.OnlineUsers : [];
 
-
-      console.log("onmessage:",  e.data)
+      // console.log("onmessage:",  e.data)
 
       onlineUsers.forEach(user => {
         changeStatus(user, 1);
@@ -37,11 +35,6 @@ class MySocket{
         typing(json.Sender)
       }
 
-      // if (json.Message) {
-      //   notify(json.Sender, json.Message)
-      // }else if (json.Sender) {
-      //   typing(json.Sender)
-      // }
     }
 
 
@@ -49,10 +42,7 @@ class MySocket{
       console.log("socket opend")
       console.log("MSG:",  msg)
 
-
-
       socket.send(msg);
-      // this.counter++;
     }; 
 
 

@@ -63,10 +63,6 @@ const Router = async () => {
 
     if (match.route.path == '/logout') {
         document.cookie = "auth=false;"
-        // var now = new Date();
-        // var time = now.getTime();
-        // var expireTime = time + 1000 * 36000;
-        // now.setTime(expireTime);
 
         fetch("/logout", {
             method: "POST"

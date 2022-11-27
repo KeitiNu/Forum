@@ -254,9 +254,22 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			a = &http.Cookie{Name: "session", Value: uuid.NewV4().String(), Expires: time.Now().Add(time.Hour), Path: "/"}
 			http.SetCookie(w, a)
+		err = app.models.Users.UpdateByToken(a.Value, authUser.Name)
+
+		}
+
+
+		if err != nil {
+			app.serverError(w, err)
+			return
 		}
 
 		userc, err := app.models.Users.GetByToken(a.Value)
+		if err != nil {
+			app.serverError(w, err)
+			return
+		}
+
 		// if err != nil {
 		// 	app.serverError(w, err)
 		// 	return
