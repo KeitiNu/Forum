@@ -249,12 +249,12 @@ const changeStatus = (username, status) => {
 }
 
 const notify = (sender, message) => {
-    if (sender == recipient) {
+    if (sender == recipient && sender != user) {
         removeLoadingDiv();
-        // let chat = document.getElementById("chat_area")
-        // let bubble = createBubble(message, sender, "recipient", getDateformat(new Date()))
-        // chat.appendChild(bubble)
-        // chat.scrollTop = chat.scrollHeight
+        let chat = document.getElementById("chat_area")
+        let bubble = createBubble(message, sender, "recipient", getDateformat(new Date()))
+        chat.appendChild(bubble)
+        chat.scrollTop = chat.scrollHeight
     } else {
         let div = document.getAnimations(`status-${sender}`)
         let bell = document.getElementById(`bell-${sender}`)
